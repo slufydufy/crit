@@ -10,7 +10,7 @@ class MyApp extends StatelessWidget {
     return MaterialApp(
       title: 'Flutter Demo',
       theme: ThemeData(
-        primarySwatch: Colors.lime,
+        primarySwatch: Colors.grey,
       ),
       home: MyHomePage(),
     );
@@ -61,11 +61,11 @@ class MyHomePage extends StatelessWidget {
 
   Widget _textProduct() {
     return Container(
-      padding: EdgeInsets.fromLTRB(8.0, 8.0, 8.0, 0.0),
+      padding: EdgeInsets.fromLTRB(8.0, 16.0, 8.0, .0),
       child: Text('Buy and Donate Now', style: TextStyle(
         fontSize: 18.0,
         fontWeight: FontWeight.bold,
-        color: Colors.grey
+        // color: Colors.grey
       ),
       ),
     );
@@ -160,14 +160,10 @@ class ItemDetail extends StatelessWidget {
             child: Row(
               children: <Widget>[
                 Expanded(
-                  child: Text('Our new design : Mr.Crit in full face', style: TextStyle(
-                    fontSize: 18.0,
-                    fontWeight: FontWeight.bold,
-                    color: Colors.grey
-                  ),
-                  maxLines: 2,),
+                  child: new Container(color: Colors.lime, width: 16.0, height: 2.0,),
                 ),
-                Text('135K', style: TextStyle(
+                
+                Text('IDR 135K', style: TextStyle(
                   fontSize: 22.0,
                   fontWeight: FontWeight.bold,
                   color: Colors.lime
@@ -180,13 +176,23 @@ class ItemDetail extends StatelessWidget {
 
   Widget _showPrice() {
     return Padding(
-            padding: EdgeInsets.fromLTRB(0.0, 16.0, 8.0, 0.0),
-            child: Text('Our new design : Mr.Crit in full face Our new design : Mr.Crit in full face', style: TextStyle(
-              fontSize: 18.0,
-              fontWeight: FontWeight.bold,
-              color: Colors.grey
+            padding: EdgeInsets.fromLTRB(16.0, 16.0, 16.0, 0.0),
+            child: Column(
+              children: <Widget>[
+                Center(
+                  child: Text('Mr.Crit in full face', style: TextStyle(
+                          fontSize: 18.0,
+                          fontWeight: FontWeight.bold,
+                          color: Colors.grey
+                        ),
+                        maxLines: 2,),
+                ),
+                Padding(
+                  padding: const EdgeInsets.all(8.0),
+                  child: Text('Our new design : Mr.Crit in full face is inspired by the some one we call HERO in our new community. A nice old man who strugle from day to night that inspired us that life is not about complaint. '),
+                )
+              ],
             ),
-            maxLines: 2,),
           );
   }
 
