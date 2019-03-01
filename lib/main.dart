@@ -13,7 +13,7 @@ class MyApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
-      title: 'Flutter Demo',
+      title: 'Crit',
       debugShowCheckedModeBanner: false,
       theme: ThemeData(
         primarySwatch: Colors.lime,
@@ -28,14 +28,81 @@ class MyHomePage extends StatelessWidget {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Center(child: Text('Crit')),
+        centerTitle: true,
+        title: Text('Crit'),
       ),
+      drawer: _showDrawer(context),
       body: ListView(
         children: <Widget>[
           _showCarousel(context),
           _textProduct(),
           _gridView(context)
           ],
+      ),
+    );
+  }
+
+  Widget _showDrawer(BuildContext context) {
+    return Drawer(
+      child: ListView(
+        children: <Widget>[
+          ListTile(
+            title: Text('My Order', style: TextStyle(
+              fontSize: 16.0
+            ),),
+            trailing: Icon(Icons.add_shopping_cart),
+            onTap: () {
+              Navigator.of(context).pop();
+              Navigator.push(context, MaterialPageRoute(builder: (context) => OrderList()));
+            }
+          ),
+          Divider(),
+          ListTile(
+            title: Text('Article Category', style: TextStyle(
+              fontSize: 16.0
+            ),),
+          ),
+          ListTile(
+            title: Text('Fashion', style: TextStyle(
+              fontSize: 16.0
+            ),),
+            trailing: Icon(Icons.arrow_forward_ios),
+            onTap: () {
+              Navigator.of(context).pop();
+              Navigator.push(context, MaterialPageRoute(builder: (context) => OrderList()));
+            }
+          ),
+          ListTile(
+            title: Text('Fashion', style: TextStyle(
+              fontSize: 16.0
+            ),),
+            trailing: Icon(Icons.arrow_forward_ios),
+            onTap: () {
+              Navigator.of(context).pop();
+              Navigator.push(context, MaterialPageRoute(builder: (context) => OrderList()));
+            }
+          ),
+          ListTile(
+            title: Text('Fashion', style: TextStyle(
+              fontSize: 16.0
+            ),),
+            trailing: Icon(Icons.arrow_forward_ios),
+            onTap: () {
+              Navigator.of(context).pop();
+              Navigator.push(context, MaterialPageRoute(builder: (context) => OrderList()));
+            }
+          ),
+          ListTile(
+            title: Text('Fashion', style: TextStyle(
+              fontSize: 16.0
+            ),),
+            trailing: Icon(Icons.arrow_forward_ios),
+            onTap: () {
+              Navigator.of(context).pop();
+              Navigator.push(context, MaterialPageRoute(builder: (context) => OrderList()));
+            }
+          ),
+        ],
       ),
     );
   }
@@ -81,7 +148,7 @@ class MyHomePage extends StatelessWidget {
       padding: EdgeInsets.fromLTRB(4.0, 0.0, 8.0, 4.0),
       child: GridView.count(
           childAspectRatio: MediaQuery.of(context).size.width /
-              (MediaQuery.of(context).size.width / 0.7),
+              (MediaQuery.of(context).size.width / 0.8),
           physics: ScrollPhysics(),
           shrinkWrap: true,
           crossAxisCount: 2,
@@ -108,7 +175,7 @@ class MyHomePage extends StatelessWidget {
                 Center(
                   child: Image.network(
                     'https://www.redwolf.in/image/cache/catalog/mens-t-shirts/breaking-bad-official-heisenberg-t-shirt-india-438x438.jpg',
-                    height: MediaQuery.of(context).size.width / 2,
+                    height: MediaQuery.of(context).size.width / 2.2,
                     fit: BoxFit.fitHeight, 
                   ),
                 ),
@@ -118,7 +185,6 @@ class MyHomePage extends StatelessWidget {
                     'Mr.Crit in full face',
                     style:
                         TextStyle(fontSize: 16.0, 
-                        fontWeight: FontWeight.bold, 
                         color: Colors.grey,
                         ),
                     maxLines: 2,
@@ -180,8 +246,6 @@ class ItemDetail extends StatelessWidget {
           NetworkImage(
               'https://static.thefancydeal.com/uploads/edd/2018/01/Fearless-buy-t-shirt-design.jpg'),
         ],
-        // animationCurve: Curves.fastOutSlowIn,
-        // animationDuration: Duration(milliseconds: 0),
         autoplay: false,
         dotSize: 6.0,
         indicatorBgPadding: 6.0,
@@ -205,7 +269,7 @@ class ItemDetail extends StatelessWidget {
                         maxLines: 2,),),
                 ),
                 Text('IDR 135K', style: TextStyle(
-                  fontSize: 18.0,
+                  fontSize: 20.0,
                   color: Colors.lime
                 ),
                 maxLines: 2,)
@@ -219,9 +283,9 @@ class ItemDetail extends StatelessWidget {
             padding: EdgeInsets.fromLTRB(16.0, 16.0, 16.0, 8.0),
             child: Column(
               children: <Widget>[
-                Text('Our new design : Mr.Crit in full face is inspired by the some one we call HERO in our new community. A nice old man who strugle from day to night that inspired us that life is not about complaint.',
+                Text('Our new design : Mr.Crit in full face, is inspired by the some one we call HERO in our new community. A nice old man who strugle from day to night but still have a happy life.',
                 style: TextStyle(
-                  letterSpacing: 0.5
+                  color: Colors.grey
                   ),)
               ],
             ),
@@ -233,7 +297,6 @@ class ItemDetail extends StatelessWidget {
         children: <Widget>[
           Expanded(
             child: Container(
-              // color: Colors.white70,
               padding: const EdgeInsets.fromLTRB(16.0, 16.0, 0.0, 16.0),
               child: Text(
                 'Material', style: TextStyle(
@@ -243,7 +306,6 @@ class ItemDetail extends StatelessWidget {
             ),
           ),
           Container(
-            // color: Colors.white70,
             padding: const EdgeInsets.fromLTRB(0.0, 16.0, 16.0, 16.0),
             child: Text(
                 'Cotton Combbed 30s', style: TextStyle(
@@ -260,7 +322,6 @@ class ItemDetail extends StatelessWidget {
         children: <Widget>[
           Expanded(
               child: Container(
-              // color: Colors.white70,
               padding: const EdgeInsets.fromLTRB(16.0, 8.0, 16.0, 16.0),
               child: Text(
                 'Available Size', style: TextStyle(
@@ -270,7 +331,6 @@ class ItemDetail extends StatelessWidget {
             ),
           ),
           Container(
-            // color: Colors.white70,
             padding: const EdgeInsets.fromLTRB(0.0, 8.0, 16.0, 16.0),
             child: Text(
                 'M / L / XL', style: TextStyle(
@@ -285,17 +345,20 @@ class ItemDetail extends StatelessWidget {
   Widget _showButton(BuildContext context) {
     return Padding(
       padding: EdgeInsets.fromLTRB(16.0, 16.0, 16.0, 16.0),
-      child: RaisedButton(
-        onPressed: () {
-          Navigator.push(context, MaterialPageRoute(builder: (context) => CheckOut()));
-        },
-        color: Colors.lime,
-        shape: RoundedRectangleBorder(
-          borderRadius: BorderRadius.circular(5.0)
+      child: ButtonTheme(
+        height: 40.0,
+          child: RaisedButton(
+          onPressed: () {
+            Navigator.push(context, MaterialPageRoute(builder: (context) => CheckOut()));
+          },
+          color: Colors.lime,
+          shape: RoundedRectangleBorder(
+            borderRadius: BorderRadius.circular(5.0)
+          ),
+          child: Text('Order Now', style: TextStyle(
+            color: Colors.white
+          ),),
         ),
-        child: Text('Buy Now', style: TextStyle(
-          color: Colors.white
-        ),),
       ),
     );
   }
@@ -309,63 +372,29 @@ class CheckOut extends StatelessWidget{
       appBar: AppBar(
         title: Text('CheckOut'),
       ),
-      body: ListView(
+      body: Column(
+        crossAxisAlignment: CrossAxisAlignment.stretch,
         children: <Widget>[
-          _showBuyerInfoText(),
-          Divider(),
-          _showName(),
-          _showMobile(),
-          _showAddress(),
-          _showItemInfoText(),
-          Divider(),
+          Expanded(
+            child: ListView(
+              children: <Widget>[
+                _showItemInfoText(),
+                Divider(),
+                _showItem(),
+                _showFinalSize(),
+                _showQuantity(),
+                _showBuyerInfoText(),
+                Divider(),
+                _showName(),
+                _showMobile(),
+                _showAddress(),
+              ],
+            ),
+          ),
+          _showCheckoutButton(context)
         ],
       ),
     );
-  }
-
-  Widget _showBuyerInfoText() {
-    return Padding(
-          padding: EdgeInsets.fromLTRB(16.0, 16.0, 16.0, 8.0),
-          child: Text('Info Pembeli', style: TextStyle(
-            fontSize: 18.0
-          ),),
-        );
-  }
-
-  Widget _showName() {
-    return Padding(
-            padding: EdgeInsets.fromLTRB(16.0, 8.0, 16.0, 0.0),
-            child: TextFormField(
-              maxLines: 1,
-              decoration: InputDecoration(
-                labelText: 'Nama',
-                border: OutlineInputBorder())
-            ),
-          );
-  }
-
-  Widget _showMobile() {
-    return Padding(
-            padding: EdgeInsets.fromLTRB(16.0, 8.0, 16.0, 0.0),
-            child: TextFormField(
-              maxLines: 1,
-              decoration: InputDecoration(
-                labelText: 'Nomor HP',
-                border: OutlineInputBorder()),
-            ),
-          );
-  }
-
-  Widget _showAddress() {
-    return Padding(
-            padding: EdgeInsets.fromLTRB(16.0, 8.0, 16.0, 24.0),
-            child: TextFormField(
-              maxLines: 5,
-              decoration: InputDecoration(
-                labelText: 'Alamat Pengiriman',
-                border: OutlineInputBorder()),
-            ),
-          );
   }
 
   Widget _showItemInfoText() {
@@ -377,4 +406,167 @@ class CheckOut extends StatelessWidget{
         );
   }
 
+  Widget _showItem() {
+    return Padding(
+      padding: EdgeInsets.fromLTRB(16.0, 16.0, 16.0, 0.0),
+      child: 
+      Row(
+        children: <Widget>[
+          Image.network('https://www.redwolf.in/image/cache/catalog/mens-t-shirts/breaking-bad-official-heisenberg-t-shirt-india-438x438.jpg',
+          height: 50,
+          width: 50,
+          ),
+          Expanded(
+            child: Padding(
+              padding: const EdgeInsets.all(16.0),
+              child: Text('Mr.Crit in full face', style: TextStyle(
+                              fontSize: 16.0,
+                            ),
+                            maxLines: 2,),
+            ),
+          )
+        ],
+      ),
+    );
+  }
+
+  Widget _showFinalSize() {
+    return Row(
+        children: <Widget>[
+          Expanded(
+            child: Container(
+              padding: const EdgeInsets.fromLTRB(16.0, 16.0, 0.0, 16.0),
+              child: Text(
+                'Ukuran', style: TextStyle(
+                  fontSize: 16.0,
+                  color: Colors.grey
+                ),
+              ),
+            ),
+          ),
+          Container(
+            padding: const EdgeInsets.fromLTRB(0.0, 16.0, 16.0, 16.0),
+            child: Text(
+                'XL', style: TextStyle(
+                  fontSize: 16.0,
+                  color: Colors.lime
+                ),
+              ),
+          ),
+        ],
+      );
+  }
+
+  Widget _showQuantity() {
+    return Row(
+        children: <Widget>[
+          Expanded(
+              child: Container(
+              padding: const EdgeInsets.fromLTRB(16.0, 8.0, 16.0, 16.0),
+              child: Text(
+                'Jumlah barang', style: TextStyle(
+                  fontSize: 16.0,
+                  color: Colors.grey
+                ),
+              ),
+            ),
+          ),
+          Container(
+            padding: const EdgeInsets.fromLTRB(0.0, 8.0, 16.0, 16.0),
+            child: Text(
+                '2', style: TextStyle(
+                  fontSize: 16.0,
+                  color: Colors.lime
+                ),
+              ),
+          ),
+        ],
+      );
+  }
+
+  Widget _showBuyerInfoText() {
+    return Padding(
+          padding: EdgeInsets.fromLTRB(16.0, 16.0, 16.0, 8.0),
+          child: Text('Info Pengiriman', style: TextStyle(
+            fontSize: 18.0
+          ),),
+        );
+  }
+
+  Widget _showName() {
+    return Container(
+            // height: 70.0,
+            padding: EdgeInsets.fromLTRB(16.0, 8.0, 16.0, 0.0),
+            child: TextFormField(
+              maxLines: 1,
+              decoration: InputDecoration(
+                labelText: 'Nama',
+                contentPadding: new EdgeInsets.symmetric(vertical: 10.0, horizontal: 10.0),
+                border: OutlineInputBorder()
+                )
+            ),
+          );
+  }
+
+  Widget _showMobile() {
+    return Padding(
+            padding: EdgeInsets.fromLTRB(16.0, 8.0, 16.0, 0.0),
+            child: TextFormField(
+              maxLines: 1,
+              decoration: InputDecoration(
+                labelText: 'Nomor HP',
+                contentPadding: new EdgeInsets.symmetric(vertical: 10.0, horizontal: 10.0),
+                border: OutlineInputBorder()
+                ),
+            ),
+          );
+  }
+
+  Widget _showAddress() {
+    return Padding(
+            padding: EdgeInsets.fromLTRB(16.0, 8.0, 16.0, 16.0),
+            child: TextFormField(
+              maxLines: 5,
+              decoration: InputDecoration(
+                labelText: 'Alamat Pengiriman',
+                contentPadding: new EdgeInsets.symmetric(vertical: 10.0, horizontal: 10.0),
+                border: OutlineInputBorder()
+                ),
+            ),
+          );
+  }
+
+  Widget _showCheckoutButton(BuildContext context) {
+    return Container(
+      padding: EdgeInsets.fromLTRB(16.0, 16.0, 16.0, 16.0),
+      child: ButtonTheme(
+        height: 40.0,
+          child: RaisedButton(
+          onPressed: () {
+            Navigator.push(context, MaterialPageRoute(builder: (context) => CheckOut()));
+          },
+          color: Colors.lime,
+          shape: RoundedRectangleBorder(
+            borderRadius: BorderRadius.circular(5.0)
+          ),
+          child: Text('Checkout', style: TextStyle(
+            color: Colors.white
+          ),),
+        ),
+      ),
+    );
+  }
+
+}
+
+class OrderList extends StatelessWidget {
+  @override
+  Widget build(BuildContext context) {
+    return Scaffold(
+      appBar: AppBar(
+        title: Text('Order Status'),
+      ),
+      body: Text('okok'),
+    );
+  }
 }
