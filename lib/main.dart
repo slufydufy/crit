@@ -543,7 +543,7 @@ class CheckOut extends StatelessWidget{
         height: 40.0,
           child: RaisedButton(
           onPressed: () {
-            Navigator.push(context, MaterialPageRoute(builder: (context) => CheckOut()));
+            Navigator.push(context, MaterialPageRoute(builder: (context) => MyHomePage()));
           },
           color: Colors.lime,
           shape: RoundedRectangleBorder(
