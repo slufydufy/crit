@@ -26,8 +26,9 @@ class MyHomePageState extends State<MyHomePage> {
     return fetchDesign.documents;
   }
 
-  navigateTODetail(DocumentSnapshot item) {
-    Navigator.push(context, MaterialPageRoute(builder: (context) => ItemDetail(item: item)));
+  navigateToDetail(DocumentSnapshot item) {
+    Navigator.push(context, 
+    MaterialPageRoute(builder: (context) => ItemDetail(item: item)));
   }
 
   @override
@@ -170,7 +171,7 @@ class MyHomePageState extends State<MyHomePage> {
       child: 
       FutureBuilder(
         future: _designData,
-        builder: (_, snapshot) {
+        builder: (context, snapshot) {
           if (snapshot.connectionState == ConnectionState.waiting) {
             return Center(child: Text('Loading...'),);
           } else {
@@ -192,7 +193,7 @@ class MyHomePageState extends State<MyHomePage> {
   Widget _itemCard(BuildContext context, DocumentSnapshot snapshot) {
     return FlatButton(
       padding: EdgeInsets.all(0.0),
-        onPressed: () => navigateTODetail(snapshot),
+        onPressed: () => navigateToDetail(snapshot),
           child: new Card(
             clipBehavior: Clip.antiAlias,
             color: Colors.white,

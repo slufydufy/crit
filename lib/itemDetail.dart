@@ -6,12 +6,13 @@ class ItemDetail extends StatefulWidget {
 
   final DocumentSnapshot item; 
   ItemDetail({this.item});
+
   @override
   ItemDetailState createState() => ItemDetailState();
-  
 }
 
 class ItemDetailState extends State<ItemDetail> {
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -35,7 +36,7 @@ class ItemDetailState extends State<ItemDetail> {
               ],
             ),
           ),
-          _showButton(context)
+          _showButton()
         ],
       ),
     );
@@ -62,7 +63,7 @@ class ItemDetailState extends State<ItemDetail> {
                         ),
                         maxLines: 2,),),
                 ),
-                Text(widget.item.data['price'], style: TextStyle(
+                Text(widget.item.data['price'].toString(), style: TextStyle(
                   fontSize: 20.0,
                   color: Colors.lime
                 ),
@@ -111,6 +112,8 @@ class ItemDetailState extends State<ItemDetail> {
   }
 
   Widget _showSize() {
+    List sizeList = widget.item.data['size'];
+    String sizeAvail = sizeList.join(',');
     return Row(
         children: <Widget>[
           Expanded(
@@ -125,7 +128,7 @@ class ItemDetailState extends State<ItemDetail> {
           ),
           Container(
             padding: const EdgeInsets.fromLTRB(0.0, 8.0, 16.0, 16.0),
-            child: Text(widget.item.data['size'], style: TextStyle(
+            child: Text(sizeAvail, style: TextStyle(
                   color: Colors.lime
                 ),
               ),
@@ -134,14 +137,13 @@ class ItemDetailState extends State<ItemDetail> {
       );
   }
 
-  Widget _showButton(BuildContext context) {
+  Widget _showButton() {
     return Padding(
       padding: EdgeInsets.fromLTRB(16.0, 16.0, 16.0, 16.0),
       child: ButtonTheme(
-        // height: 40.0,
           child: RaisedButton(
           onPressed: () {
-            Navigator.push(context, MaterialPageRoute(builder: (context) => CheckOut()));
+            Navigator.push(context, MaterialPageRoute(builder: (context) => CheckOut(itemCO: widget.item,)));
           },
           color: Colors.lime,
           shape: RoundedRectangleBorder(
