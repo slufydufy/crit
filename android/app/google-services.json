@@ -1,0 +1,55 @@
+{
+  "project_info": {
+    "project_number": "69672803238",
+    "firebase_url": "https://crit-991f2.firebaseio.com",
+    "project_id": "crit-991f2",
+    "storage_bucket": "crit-991f2.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:69672803238:android:0c75ce884a9e171b",
+        "android_client_info": {
+          "package_name": "com.crit"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "69672803238-kt68bhkavvah3dkaga0fqt5gj70mtaca.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.crit",
+            "certificate_hash": "a23ecaad9b0b7c9c93ccd61a0bfd4eec5cd6a04b"
+          }
+        },
+        {
+          "client_id": "69672803238-sepv63ca1pmm6idakodiogp9smbtllsm.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyBHbme491WI79S-g4azLrMs-ibyotYFLh4"
+        }
+      ],
+      "services": {
+        "analytics_service": {
+          "status": 1
+        },
+        "appinvite_service": {
+          "status": 2,
+          "other_platform_oauth_client": [
+            {
+              "client_id": "69672803238-sepv63ca1pmm6idakodiogp9smbtllsm.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        },
+        "ads_service": {
+          "status": 2
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
