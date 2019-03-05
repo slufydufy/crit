@@ -2,8 +2,8 @@ import 'package:flutter/material.dart';
 import 'myHomePage.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 
-class CheckOut extends StatefulWidget{
-  final DocumentSnapshot itemCO; 
+class CheckOut extends StatefulWidget {
+  final DocumentSnapshot itemCO;
   CheckOut({this.itemCO});
 
   @override
@@ -11,6 +11,8 @@ class CheckOut extends StatefulWidget{
 }
 
 class CheckOutState extends State<CheckOut> {
+  String finalSize;
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -45,40 +47,48 @@ class CheckOutState extends State<CheckOut> {
 
   Widget _showItemInfoText() {
     return Padding(
-          padding: EdgeInsets.fromLTRB(16.0, 16.0, 16.0, 8.0),
-          child: Text('Info Barang', style: TextStyle(
-            fontSize: 18.0
-          ),),
-        );
+      padding: EdgeInsets.fromLTRB(16.0, 16.0, 16.0, 8.0),
+      child: Text(
+        'Info Barang',
+        style: TextStyle(fontSize: 18.0),
+      ),
+    );
   }
 
   Widget _showItem() {
     return Padding(
       padding: EdgeInsets.fromLTRB(16.0, 16.0, 16.0, 0.0),
-      child: 
-      Row(
+      child: Row(
         children: <Widget>[
           Image.network(
             widget.itemCO.data['url'],
-          height: 50,
-          width: 50,
+            height: 50,
+            width: 50,
           ),
           Expanded(
             child: Padding(
               padding: const EdgeInsets.all(16.0),
-              child: Text(widget.itemCO.data['title'], style: TextStyle(
-                              fontSize: 16.0,
-                            ),
-                            maxLines: 2,),
+              child: Text(
+                widget.itemCO.data['title'],
+                style: TextStyle(
+                  fontSize: 16.0,
+                ),
+                maxLines: 2,
+              ),
             ),
           ),
           Container(
             padding: const EdgeInsets.fromLTRB(0.0, 16.0, 0.0, 16.0),
-            child: Text(widget.itemCO.data['price'].toString(), style: TextStyle(
-                  fontSize: 16.0,
-                  color: Colors.lime
-                ),
-              ),
+            child: Text('IDR',
+              style: TextStyle(fontSize: 16.0, color: Colors.lime),
+            ),
+          ),
+          Container(
+            padding: const EdgeInsets.fromLTRB(8.0, 16.0, 0.0, 16.0),
+            child: Text(
+              widget.itemCO.data['price'].toString(),
+              style: TextStyle(fontSize: 16.0, color: Colors.lime),
+            ),
           ),
         ],
       ),
@@ -86,138 +96,144 @@ class CheckOutState extends State<CheckOut> {
   }
 
   Widget _showFinalSize() {
+    List sizeList = widget.itemCO.data['size'];
     return Row(
-        children: <Widget>[
-          Expanded(
-            child: Container(
-              padding: const EdgeInsets.fromLTRB(16.0, 16.0, 0.0, 16.0),
-              child: Text(
-                'Ukuran', style: TextStyle(
-                  fontSize: 16.0,
-                  color: Colors.grey
-                ),
-              ),
+      children: <Widget>[
+        Expanded(
+          child: Container(
+            padding: const EdgeInsets.fromLTRB(16.0, 16.0, 0.0, 8.0),
+            child: Text(
+              'Ukuran',
+              style: TextStyle(fontSize: 16.0, color: Colors.grey),
             ),
           ),
-          Container(
-            padding: const EdgeInsets.fromLTRB(0.0, 16.0, 16.0, 16.0),
-            child: 
-            // DropdownButton()
-            Text(
-                'XL', style: TextStyle(
-                  fontSize: 16.0,
-                  color: Colors.lime
-                ),
-              ),
-          ),
-        ],
-      );
+        ),
+        Container(
+            padding: const EdgeInsets.fromLTRB(0.0, 16.0, 16.0, 8.0),
+            child: DropdownButton(
+              hint: Text(' Pilih ', style: TextStyle(color: Colors.lime)),
+              items: sizeList.map((size) {
+                return DropdownMenuItem(
+                  child: Text(
+                    size,
+                    style: TextStyle(color: Colors.lime),
+                  ),
+                  value: size,
+                );
+              }).toList(),
+              onChanged: (newVal) {
+                setState(() {
+                  finalSize = newVal;
+                });
+              },
+              value: finalSize,
+            )),
+      ],
+    );
   }
 
   Widget _showQuantity() {
     return Row(
-        children: <Widget>[
-          Expanded(
-              child: Container(
-              padding: const EdgeInsets.fromLTRB(16.0, 8.0, 16.0, 16.0),
-              child: Text(
-                'Jumlah barang', style: TextStyle(
-                  fontSize: 16.0,
-                  color: Colors.grey
-                ),
-              ),
+      children: <Widget>[
+        Expanded(
+          child: Container(
+            padding: const EdgeInsets.fromLTRB(16.0, 8.0, 16.0, 8.0),
+            child: Text(
+              'Jumlah barang',
+              style: TextStyle(fontSize: 16.0, color: Colors.grey),
             ),
           ),
-          Container(
-            padding: const EdgeInsets.fromLTRB(0.0, 8.0, 16.0, 16.0),
-            child: Text(
-                '2', style: TextStyle(
-                  fontSize: 16.0,
-                  color: Colors.lime
-                ),
-              ),
-          ),
-        ],
-      );
+        ),
+        Container(
+          width: 60.0,
+          padding: const EdgeInsets.fromLTRB(0.0, .0, 16.0, 16.0),
+          child: 
+          TextField(
+            maxLength: 3,
+            keyboardType: TextInputType.number,
+            textDirection: TextDirection.rtl,
+            style: TextStyle(color: Colors.lime),
+            decoration: InputDecoration(enabledBorder: UnderlineInputBorder(borderSide: BorderSide(color: Colors.lime))),
+            )
+        
+        ),
+      ],
+    );
   }
 
   Widget _showTotalPrize() {
     return Row(
-        children: <Widget>[
-          Expanded(
-            child: Container(
-              padding: const EdgeInsets.fromLTRB(16.0, 16.0, 0.0, 16.0),
-              child: Text(
-                'Total Harga', style: TextStyle(
-                  fontSize: 16.0,
-                  color: Colors.grey
-                ),
-              ),
+      children: <Widget>[
+        Expanded(
+          child: Container(
+            padding: const EdgeInsets.fromLTRB(16.0, 16.0, 0.0, 16.0),
+            child: Text(
+              'Total Harga',
+              style: TextStyle(fontSize: 16.0, color: Colors.grey),
             ),
           ),
-          Container(
-            padding: const EdgeInsets.fromLTRB(0.0, 16.0, 16.0, 16.0),
-            child: Text(
-                '270000', style: TextStyle(
-                  fontSize: 16.0,
-                  color: Colors.lime
-                ),
-              ),
+        ),
+        Container(
+          padding: const EdgeInsets.fromLTRB(0.0, 16.0, 16.0, 16.0),
+          child: Text(
+            '270000',
+            style: TextStyle(fontSize: 16.0, color: Colors.lime),
           ),
-        ],
-      );
+        ),
+      ],
+    );
   }
 
   Widget _showBuyerInfoText() {
     return Padding(
-          padding: EdgeInsets.fromLTRB(16.0, 16.0, 16.0, 8.0),
-          child: Text('Info Pengiriman', style: TextStyle(
-            fontSize: 18.0
-          ),),
-        );
+      padding: EdgeInsets.fromLTRB(16.0, 16.0, 16.0, 8.0),
+      child: Text(
+        'Info Pengiriman',
+        style: TextStyle(fontSize: 18.0),
+      ),
+    );
   }
 
   Widget _showName() {
     return Container(
-            // height: 70.0,
-            padding: EdgeInsets.fromLTRB(16.0, 8.0, 16.0, 0.0),
-            child: TextFormField(
-              maxLines: 1,
-              decoration: InputDecoration(
-                labelText: 'Nama',
-                contentPadding: new EdgeInsets.symmetric(vertical: 10.0, horizontal: 10.0),
-                border: OutlineInputBorder()
-                )
-            ),
-          );
+      // height: 70.0,
+      padding: EdgeInsets.fromLTRB(16.0, 8.0, 16.0, 0.0),
+      child: TextFormField(
+          maxLines: 1,
+          decoration: InputDecoration(
+              labelText: 'Nama',
+              contentPadding:
+                  new EdgeInsets.symmetric(vertical: 10.0, horizontal: 10.0),
+              border: OutlineInputBorder())),
+    );
   }
 
   Widget _showMobile() {
     return Padding(
-            padding: EdgeInsets.fromLTRB(16.0, 8.0, 16.0, 0.0),
-            child: TextFormField(
-              maxLines: 1,
-              decoration: InputDecoration(
-                labelText: 'Nomor HP',
-                contentPadding: new EdgeInsets.symmetric(vertical: 10.0, horizontal: 10.0),
-                border: OutlineInputBorder()
-                ),
-            ),
-          );
+      padding: EdgeInsets.fromLTRB(16.0, 8.0, 16.0, 0.0),
+      child: TextFormField(
+        maxLines: 1,
+        decoration: InputDecoration(
+            labelText: 'Nomor HP',
+            contentPadding:
+                new EdgeInsets.symmetric(vertical: 10.0, horizontal: 10.0),
+            border: OutlineInputBorder()),
+      ),
+    );
   }
 
   Widget _showAddress() {
     return Padding(
-            padding: EdgeInsets.fromLTRB(16.0, 8.0, 16.0, 16.0),
-            child: TextFormField(
-              maxLines: 5,
-              decoration: InputDecoration(
-                labelText: 'Alamat Pengiriman',
-                contentPadding: new EdgeInsets.symmetric(vertical: 10.0, horizontal: 10.0),
-                border: OutlineInputBorder()
-                ),
-            ),
-          );
+      padding: EdgeInsets.fromLTRB(16.0, 8.0, 16.0, 16.0),
+      child: TextFormField(
+        maxLines: 5,
+        decoration: InputDecoration(
+            labelText: 'Alamat Pengiriman',
+            contentPadding:
+                new EdgeInsets.symmetric(vertical: 10.0, horizontal: 10.0),
+            border: OutlineInputBorder()),
+      ),
+    );
   }
 
   Widget _showCheckoutButton(BuildContext context) {
@@ -225,17 +241,18 @@ class CheckOutState extends State<CheckOut> {
       padding: EdgeInsets.fromLTRB(16.0, 16.0, 16.0, 16.0),
       child: ButtonTheme(
         // height: 40.0,
-          child: RaisedButton(
+        child: RaisedButton(
           onPressed: () {
-            Navigator.push(context, MaterialPageRoute(builder: (context) => MyHomePage()));
+            Navigator.push(
+                context, MaterialPageRoute(builder: (context) => MyHomePage()));
           },
           color: Colors.lime,
-          shape: RoundedRectangleBorder(
-            borderRadius: BorderRadius.circular(5.0)
+          shape:
+              RoundedRectangleBorder(borderRadius: BorderRadius.circular(5.0)),
+          child: Text(
+            'Checkout',
+            style: TextStyle(color: Colors.white),
           ),
-          child: Text('Checkout', style: TextStyle(
-            color: Colors.white
-          ),),
         ),
       ),
     );

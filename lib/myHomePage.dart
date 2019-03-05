@@ -129,7 +129,7 @@ class MyHomePageState extends State<MyHomePage> {
       future: _bannerData,
       builder: (_, snapshot) {
         if (snapshot.connectionState == ConnectionState.waiting) {
-          return Center(child: Text('Loading...'),);
+          return Center(child: CircularProgressIndicator(),);
         } else {
           
           return Container(
@@ -173,7 +173,7 @@ class MyHomePageState extends State<MyHomePage> {
         future: _designData,
         builder: (context, snapshot) {
           if (snapshot.connectionState == ConnectionState.waiting) {
-            return Center(child: Text('Loading...'),);
+            return Center(child: CircularProgressIndicator(),);
           } else {
             return 
             GridView.builder(
