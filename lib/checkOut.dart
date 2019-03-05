@@ -1,7 +1,16 @@
 import 'package:flutter/material.dart';
 import 'myHomePage.dart';
+import 'package:cloud_firestore/cloud_firestore.dart';
 
-class CheckOut extends StatelessWidget{
+class CheckOut extends StatefulWidget{
+  final DocumentSnapshot itemCO; 
+  CheckOut({this.itemCO});
+
+  @override
+  CheckOutState createState() => CheckOutState();
+}
+
+class CheckOutState extends State<CheckOut> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -49,14 +58,15 @@ class CheckOut extends StatelessWidget{
       child: 
       Row(
         children: <Widget>[
-          Image.network('https://www.redwolf.in/image/cache/catalog/mens-t-shirts/breaking-bad-official-heisenberg-t-shirt-india-438x438.jpg',
+          Image.network(
+            widget.itemCO.data['url'],
           height: 50,
           width: 50,
           ),
           Expanded(
             child: Padding(
               padding: const EdgeInsets.all(16.0),
-              child: Text('Mr.Crit in full face', style: TextStyle(
+              child: Text(widget.itemCO.data['title'], style: TextStyle(
                               fontSize: 16.0,
                             ),
                             maxLines: 2,),
@@ -64,8 +74,7 @@ class CheckOut extends StatelessWidget{
           ),
           Container(
             padding: const EdgeInsets.fromLTRB(0.0, 16.0, 0.0, 16.0),
-            child: Text(
-                '135000', style: TextStyle(
+            child: Text(widget.itemCO.data['price'].toString(), style: TextStyle(
                   fontSize: 16.0,
                   color: Colors.lime
                 ),
@@ -92,7 +101,9 @@ class CheckOut extends StatelessWidget{
           ),
           Container(
             padding: const EdgeInsets.fromLTRB(0.0, 16.0, 16.0, 16.0),
-            child: Text(
+            child: 
+            // DropdownButton()
+            Text(
                 'XL', style: TextStyle(
                   fontSize: 16.0,
                   color: Colors.lime
@@ -229,5 +240,4 @@ class CheckOut extends StatelessWidget{
       ),
     );
   }
-
 }
