@@ -32,6 +32,7 @@ class OrderCard extends StatelessWidget {
             _showOrderId(),
             Divider(),
             _showItem(),
+            _showPrice(),
             _showFinalSize(),
             _showQuantity(),
             _showTotalPrize(),
@@ -49,7 +50,7 @@ class OrderCard extends StatelessWidget {
       padding: EdgeInsets.fromLTRB(16.0, 16.0, 16.0, 0.0),
           child: Row(
         children: <Widget>[
-          Text('Order id:', style: TextStyle(
+          Text('Order Number:', style: TextStyle(
             fontSize: 16.0,
             color: Colors.grey
           ),),
@@ -132,6 +133,33 @@ class OrderCard extends StatelessWidget {
             padding: const EdgeInsets.fromLTRB(0.0, 8.0, 16.0, 0.0),
             child: Text(
                 '2', style: TextStyle(
+                  fontSize: 16.0,
+                  color: Colors.lime
+                ),
+              ),
+          ),
+        ],
+      );
+  }
+
+  Widget _showPrice() {
+    return Row(
+        children: <Widget>[
+          Expanded(
+              child: Container(
+              padding: const EdgeInsets.fromLTRB(16.0, 8.0, 0.0, 0.0),
+              child: Text(
+                'Harga', style: TextStyle(
+                  fontSize: 16.0,
+                  color: Colors.grey
+                ),
+              ),
+            ),
+          ),
+          Container(
+            padding: const EdgeInsets.fromLTRB(0.0, 8.0, 16.0, 0.0),
+            child: Text(
+                '135000', style: TextStyle(
                   fontSize: 16.0,
                   color: Colors.lime
                 ),

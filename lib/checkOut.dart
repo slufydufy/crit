@@ -1,6 +1,8 @@
-import 'package:flutter/material.dart';
-import 'myHomePage.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
+import 'myHomePage.dart';
+import 'crud.dart';
 
 class CheckOut extends StatefulWidget {
   final DocumentSnapshot itemCO;
@@ -11,7 +13,99 @@ class CheckOut extends StatefulWidget {
 }
 
 class CheckOutState extends State<CheckOut> {
+
+  BuildContext scafoldContext;
+
   String finalSize;
+  int finalPrice = 0;
+  var quantityTxtCont = TextEditingController();
+  var orderNameTxtCont = TextEditingController();
+  var orderPhoneTxtCont = TextEditingController();
+  var orderAddrTxtCont = TextEditingController();
+  final _formkey = GlobalKey<FormState>();
+  CrudMethod crudObj = CrudMethod();
+
+  @override
+  void dispose() {
+    quantityTxtCont.dispose();
+    super.dispose();
+  }
+
+  void createSnackBar(String message) {
+    final snackBar = SnackBar(content: Column(
+      mainAxisSize: MainAxisSize.min,
+      children: <Widget>[
+        Text(message, style: TextStyle(fontWeight: FontWeight.bold),),
+      ],
+    ),
+    backgroundColor: Colors.black.withOpacity(0.8),
+    );
+    Scaffold.of(scafoldContext).showSnackBar(snackBar);
+  }
+
+  submitOrder() {
+    var cDate = DateTime.now();
+    if (finalSize == null) {
+      createSnackBar('Pilih ukuran');
+    } else if (quantityTxtCont.text.isEmpty || quantityTxtCont.text == '0') {
+      createSnackBar('Jumlah minimum 1');
+    } else if (_formkey.currentState.validate()) {
+      crudObj.addOrder({
+        'itemTitle' : widget.itemCO.data['title'],
+        'itemPrice' : widget.itemCO.data['price'],
+        'itemImg' : widget.itemCO.data['url'],
+        'size' : finalSize,
+        'quantity' : quantityTxtCont.text,
+        'name' : orderNameTxtCont,
+        'phone' : orderPhoneTxtCont,
+        'address' : orderAddrTxtCont,
+        'totalPrice' : finalPrice,
+        'status' : 'menunggu pembayaran',
+        'ordernumber' : cDate
+      }).then((result) {
+        dismissOrderDialog(context);
+      }).catchError((e) {
+        print(e);
+      });
+
+      
+    } 
+  }
+
+  Future<bool> dismissOrderDialog(BuildContext context) async {
+    return showDialog(
+      context: context,
+      barrierDismissible: false,
+      builder: (BuildContext context) {
+        return AlertDialog(
+          title: Text('Order Status'),
+          content: Text('Order berhasil, silahkan melakukan konfirmasi pembayaran'),
+          actions: <Widget>[
+            FlatButton(
+              child: Text('OK'),
+              textColor: Colors.lime,
+              onPressed: () {
+                Navigator.push(
+                  context, MaterialPageRoute(builder: (context) => MyHomePage()));
+              },
+            )
+          ],
+        );
+      },
+    );
+  }
+
+  @override
+  void initState() {
+    quantityTxtCont.addListener(() {
+      num price = widget.itemCO.data['price'];
+      int qty = int.tryParse(quantityTxtCont.text);
+      setState(() {
+        finalPrice = price * qty;
+      });
+    });
+    super.initState();
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -19,7 +113,9 @@ class CheckOutState extends State<CheckOut> {
       appBar: AppBar(
         title: Text('Checkout'),
       ),
-      body: Column(
+      body: Builder(builder: (BuildContext context) {
+        scafoldContext = context;
+        return Column(
         crossAxisAlignment: CrossAxisAlignment.stretch,
         children: <Widget>[
           Expanded(
@@ -33,15 +129,19 @@ class CheckOutState extends State<CheckOut> {
                 _showTotalPrize(),
                 _showBuyerInfoText(),
                 Divider(),
-                _showName(),
-                _showMobile(),
-                _showAddress(),
+                _receipentForm()
+                // _showName(),
+                // _showMobile(),
+                // _showAddress(),
               ],
             ),
           ),
           _showCheckoutButton(context)
         ],
-      ),
+      );
+    
+      },)
+      
     );
   }
 
@@ -148,7 +248,10 @@ class CheckOutState extends State<CheckOut> {
           width: 60.0,
           padding: const EdgeInsets.fromLTRB(0.0, .0, 16.0, 16.0),
           child: 
-          TextField(
+          TextFormField(
+            inputFormatters: [WhitelistingTextInputFormatter.digitsOnly],
+            validator: (value) => value.isEmpty ? 'Order minimal 1' : null ,
+            controller: quantityTxtCont,
             maxLength: 3,
             keyboardType: TextInputType.number,
             textDirection: TextDirection.rtl,
@@ -175,8 +278,7 @@ class CheckOutState extends State<CheckOut> {
         ),
         Container(
           padding: const EdgeInsets.fromLTRB(0.0, 16.0, 16.0, 16.0),
-          child: Text(
-            '270000',
+          child: Text('$finalPrice',
             style: TextStyle(fontSize: 16.0, color: Colors.lime),
           ),
         ),
@@ -194,12 +296,31 @@ class CheckOutState extends State<CheckOut> {
     );
   }
 
+  Widget _receipentForm() {
+    return Form(
+      key: _formkey,
+      child: Column(
+        children: <Widget>[
+          _showName(),
+          _showMobile(),
+          _showAddress()
+        ],
+      ),
+    );
+  }
+
   Widget _showName() {
     return Container(
       // height: 70.0,
       padding: EdgeInsets.fromLTRB(16.0, 8.0, 16.0, 0.0),
       child: TextFormField(
+        controller: orderNameTxtCont,
           maxLines: 1,
+          validator: (value) {
+            if (value.isEmpty) {
+              return 'Nama belum diisi';
+            }
+          },
           decoration: InputDecoration(
               labelText: 'Nama',
               contentPadding:
@@ -212,7 +333,13 @@ class CheckOutState extends State<CheckOut> {
     return Padding(
       padding: EdgeInsets.fromLTRB(16.0, 8.0, 16.0, 0.0),
       child: TextFormField(
+        controller: orderPhoneTxtCont,
         maxLines: 1,
+        validator: (value) {
+            if (value.isEmpty) {
+              return 'Nomor HP belum diisi';
+            }
+          },
         decoration: InputDecoration(
             labelText: 'Nomor HP',
             contentPadding:
@@ -226,7 +353,13 @@ class CheckOutState extends State<CheckOut> {
     return Padding(
       padding: EdgeInsets.fromLTRB(16.0, 8.0, 16.0, 16.0),
       child: TextFormField(
+        controller: orderAddrTxtCont,
         maxLines: 5,
+        validator: (value) {
+            if (value.isEmpty) {
+              return 'Alamat belum diisi';
+            }
+          },
         decoration: InputDecoration(
             labelText: 'Alamat Pengiriman',
             contentPadding:
@@ -240,12 +373,8 @@ class CheckOutState extends State<CheckOut> {
     return Container(
       padding: EdgeInsets.fromLTRB(16.0, 16.0, 16.0, 16.0),
       child: ButtonTheme(
-        // height: 40.0,
         child: RaisedButton(
-          onPressed: () {
-            Navigator.push(
-                context, MaterialPageRoute(builder: (context) => MyHomePage()));
-          },
+          onPressed: submitOrder,
           color: Colors.lime,
           shape:
               RoundedRectangleBorder(borderRadius: BorderRadius.circular(5.0)),
@@ -257,4 +386,5 @@ class CheckOutState extends State<CheckOut> {
       ),
     );
   }
+
 }

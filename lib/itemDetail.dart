@@ -2,16 +2,10 @@ import 'package:flutter/material.dart';
 import 'checkOut.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 
-class ItemDetail extends StatefulWidget {
+class ItemDetail extends StatelessWidget {
 
   final DocumentSnapshot item; 
   ItemDetail({this.item});
-
-  @override
-  ItemDetailState createState() => ItemDetailState();
-}
-
-class ItemDetailState extends State<ItemDetail> {
 
   @override
   Widget build(BuildContext context) {
@@ -36,7 +30,7 @@ class ItemDetailState extends State<ItemDetail> {
               ],
             ),
           ),
-          _showButton()
+          _showButton(context)
         ],
       ),
     );
@@ -47,7 +41,7 @@ class ItemDetailState extends State<ItemDetail> {
     return Container(
       height: height * 0.5,
       padding: EdgeInsets.all(8.0),
-      child: Image.network(widget.item.data['url']),
+      child: Image.network(item.data['url']),
     );
   }
 
@@ -57,13 +51,13 @@ class ItemDetailState extends State<ItemDetail> {
             child: Row(
               children: <Widget>[
                 Expanded(
-                  child: new Container(child: Text(widget.item.data['title'], style: TextStyle(
+                  child: new Container(child: Text(item.data['title'], style: TextStyle(
                           fontSize: 20.0,
                           color: Colors.grey,
                         ),
                         maxLines: 2,),),
                 ),
-                Text(widget.item.data['price'].toString(), style: TextStyle(
+                Text(item.data['price'].toString(), style: TextStyle(
                   fontSize: 20.0,
                   color: Colors.lime
                 ),
@@ -78,7 +72,7 @@ class ItemDetailState extends State<ItemDetail> {
             padding: EdgeInsets.fromLTRB(16.0, 16.0, 16.0, 8.0),
             child: Column(
               children: <Widget>[
-                Text(widget.item.data['desc'],
+                Text(item.data['desc'],
                 style: TextStyle(
                   color: Colors.grey
                   ),)
@@ -102,7 +96,7 @@ class ItemDetailState extends State<ItemDetail> {
           ),
           Container(
             padding: const EdgeInsets.fromLTRB(0.0, 16.0, 16.0, 16.0),
-            child: Text(widget.item.data['material'], style: TextStyle(
+            child: Text(item.data['material'], style: TextStyle(
                   color: Colors.lime
                 ),
               ),
@@ -112,7 +106,7 @@ class ItemDetailState extends State<ItemDetail> {
   }
 
   Widget _showSize() {
-    List sizeList = widget.item.data['size'];
+    List sizeList = item.data['size'];
     String sizeAvail = sizeList.join(',');
     return Row(
         children: <Widget>[
@@ -137,13 +131,13 @@ class ItemDetailState extends State<ItemDetail> {
       );
   }
 
-  Widget _showButton() {
+  Widget _showButton(BuildContext context) {
     return Padding(
       padding: EdgeInsets.fromLTRB(16.0, 16.0, 16.0, 16.0),
       child: ButtonTheme(
           child: RaisedButton(
           onPressed: () {
-            Navigator.push(context, MaterialPageRoute(builder: (context) => CheckOut(itemCO: widget.item,)));
+            Navigator.push(context, MaterialPageRoute(builder: (context) => CheckOut(itemCO: item,)));
           },
           color: Colors.lime,
           shape: RoundedRectangleBorder(
