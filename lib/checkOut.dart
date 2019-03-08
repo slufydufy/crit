@@ -88,7 +88,7 @@ class CheckOutState extends State<CheckOut> {
       builder: (BuildContext context) {
         return AlertDialog(
           title: Text('Order Status'),
-          content: Text('Order berhasil, silahkan melakukan konfirmasi pembayaran di menu \"order saya\"'),
+          content: Text('Order berhasil, lakukan konfirmasi pembayaran di menu \"order saya\"'),
           actions: <Widget>[
             FlatButton(
               child: Text('OK'),
@@ -387,11 +387,8 @@ class CheckOutState extends State<CheckOut> {
         child: RaisedButton(
           onPressed: submitOrder,
           color: Colors.lime,
-          shape:
-              RoundedRectangleBorder(borderRadius: BorderRadius.circular(5.0)),
-          child: Text(
-            'Checkout',
-            style: TextStyle(color: Colors.white),
+          shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(5.0)),
+          child: Text('Checkout', style: TextStyle(color: Colors.white),
           ),
         ),
       ),

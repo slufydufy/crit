@@ -37,7 +37,8 @@ class OrderCard extends StatelessWidget {
             _showQuantity(),
             _showTotalPrize(),
             Divider(),
-            _showStatus()
+            _showStatus(),
+            _showConfirmBtn()
           ],
         ),
       ),
@@ -211,7 +212,7 @@ class OrderCard extends StatelessWidget {
             ),
           ),
           Container(
-            padding: const EdgeInsets.fromLTRB(0.0, 8.0, 16.0, 16.0),
+            padding: const EdgeInsets.fromLTRB(0.0, 8.0, 16.0, 8.0),
             child: Text(
                 'menunggu pembayaran', style: TextStyle(
                   fontSize: 16.0,
@@ -221,6 +222,23 @@ class OrderCard extends StatelessWidget {
           ),
         ],
       );
+  }
+
+  Widget _showConfirmBtn() {
+    return Container(
+      padding: EdgeInsets.only(bottom: 16.0),
+      child: ButtonTheme(
+        child: RaisedButton(
+          onPressed: () {
+
+          },
+          color: Colors.lime,
+          shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(5.0)),
+          child: Text('Konfirmasi', style: TextStyle(color: Colors.white),
+          ),
+        ),
+      ),
+    );
   }
 
 }

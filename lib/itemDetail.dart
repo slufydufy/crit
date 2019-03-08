@@ -3,8 +3,7 @@ import 'checkOut.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 
 class ItemDetail extends StatelessWidget {
-
-  final DocumentSnapshot item; 
+  final DocumentSnapshot item;
   ItemDetail({this.item});
 
   @override
@@ -13,8 +12,7 @@ class ItemDetail extends StatelessWidget {
       appBar: AppBar(
         title: Text('Detail'),
       ),
-      body: 
-      Column(
+      body: Column(
         crossAxisAlignment: CrossAxisAlignment.stretch,
         children: <Widget>[
           Expanded(
@@ -47,105 +45,105 @@ class ItemDetail extends StatelessWidget {
 
   Widget _showTitlePrice() {
     return Padding(
-            padding: EdgeInsets.fromLTRB(16.0, 16.0, 16.0, 0.0),
-            child: Row(
-              children: <Widget>[
-                Expanded(
-                  child: new Container(child: Text(item.data['title'], style: TextStyle(
-                          fontSize: 20.0,
-                          color: Colors.grey,
-                        ),
-                        maxLines: 2,),),
-                ),
-                Text(item.data['price'].toString(), style: TextStyle(
+      padding: EdgeInsets.fromLTRB(16.0, 16.0, 16.0, 0.0),
+      child: Row(
+        children: <Widget>[
+          Expanded(
+            child: new Container(
+              child: Text(
+                item.data['title'],
+                style: TextStyle(
                   fontSize: 20.0,
-                  color: Colors.lime
+                  color: Colors.grey,
                 ),
-                maxLines: 2,)
-              ],
+                maxLines: 2,
+              ),
             ),
-          );
+          ),
+          Text(
+            item.data['price'].toString(),
+            style: TextStyle(fontSize: 20.0, color: Colors.lime),
+            maxLines: 2,
+          )
+        ],
+      ),
+    );
   }
 
   Widget _showTitleDesc() {
     return Padding(
-            padding: EdgeInsets.fromLTRB(16.0, 16.0, 16.0, 8.0),
-            child: Column(
-              children: <Widget>[
-                Text(item.data['desc'],
-                style: TextStyle(
-                  color: Colors.grey
-                  ),)
-              ],
-            ),
-          );
+      padding: EdgeInsets.fromLTRB(16.0, 16.0, 16.0, 8.0),
+      child: Column(
+        children: <Widget>[
+          Text(
+            item.data['desc'],
+            style: TextStyle(color: Colors.grey),
+          )
+        ],
+      ),
+    );
   }
 
   Widget _showMaterial() {
     return Row(
-        children: <Widget>[
-          Expanded(
-            child: Container(
-              padding: const EdgeInsets.fromLTRB(16.0, 16.0, 0.0, 16.0),
-              child: Text(
-                'Material', style: TextStyle(
-                  color: Colors.grey
-                ),
-              ),
+      children: <Widget>[
+        Expanded(
+          child: Container(
+            padding: const EdgeInsets.fromLTRB(16.0, 16.0, 0.0, 16.0),
+            child: Text(
+              'Material',
+              style: TextStyle(color: Colors.grey),
             ),
           ),
-          Container(
-            padding: const EdgeInsets.fromLTRB(0.0, 16.0, 16.0, 16.0),
-            child: Text(item.data['material'], style: TextStyle(
-                  color: Colors.lime
-                ),
-              ),
+        ),
+        Container(
+          padding: const EdgeInsets.fromLTRB(0.0, 16.0, 16.0, 16.0),
+          child: Text(
+            item.data['material'],
+            style: TextStyle(color: Colors.lime),
           ),
-        ],
-      );
+        ),
+      ],
+    );
   }
 
   Widget _showSize() {
     List sizeList = item.data['size'];
     String sizeAvail = sizeList.join(',');
     return Row(
-        children: <Widget>[
-          Expanded(
-              child: Container(
-              padding: const EdgeInsets.fromLTRB(16.0, 8.0, 16.0, 16.0),
-              child: Text(
-                'Available Size', style: TextStyle(
-                  color: Colors.grey
-                ),
-              ),
+      children: <Widget>[
+        Expanded(
+          child: Container(
+            padding: const EdgeInsets.fromLTRB(16.0, 8.0, 16.0, 16.0),
+            child: Text(
+              'Available Size',
+              style: TextStyle(color: Colors.grey),
             ),
           ),
-          Container(
-            padding: const EdgeInsets.fromLTRB(0.0, 8.0, 16.0, 16.0),
-            child: Text(sizeAvail, style: TextStyle(
-                  color: Colors.lime
-                ),
-              ),
+        ),
+        Container(
+          padding: const EdgeInsets.fromLTRB(0.0, 8.0, 16.0, 16.0),
+          child: Text(
+            sizeAvail,
+            style: TextStyle(color: Colors.lime),
           ),
-        ],
-      );
+        ),
+      ],
+    );
   }
 
   Widget _showButton(BuildContext context) {
     return Padding(
       padding: EdgeInsets.fromLTRB(16.0, 16.0, 16.0, 16.0),
       child: ButtonTheme(
-          child: RaisedButton(
+        child: RaisedButton(
           onPressed: () {
-            Navigator.push(context, MaterialPageRoute(builder: (context) => CheckOut(itemCO: item,)));
+            Navigator.push(context, MaterialPageRoute(builder: (context) => CheckOut(itemCO: item)));
           },
           color: Colors.lime,
-          shape: RoundedRectangleBorder(
-            borderRadius: BorderRadius.circular(5.0)
+          shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(5.0)),
+          child: Text('Order Now', style: TextStyle(color: Colors.white),
           ),
-          child: Text('Order Now', style: TextStyle(
-            color: Colors.white
-          ),),
         ),
       ),
     );
