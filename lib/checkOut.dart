@@ -18,16 +18,19 @@ class CheckOutState extends State<CheckOut> {
 
   String finalSize;
   int finalPrice = 0;
-  var quantityTxtCont = TextEditingController();
-  var orderNameTxtCont = TextEditingController();
-  var orderPhoneTxtCont = TextEditingController();
-  var orderAddrTxtCont = TextEditingController();
+  final quantityTxtCont = TextEditingController();
+  final orderNameTxtCont = TextEditingController();
+  final orderPhoneTxtCont = TextEditingController();
+  final orderAddrTxtCont = TextEditingController();
   final _formkey = GlobalKey<FormState>();
   CrudMethod crudObj = CrudMethod();
 
   @override
   void dispose() {
     quantityTxtCont.dispose();
+    orderNameTxtCont.dispose();
+    orderPhoneTxtCont.dispose();
+    orderAddrTxtCont.dispose();
     super.dispose();
   }
 
@@ -47,22 +50,28 @@ class CheckOutState extends State<CheckOut> {
     var cDate = DateTime.now();
     if (finalSize == null) {
       createSnackBar('Pilih ukuran');
-    } else if (quantityTxtCont.text.isEmpty || quantityTxtCont.text == '0') {
+    } else if 
+    (quantityTxtCont.text.isEmpty || quantityTxtCont.text == '0') {
       createSnackBar('Jumlah minimum 1');
-    } else if (_formkey.currentState.validate()) {
+    } else if 
+    (_formkey.currentState.validate()) {
       crudObj.addOrder({
         'itemTitle' : widget.itemCO.data['title'],
         'itemPrice' : widget.itemCO.data['price'],
         'itemImg' : widget.itemCO.data['url'],
         'size' : finalSize,
         'quantity' : quantityTxtCont.text,
-        'name' : orderNameTxtCont,
-        'phone' : orderPhoneTxtCont,
-        'address' : orderAddrTxtCont,
+        'name' : orderNameTxtCont.text,
+        'phone' : orderPhoneTxtCont.text,
+        'address' : orderAddrTxtCont.text,
         'totalPrice' : finalPrice,
         'status' : 'menunggu pembayaran',
         'ordernumber' : cDate
       }).then((result) {
+        print(quantityTxtCont);
+        print(orderNameTxtCont);
+        print(orderPhoneTxtCont);
+        print(orderAddrTxtCont);
         dismissOrderDialog(context);
       }).catchError((e) {
         print(e);
@@ -72,14 +81,14 @@ class CheckOutState extends State<CheckOut> {
     } 
   }
 
-  Future<bool> dismissOrderDialog(BuildContext context) async {
+  dismissOrderDialog(BuildContext context) async {
     return showDialog(
       context: context,
       barrierDismissible: false,
       builder: (BuildContext context) {
         return AlertDialog(
           title: Text('Order Status'),
-          content: Text('Order berhasil, silahkan melakukan konfirmasi pembayaran'),
+          content: Text('Order berhasil, silahkan melakukan konfirmasi pembayaran di menu \"order saya\"'),
           actions: <Widget>[
             FlatButton(
               child: Text('OK'),
@@ -334,6 +343,8 @@ class CheckOutState extends State<CheckOut> {
       padding: EdgeInsets.fromLTRB(16.0, 8.0, 16.0, 0.0),
       child: TextFormField(
         controller: orderPhoneTxtCont,
+        keyboardType: TextInputType.phone,
+        inputFormatters: [WhitelistingTextInputFormatter.digitsOnly],
         maxLines: 1,
         validator: (value) {
             if (value.isEmpty) {

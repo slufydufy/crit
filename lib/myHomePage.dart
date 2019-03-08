@@ -61,7 +61,7 @@ class MyHomePageState extends State<MyHomePage> {
       child: ListView(
         children: <Widget>[
           ListTile(
-            title: Text('My Order', style: TextStyle(
+            title: Text('Order Saya', style: TextStyle(
               fontSize: 16.0
             ),),
             trailing: Icon(Icons.add_shopping_cart),
