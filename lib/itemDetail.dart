@@ -141,7 +141,7 @@ class ItemDetail extends StatelessWidget {
             Navigator.push(context, MaterialPageRoute(builder: (context) => CheckOut(itemCO: item)));
           },
           color: Colors.lime,
-          shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(5.0)),
+          shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(20.0)),
           child: Text('Order Now', style: TextStyle(color: Colors.white),
           ),
         ),

@@ -3,6 +3,7 @@ import 'package:carousel_pro/carousel_pro.dart';
 import 'itemDetail.dart';
 import 'orderList.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'mainLogin.dart';
 
 class MyHomePage extends StatefulWidget {
   @override
@@ -61,6 +62,13 @@ class MyHomePageState extends State<MyHomePage> {
       child: ListView(
         children: <Widget>[
           ListTile(
+            title: Text('Crit, buy to Donate', style: TextStyle(
+              fontSize: 22.0,
+              color: Colors.lime
+            ),),
+          ),
+          Divider(),
+          ListTile(
             title: Text('Order Saya', style: TextStyle(
               fontSize: 16.0
             ),),
@@ -72,48 +80,24 @@ class MyHomePageState extends State<MyHomePage> {
           ),
           Divider(),
           ListTile(
-            title: Text('Article Category', style: TextStyle(
+            title: Text('Logout', style: TextStyle(
               fontSize: 16.0
             ),),
-          ),
-          ListTile(
-            title: Text('Fashion', style: TextStyle(
-              fontSize: 16.0
-            ),),
-            trailing: Icon(Icons.arrow_forward_ios),
+            trailing: Icon(Icons.blur_off),
             onTap: () {
               Navigator.of(context).pop();
               Navigator.push(context, MaterialPageRoute(builder: (context) => OrderList()));
             }
           ),
+          Divider(),
           ListTile(
-            title: Text('Fashion', style: TextStyle(
+            title: Text('Login', style: TextStyle(
               fontSize: 16.0
             ),),
-            trailing: Icon(Icons.arrow_forward_ios),
+            trailing: Icon(Icons.blur_off),
             onTap: () {
               Navigator.of(context).pop();
-              Navigator.push(context, MaterialPageRoute(builder: (context) => OrderList()));
-            }
-          ),
-          ListTile(
-            title: Text('Fashion', style: TextStyle(
-              fontSize: 16.0
-            ),),
-            trailing: Icon(Icons.arrow_forward_ios),
-            onTap: () {
-              Navigator.of(context).pop();
-              Navigator.push(context, MaterialPageRoute(builder: (context) => OrderList()));
-            }
-          ),
-          ListTile(
-            title: Text('Fashion', style: TextStyle(
-              fontSize: 16.0
-            ),),
-            trailing: Icon(Icons.arrow_forward_ios),
-            onTap: () {
-              Navigator.of(context).pop();
-              Navigator.push(context, MaterialPageRoute(builder: (context) => OrderList()));
+              Navigator.push(context, MaterialPageRoute(builder: (context) => MainLogin()));
             }
           ),
         ],
@@ -123,7 +107,6 @@ class MyHomePageState extends State<MyHomePage> {
 
   Widget _showCarousel(BuildContext context) {
     double height = MediaQuery.of(context).size.height;
-
     return 
     FutureBuilder(
       future: _bannerData,
@@ -131,7 +114,6 @@ class MyHomePageState extends State<MyHomePage> {
         if (snapshot.connectionState == ConnectionState.waiting) {
           return Center(child: CircularProgressIndicator(),);
         } else {
-          
           return Container(
         height: height * 0.5,
         padding: EdgeInsets.all(8.0),

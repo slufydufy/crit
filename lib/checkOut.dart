@@ -1,8 +1,8 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
-import 'myHomePage.dart';
 import 'crud.dart';
+import 'mainLogin.dart';
 
 class CheckOut extends StatefulWidget {
   final DocumentSnapshot itemCO;
@@ -41,9 +41,17 @@ class CheckOutState extends State<CheckOut> {
         Text(message, style: TextStyle(fontWeight: FontWeight.bold),),
       ],
     ),
-    backgroundColor: Colors.black.withOpacity(0.8),
+    backgroundColor: Colors.grey.withOpacity(0.8),
     );
     Scaffold.of(scafoldContext).showSnackBar(snackBar);
+  }
+
+  checkLogin() {
+    if (!crudObj.isLoggedIn()) {
+      submitOrder();
+    } else {
+      dismissLoginDialog(context);
+    }
   }
 
   submitOrder() {
@@ -66,12 +74,8 @@ class CheckOutState extends State<CheckOut> {
         'address' : orderAddrTxtCont.text,
         'totalPrice' : finalPrice,
         'status' : 'menunggu pembayaran',
-        'ordernumber' : cDate
+        'orderNumber' : cDate
       }).then((result) {
-        print(quantityTxtCont);
-        print(orderNameTxtCont);
-        print(orderPhoneTxtCont);
-        print(orderAddrTxtCont);
         dismissOrderDialog(context);
       }).catchError((e) {
         print(e);
@@ -94,8 +98,31 @@ class CheckOutState extends State<CheckOut> {
               child: Text('OK'),
               textColor: Colors.lime,
               onPressed: () {
-                Navigator.push(
-                  context, MaterialPageRoute(builder: (context) => MyHomePage()));
+                Navigator.popUntil(context, ModalRoute.withName('/'));
+              },
+            )
+          ],
+        );
+      },
+    );
+  }
+
+  dismissLoginDialog(BuildContext context) async {
+    return showDialog(
+      context: context,
+      barrierDismissible: true,
+      builder: (BuildContext context) {
+        return AlertDialog(
+          
+          title: Text('You are not Login'),
+          content: Text('Please login to make an order'),
+          actions: <Widget>[
+            FlatButton(
+              child: Text('Login'),
+              textColor: Colors.lime,
+              onPressed: () {
+                Navigator.pop(context);
+                Navigator.push(context, MaterialPageRoute(builder: (context) => MainLogin()));
               },
             )
           ],
@@ -139,9 +166,6 @@ class CheckOutState extends State<CheckOut> {
                 _showBuyerInfoText(),
                 Divider(),
                 _receipentForm()
-                // _showName(),
-                // _showMobile(),
-                // _showAddress(),
               ],
             ),
           ),
@@ -254,14 +278,14 @@ class CheckOutState extends State<CheckOut> {
           ),
         ),
         Container(
-          width: 60.0,
+          width: 70.0,
           padding: const EdgeInsets.fromLTRB(0.0, .0, 16.0, 16.0),
           child: 
           TextFormField(
             inputFormatters: [WhitelistingTextInputFormatter.digitsOnly],
             validator: (value) => value.isEmpty ? 'Order minimal 1' : null ,
             controller: quantityTxtCont,
-            maxLength: 3,
+            maxLength: 4,
             keyboardType: TextInputType.number,
             textDirection: TextDirection.rtl,
             style: TextStyle(color: Colors.lime),
@@ -320,7 +344,6 @@ class CheckOutState extends State<CheckOut> {
 
   Widget _showName() {
     return Container(
-      // height: 70.0,
       padding: EdgeInsets.fromLTRB(16.0, 8.0, 16.0, 0.0),
       child: TextFormField(
         controller: orderNameTxtCont,
@@ -385,9 +408,9 @@ class CheckOutState extends State<CheckOut> {
       padding: EdgeInsets.fromLTRB(16.0, 16.0, 16.0, 16.0),
       child: ButtonTheme(
         child: RaisedButton(
-          onPressed: submitOrder,
+          onPressed: checkLogin,
           color: Colors.lime,
-          shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(5.0)),
+          shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(20.0)),
           child: Text('Checkout', style: TextStyle(color: Colors.white),
           ),
         ),
