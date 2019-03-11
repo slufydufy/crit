@@ -21,5 +21,5 @@ class CrudMethod {
   getData() async {
     return await Firestore.instance.collection('orderList').getDocuments();
   }
-  
+
 }

@@ -2,24 +2,31 @@ import 'package:flutter/material.dart';
 import 'myHomePage.dart';
 import 'register.dart';
 
-class MainLogin extends StatelessWidget {
+class MainLogin extends StatefulWidget {
 
+  @override
+  _MainLoginState createState() => _MainLoginState();
+}
+
+class _MainLoginState extends State<MainLogin> {
   final _formLoginkey = GlobalKey<FormState>();
+
   final passwordTxtCont = TextEditingController();
+
   final emailTxtCont = TextEditingController();
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       backgroundColor: Colors.grey[600],
-      body: Column(
-        crossAxisAlignment: CrossAxisAlignment.stretch,
+      body: 
+      ListView(
         children: <Widget>[
-          _showLogo(context),
-          _showSkipText(context),
-          _loginForm(),
-          _showButton(),
-          _showRegister(context)
+            _showLogo(context),
+            _showSkipText(context),
+            _loginForm(),
+            _showButton(),
+            _showRegister(context)
         ],
       ),
     );
@@ -31,6 +38,7 @@ class MainLogin extends StatelessWidget {
     fit: BoxFit.cover,
     );
   }
+
   Widget _showSkipText(BuildContext context) {
     return 
     Padding(
@@ -54,6 +62,7 @@ class MainLogin extends StatelessWidget {
       ),
     );
   }
+
   Widget _loginForm() {
     return Form(
       key: _formLoginkey,
@@ -74,7 +83,7 @@ class MainLogin extends StatelessWidget {
           maxLines: 1,
           validator: (value) {
             if (value.isEmpty) {
-              return 'Nama belum diisi';
+              return 'Email can\'t be empty';
             }
           },
           decoration: InputDecoration(
@@ -91,13 +100,14 @@ class MainLogin extends StatelessWidget {
       child: TextFormField(
         controller: passwordTxtCont,
         maxLines: 1,
+        obscureText: true,
         validator: (value) {
             if (value.isEmpty) {
-              return 'Nomor HP belum diisi';
+              return 'Password can\'t be empty';
             }
           },
         decoration: InputDecoration(
-            labelText: 'Nomor HP',
+            labelText: 'Password',
             contentPadding:
                 new EdgeInsets.symmetric(vertical: 10.0, horizontal: 10.0),
             border: OutlineInputBorder()),
@@ -111,7 +121,9 @@ class MainLogin extends StatelessWidget {
       padding: const EdgeInsets.fromLTRB(16.0, 32.0, 16.0, 16.0),
       child: RaisedButton(
         onPressed: () {
-          
+          if (_formLoginkey.currentState.validate()) {
+            Navigator.push(context, MaterialPageRoute(builder: (context) => MyHomePage()));
+          }
         },
         color: Colors.lime.withOpacity(0.5),
         shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(20.0)),
@@ -119,6 +131,7 @@ class MainLogin extends StatelessWidget {
       ),
     );
   }
+
   Widget _showRegister(BuildContext context) {
     return
     Center(
@@ -126,7 +139,7 @@ class MainLogin extends StatelessWidget {
             onTap: () {
               Navigator.push(context, MaterialPageRoute(builder: (context) => Register()));
             },
-          child: Text('Don\'t have account? Register'),
+          child: Text('Don\'t have account? Register', style: TextStyle(color: Colors.white),),
       ),
     );
   }

@@ -1,17 +1,31 @@
 import 'package:flutter/material.dart';
 import 'myHomePage.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 
-class Register extends StatelessWidget {
+class Register extends StatefulWidget {
+
+  @override
+  _RegisterState createState() => _RegisterState();
+}
+
+class _RegisterState extends State<Register> {
 
   final _formRegKey = GlobalKey<FormState>();
   final nameTxtCont = TextEditingController();
   final emailTxtCont = TextEditingController();
   final passTxtCont = TextEditingController();
 
+  registerEmail(email, password) async {
+    final user = await FirebaseAuth.instance.createUserWithEmailAndPassword(email: email, password: password);
+    if (user !=null) {
+      Navigator.push(context, MaterialPageRoute(builder: (context) => MyHomePage()));
+    }
+  }
+
   // _registerAction(BuildContext context) {
-  //   if (_formRegkey.currentState.validate()) {
-  //           Navigator.push(context, MaterialPageRoute(builder: (context) => MyHomePage()));
-  //         } 
+    // if (_formRegKey.currentState.validate()) {
+    //         Navigator.push(context, MaterialPageRoute(builder: (context) => MyHomePage()));
+    //       } 
   // }
 
   @override
@@ -27,19 +41,21 @@ class Register extends StatelessWidget {
           _showButton(context)
         ],
       ),
-      backgroundColor: Colors.grey[600],
     );
   }
 
   Widget _showRegForm() {
-    return Form(
-      key: _formRegKey,
-      child: Column(
-        children: <Widget>[
-          _showName(),
-          _showEmail(),
-          _showPassword()
-        ],
+    return Padding(
+      padding: const EdgeInsets.only(top: 16.0),
+      child: Form(
+        key: _formRegKey,
+        child: Column(
+          children: <Widget>[
+            _showName(),
+            _showEmail(),
+            _showPassword()
+          ],
+        ),
       ),
     );
   }
@@ -52,11 +68,11 @@ class Register extends StatelessWidget {
           maxLines: 1,
           validator: (value) {
             if (value.isEmpty) {
-              return 'Nama belum diisi';
+              return 'Name can\'t be empty';
             }
           },
           decoration: InputDecoration(
-              labelText: 'Nama',
+              labelText: 'Name',
               contentPadding:
                   new EdgeInsets.symmetric(vertical: 10.0, horizontal: 10.0),
               border: OutlineInputBorder())),
@@ -71,11 +87,11 @@ class Register extends StatelessWidget {
         maxLines: 1,
         validator: (value) {
             if (value.isEmpty) {
-              return 'Nomor HP belum diisi';
+              return 'Email can\'t be empty';
             }
           },
         decoration: InputDecoration(
-            labelText: 'Nomor HP',
+            labelText: 'Email',
             contentPadding:
                 new EdgeInsets.symmetric(vertical: 10.0, horizontal: 10.0),
             border: OutlineInputBorder()),
@@ -89,31 +105,36 @@ class Register extends StatelessWidget {
       child: TextFormField(
         controller: passTxtCont,
         maxLines: 1,
+        obscureText: true,
         validator: (value) {
             if (value.isEmpty) {
-              return 'Alamat belum diisi';
+              return 'Password can\'t be empty';
             }
           },
         decoration: InputDecoration(
-            labelText: 'Alamat Pengiriman',
+            labelText: 'Password',
             contentPadding:
                 new EdgeInsets.symmetric(vertical: 10.0, horizontal: 10.0),
             border: OutlineInputBorder()),
       ),
     );
   }
+
   Widget _showButton(BuildContext context) {
     return
     Padding(
-      padding: const EdgeInsets.fromLTRB(16.0, 32.0, 16.0, 16.0),
+      padding: const EdgeInsets.fromLTRB(16.0, 16.0, 16.0, 16.0),
       child: RaisedButton(
-        onPressed: () {},
+        onPressed:() {
+          if (_formRegKey.currentState.validate()) {
+            registerEmail(emailTxtCont.text, passTxtCont.text);
+          } 
+        },
         // _registerAction(context),
-        color: Colors.lime.withOpacity(0.5),
+        color: Colors.lime,
         shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(20.0)),
         child: Text('Register', style: TextStyle(color: Colors.white),),
       ),
     );
   }
-
 }
