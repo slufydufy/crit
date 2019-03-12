@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
-import 'myHomePage.dart';
 import 'package:firebase_auth/firebase_auth.dart';
+import 'crud.dart';
 
 class Register extends StatefulWidget {
 
@@ -14,18 +14,39 @@ class _RegisterState extends State<Register> {
   final nameTxtCont = TextEditingController();
   final emailTxtCont = TextEditingController();
   final passTxtCont = TextEditingController();
+  CrudMethod crudObject = CrudMethod();
+
+  @override
+  void dispose() {
+    nameTxtCont.dispose();
+    emailTxtCont.dispose();
+    passTxtCont.dispose();
+    super.dispose();
+  }
 
   registerEmail(email, password) async {
-    final user = await FirebaseAuth.instance.createUserWithEmailAndPassword(email: email, password: password);
-    if (user !=null) {
-      Navigator.push(context, MaterialPageRoute(builder: (context) => MyHomePage()));
+    final createUser = await FirebaseAuth.instance.
+      createUserWithEmailAndPassword(email: email, password: password).catchError((e) {
+      print(e);
+    });
+    if (createUser !=null) {
+      final user = await FirebaseAuth.instance.currentUser();
+      final uid = user.uid;
+      crudObject.addUser({
+        'uid' :uid,
+        'name' : nameTxtCont.text,
+        'email' : email,
+      }).then((result) {
+        // loginUser();
+        Navigator.popUntil(context, ModalRoute.withName('/'));
+      }).catchError((e) {
+        print(e);
+      });
     }
   }
 
-  // _registerAction(BuildContext context) {
-    // if (_formRegKey.currentState.validate()) {
-    //         Navigator.push(context, MaterialPageRoute(builder: (context) => MyHomePage()));
-    //       } 
+  // loginUser() {
+  //   crudObject.loginUser(emailTxtCont.text, passTxtCont.text);
   // }
 
   @override
@@ -130,7 +151,6 @@ class _RegisterState extends State<Register> {
             registerEmail(emailTxtCont.text, passTxtCont.text);
           } 
         },
-        // _registerAction(context),
         color: Colors.lime,
         shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(20.0)),
         child: Text('Register', style: TextStyle(color: Colors.white),),

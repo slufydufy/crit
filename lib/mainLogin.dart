@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'myHomePage.dart';
 import 'register.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 
 class MainLogin extends StatefulWidget {
 
@@ -122,6 +123,9 @@ class _MainLoginState extends State<MainLogin> {
       child: RaisedButton(
         onPressed: () {
           if (_formLoginkey.currentState.validate()) {
+    //         final loginUser = await FirebaseAuth.instance.signInWithEmailAndPassword(email: emailTxtCont.text, password: passwordTxtCont.text).catchError((e) {
+    //   print(e);
+    // });
             Navigator.push(context, MaterialPageRoute(builder: (context) => MyHomePage()));
           }
         },

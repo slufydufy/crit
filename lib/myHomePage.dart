@@ -4,6 +4,7 @@ import 'itemDetail.dart';
 import 'orderList.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'mainLogin.dart';
+import 'crud.dart';
 
 class MyHomePage extends StatefulWidget {
   @override
@@ -16,6 +17,7 @@ class MyHomePageState extends State<MyHomePage> {
   Future _designData;
   
   var ref = Firestore.instance;
+  CrudMethod crudObj = CrudMethod();
 
   Future fetchBanner() async {
     QuerySnapshot fetchBanner = await ref.collection('banner').getDocuments();
@@ -30,6 +32,40 @@ class MyHomePageState extends State<MyHomePage> {
   navigateToDetail(DocumentSnapshot item) {
     Navigator.push(context, 
     MaterialPageRoute(builder: (context) => ItemDetail(item: item)));
+  }
+
+  checkLogin() {
+    if (!crudObj.isLoggedIn()) {
+      Navigator.of(context).pop();
+      Navigator.push(context, MaterialPageRoute(builder: (context) => OrderList()));
+    } else {
+      Navigator.of(context).pop();
+      _dismissLoginDialog(context);
+    }
+  }
+
+  _dismissLoginDialog(BuildContext context) async {
+    return showDialog(
+      context: context,
+      barrierDismissible: true,
+      builder: (BuildContext context) {
+        return AlertDialog(
+          
+          title: Text('You are not Login'),
+          content: Text('Please login to view order'),
+          actions: <Widget>[
+            FlatButton(
+              child: Text('Login'),
+              textColor: Colors.lime,
+              onPressed: () {
+                Navigator.pop(context);
+                Navigator.push(context, MaterialPageRoute(builder: (context) => MainLogin()));
+              },
+            )
+          ],
+        );
+      },
+    );
   }
 
   @override
@@ -73,10 +109,7 @@ class MyHomePageState extends State<MyHomePage> {
               fontSize: 16.0
             ),),
             trailing: Icon(Icons.add_shopping_cart),
-            onTap: () {
-              Navigator.of(context).pop();
-              Navigator.push(context, MaterialPageRoute(builder: (context) => OrderList()));
-            }
+            onTap: checkLogin
           ),
           Divider(),
           ListTile(

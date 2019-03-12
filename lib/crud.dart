@@ -1,5 +1,6 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
+// import 'firebaseu';
 
 class CrudMethod {
 
@@ -12,8 +13,19 @@ class CrudMethod {
   }
 
   Future<void> addOrder(orderData) async {
-    //add login condition
     Firestore.instance.collection('orderList').add(orderData).catchError((e) {
+      print(e);
+    });
+  }
+
+  Future<void> addUser(userData) async {
+    Firestore.instance.collection('users').add(userData).catchError((e) {
+      print(e);
+    });
+  }
+
+  Future<void> loginUser(email, password) async {
+    FirebaseAuth.instance.signInWithEmailAndPassword(email: email, password: password).catchError((e) {
       print(e);
     });
   }
