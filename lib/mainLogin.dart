@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'myHomePage.dart';
 import 'register.dart';
 import 'package:firebase_auth/firebase_auth.dart';
+import 'crud.dart';
 
 class MainLogin extends StatefulWidget {
 
@@ -11,10 +12,25 @@ class MainLogin extends StatefulWidget {
 
 class _MainLoginState extends State<MainLogin> {
   final _formLoginkey = GlobalKey<FormState>();
-
   final passwordTxtCont = TextEditingController();
-
   final emailTxtCont = TextEditingController();
+  CrudMethod crudObj =CrudMethod();
+
+
+  signInEmail() async {
+    FirebaseUser user;
+    try {
+      user = await FirebaseAuth.instance.
+        signInWithEmailAndPassword(email: emailTxtCont.text, password: passwordTxtCont.text);
+    } catch (e) {
+      print(e.toString());
+    } finally {
+      if (user != null ) {
+        print(user);
+        Navigator.popUntil(context, ModalRoute.withName('/'));
+      }
+    }
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -88,7 +104,7 @@ class _MainLoginState extends State<MainLogin> {
             }
           },
           decoration: InputDecoration(
-              labelText: 'Nama',
+              labelText: 'Email',
               contentPadding:
                   new EdgeInsets.symmetric(vertical: 10.0, horizontal: 10.0),
               border: OutlineInputBorder())),
@@ -121,14 +137,7 @@ class _MainLoginState extends State<MainLogin> {
     Padding(
       padding: const EdgeInsets.fromLTRB(16.0, 32.0, 16.0, 16.0),
       child: RaisedButton(
-        onPressed: () {
-          if (_formLoginkey.currentState.validate()) {
-    //         final loginUser = await FirebaseAuth.instance.signInWithEmailAndPassword(email: emailTxtCont.text, password: passwordTxtCont.text).catchError((e) {
-    //   print(e);
-    // });
-            Navigator.push(context, MaterialPageRoute(builder: (context) => MyHomePage()));
-          }
-        },
+        onPressed: signInEmail,
         color: Colors.lime.withOpacity(0.5),
         shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(20.0)),
         child: Text('Login', style: TextStyle(color: Colors.white),),
@@ -141,6 +150,7 @@ class _MainLoginState extends State<MainLogin> {
     Center(
           child: GestureDetector(
             onTap: () {
+
               Navigator.push(context, MaterialPageRoute(builder: (context) => Register()));
             },
           child: Text('Don\'t have account? Register', style: TextStyle(color: Colors.white),),

@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'crud.dart';
 import 'mainLogin.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 
 class CheckOut extends StatefulWidget {
   final DocumentSnapshot itemCO;
@@ -46,11 +47,12 @@ class CheckOutState extends State<CheckOut> {
     Scaffold.of(scafoldContext).showSnackBar(snackBar);
   }
 
-  checkLogin() {
-    if (!crudObj.isLoggedIn()) {
-      submitOrder();
-    } else {
+  checkLogin() async {
+    FirebaseUser status = await FirebaseAuth.instance.currentUser();
+    if (status == null) {
       dismissLoginDialog(context);
+    } else {
+      submitOrder();
     }
   }
 

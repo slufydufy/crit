@@ -29,7 +29,7 @@ class _RegisterState extends State<Register> {
       createUserWithEmailAndPassword(email: email, password: password).catchError((e) {
       print(e);
     });
-    if (createUser !=null) {
+    if (createUser != null) {
       final user = await FirebaseAuth.instance.currentUser();
       final uid = user.uid;
       crudObject.addUser({

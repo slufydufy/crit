@@ -5,6 +5,7 @@ import 'orderList.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'mainLogin.dart';
 import 'crud.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 
 class MyHomePage extends StatefulWidget {
   @override
@@ -34,13 +35,14 @@ class MyHomePageState extends State<MyHomePage> {
     MaterialPageRoute(builder: (context) => ItemDetail(item: item)));
   }
 
-  checkLogin() {
-    if (!crudObj.isLoggedIn()) {
-      Navigator.of(context).pop();
-      Navigator.push(context, MaterialPageRoute(builder: (context) => OrderList()));
-    } else {
+  checkLogin() async {
+    FirebaseUser status = await FirebaseAuth.instance.currentUser();
+    if (status == null) {
       Navigator.of(context).pop();
       _dismissLoginDialog(context);
+    } else {
+      Navigator.of(context).pop();
+      Navigator.push(context, MaterialPageRoute(builder: (context) => OrderList()));
     }
   }
 
@@ -68,8 +70,15 @@ class MyHomePageState extends State<MyHomePage> {
     );
   }
 
+  signOut() async {
+    await FirebaseAuth.instance.signOut();
+    Navigator.pop(context);
+    print('sign out');
+  }
+
+
   @override
-  void initState() {
+  void initState(){
     super.initState();
     _bannerData = fetchBanner();
     _designData = fetchDonateDesign();
@@ -92,6 +101,12 @@ class MyHomePageState extends State<MyHomePage> {
       ),
     );
   }
+
+  // Widget _statusBtn() {
+  //   if () {
+      
+  //   }
+  // }
 
   Widget _showDrawer(BuildContext context) {
     return Drawer(
@@ -117,10 +132,7 @@ class MyHomePageState extends State<MyHomePage> {
               fontSize: 16.0
             ),),
             trailing: Icon(Icons.blur_off),
-            onTap: () {
-              Navigator.of(context).pop();
-              Navigator.push(context, MaterialPageRoute(builder: (context) => OrderList()));
-            }
+            onTap: signOut
           ),
           Divider(),
           ListTile(
