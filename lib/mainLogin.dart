@@ -62,7 +62,7 @@ class _MainLoginState extends State<MainLogin> {
       padding: const EdgeInsets.only(left: 16.0, right: 16.0),
       child: Row(
         children: <Widget>[
-          Text('Login', style: TextStyle(
+          Text('Signin', style: TextStyle(
             color: Colors.black45,
             fontSize: 22
           )),
@@ -81,13 +81,16 @@ class _MainLoginState extends State<MainLogin> {
   }
 
   Widget _loginForm() {
-    return Form(
-      key: _formLoginkey,
-      child: Column(
-        children: <Widget>[
-          _showEmail(),
-          _showPassword(),
-        ],
+    return Padding(
+      padding: const EdgeInsets.only(top: 16.0),
+      child: Form(
+        key: _formLoginkey,
+        child: Column(
+          children: <Widget>[
+            _showEmail(),
+            _showPassword(),
+          ],
+        ),
       ),
     );
   }

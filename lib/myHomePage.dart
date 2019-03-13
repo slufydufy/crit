@@ -6,6 +6,7 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'mainLogin.dart';
 import 'crud.dart';
 import 'package:firebase_auth/firebase_auth.dart';
+import 'profile.dart';
 
 class MyHomePage extends StatefulWidget {
   @override
@@ -35,7 +36,18 @@ class MyHomePageState extends State<MyHomePage> {
     MaterialPageRoute(builder: (context) => ItemDetail(item: item)));
   }
 
-  checkLogin() async {
+  checkLoginProfile() async {
+    FirebaseUser status = await FirebaseAuth.instance.currentUser();
+    if (status == null) {
+      Navigator.of(context).pop();
+      _dismissLoginDialog(context);
+    } else {
+      Navigator.of(context).pop();
+      Navigator.push(context, MaterialPageRoute(builder: (context) => Profile()));
+    }
+  }
+
+  checkLoginOrder() async {
     FirebaseUser status = await FirebaseAuth.instance.currentUser();
     if (status == null) {
       Navigator.of(context).pop();
@@ -53,11 +65,11 @@ class MyHomePageState extends State<MyHomePage> {
       builder: (BuildContext context) {
         return AlertDialog(
           
-          title: Text('You are not Login'),
-          content: Text('Please login to view order'),
+          title: Text('You are not signin'),
+          content: Text('Please Signin to continue'),
           actions: <Widget>[
             FlatButton(
-              child: Text('Login'),
+              child: Text('Signin'),
               textColor: Colors.lime,
               onPressed: () {
                 Navigator.pop(context);
@@ -69,13 +81,6 @@ class MyHomePageState extends State<MyHomePage> {
       },
     );
   }
-
-  signOut() async {
-    await FirebaseAuth.instance.signOut();
-    Navigator.pop(context);
-    print('sign out');
-  }
-
 
   @override
   void initState(){
@@ -102,12 +107,6 @@ class MyHomePageState extends State<MyHomePage> {
     );
   }
 
-  // Widget _statusBtn() {
-  //   if () {
-      
-  //   }
-  // }
-
   Widget _showDrawer(BuildContext context) {
     return Drawer(
       child: ListView(
@@ -120,30 +119,20 @@ class MyHomePageState extends State<MyHomePage> {
           ),
           Divider(),
           ListTile(
+            title: Text('Profile', style: TextStyle(
+              fontSize: 16.0
+            ),),
+            trailing: Icon(Icons.person),
+            onTap: 
+            // () {}
+            checkLoginProfile
+          ),
+          ListTile(
             title: Text('Order Saya', style: TextStyle(
               fontSize: 16.0
             ),),
             trailing: Icon(Icons.add_shopping_cart),
-            onTap: checkLogin
-          ),
-          Divider(),
-          ListTile(
-            title: Text('Logout', style: TextStyle(
-              fontSize: 16.0
-            ),),
-            trailing: Icon(Icons.blur_off),
-            onTap: signOut
-          ),
-          Divider(),
-          ListTile(
-            title: Text('Login', style: TextStyle(
-              fontSize: 16.0
-            ),),
-            trailing: Icon(Icons.blur_off),
-            onTap: () {
-              Navigator.of(context).pop();
-              Navigator.push(context, MaterialPageRoute(builder: (context) => MainLogin()));
-            }
+            onTap: checkLoginOrder
           ),
         ],
       ),
@@ -151,7 +140,6 @@ class MyHomePageState extends State<MyHomePage> {
   }
 
   Widget _showCarousel(BuildContext context) {
-    double height = MediaQuery.of(context).size.height;
     return 
     FutureBuilder(
       future: _bannerData,
@@ -160,8 +148,7 @@ class MyHomePageState extends State<MyHomePage> {
           return Center(child: CircularProgressIndicator(),);
         } else {
           return Container(
-        height: height * 0.5,
-        padding: EdgeInsets.all(8.0),
+        height: MediaQuery.of(context).size.height / 2.5,
         child: new Carousel(
           boxFit: BoxFit.cover,
           images: [

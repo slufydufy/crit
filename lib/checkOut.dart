@@ -116,11 +116,11 @@ class CheckOutState extends State<CheckOut> {
       builder: (BuildContext context) {
         return AlertDialog(
           
-          title: Text('You are not Login'),
-          content: Text('Please login to make an order'),
+          title: Text('You are not signin'),
+          content: Text('Please signin to make an order'),
           actions: <Widget>[
             FlatButton(
-              child: Text('Login'),
+              child: Text('Signin'),
               textColor: Colors.lime,
               onPressed: () {
                 Navigator.pop(context);
