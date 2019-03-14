@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 
 class OrderList extends StatefulWidget {
   @override
@@ -11,7 +12,9 @@ class OrderListState extends State<OrderList> {
   var ref = Firestore.instance;
 
   Future fetchOrder() async {
-    QuerySnapshot fetchOrder = await ref.collection('orderList').getDocuments();
+    final user = await FirebaseAuth.instance.currentUser();
+    final _uid = user.uid;
+    QuerySnapshot fetchOrder = await ref.collection('orderList').where('uid', isEqualTo: '$_uid').getDocuments();
     return fetchOrder.documents;
   }
 
@@ -31,32 +34,34 @@ class OrderListState extends State<OrderList> {
       future: _orderData,
       builder: (_, snapshot) {
         if (snapshot.connectionState == ConnectionState.waiting) {
-          return Center(child: CircularProgressIndicator(),);
+          return Center(child: CircularProgressIndicator());
+        } else if (!snapshot.hasData) {
+          return Center(child: Text('You\'re not order any item yet, buy to donate now.'));
         } else {
           return 
           ListView.builder(
             itemCount: snapshot.data.length,
             itemBuilder: (context, i) {
               return 
-                Padding(
-      padding: EdgeInsets.only(left: 16.0, right: 16.0, top: 8.0),
-      child: Card(
-        child: Column(
-          children: <Widget>[
-            _showOrderId(snapshot.data[i]),
-            Divider(),
-            _showItem(snapshot.data[i]),
-            _showPrice(snapshot.data[i]),
-            _showFinalSize(snapshot.data[i]),
-            _showQuantity(snapshot.data[i]),
-            _showTotalPrize(snapshot.data[i]),
-            Divider(),
-            _showStatus(snapshot.data[i]),
-            _showConfirmBtn()
-          ],
-        ),
-      ),
-    );
+              Padding(
+              padding: EdgeInsets.only(left: 16.0, right: 16.0, top: 8.0),
+              child: Card(
+                child: Column(
+                  children: <Widget>[
+                    _showOrderId(snapshot.data[i]),
+                    Divider(),
+                    _showItem(snapshot.data[i]),
+                    _showPrice(snapshot.data[i]),
+                    _showFinalSize(snapshot.data[i]),
+                    _showQuantity(snapshot.data[i]),
+                    _showTotalPrize(snapshot.data[i]),
+                    Divider(),
+                    _showStatus(snapshot.data[i]),
+                    _showConfirmBtn()
+                  ],
+                ),
+              ),
+            );
 
               },
             );

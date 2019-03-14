@@ -24,6 +24,7 @@ class CheckOutState extends State<CheckOut> {
   final orderPhoneTxtCont = TextEditingController();
   final orderAddrTxtCont = TextEditingController();
   final _formkey = GlobalKey<FormState>();
+  String _uid;
   CrudMethod crudObj = CrudMethod();
 
   @override
@@ -52,6 +53,7 @@ class CheckOutState extends State<CheckOut> {
     if (status == null) {
       dismissLoginDialog(context);
     } else {
+      _uid = status.uid;
       submitOrder();
     }
   }
@@ -66,6 +68,7 @@ class CheckOutState extends State<CheckOut> {
     } else if 
     (_formkey.currentState.validate()) {
       crudObj.addOrder({
+        'uid' : _uid,
         'itemTitle' : widget.itemCO.data['title'],
         'itemPrice' : widget.itemCO.data['price'],
         'itemImg' : widget.itemCO.data['url'],
@@ -116,11 +119,11 @@ class CheckOutState extends State<CheckOut> {
       builder: (BuildContext context) {
         return AlertDialog(
           
-          title: Text('You are not signin'),
-          content: Text('Please signin to make an order'),
+          title: Text('You are not sign in'),
+          content: Text('Please sign in to make an order'),
           actions: <Widget>[
             FlatButton(
-              child: Text('Signin'),
+              child: Text('Sign In'),
               textColor: Colors.lime,
               onPressed: () {
                 Navigator.pop(context);
@@ -236,7 +239,7 @@ class CheckOutState extends State<CheckOut> {
       children: <Widget>[
         Expanded(
           child: Container(
-            padding: const EdgeInsets.fromLTRB(16.0, 16.0, 0.0, 8.0),
+            padding: const EdgeInsets.fromLTRB(16.0, 16.0, 0.0, 0.0),
             child: Text(
               'Ukuran',
               style: TextStyle(fontSize: 16.0, color: Colors.grey),
@@ -244,7 +247,7 @@ class CheckOutState extends State<CheckOut> {
           ),
         ),
         Container(
-            padding: const EdgeInsets.fromLTRB(0.0, 16.0, 16.0, 8.0),
+            padding: const EdgeInsets.fromLTRB(0.0, 16.0, 16.0, 0.0),
             child: DropdownButton(
               hint: Text(' Pilih ', style: TextStyle(color: Colors.lime)),
               items: sizeList.map((size) {
@@ -272,7 +275,7 @@ class CheckOutState extends State<CheckOut> {
       children: <Widget>[
         Expanded(
           child: Container(
-            padding: const EdgeInsets.fromLTRB(16.0, 8.0, 16.0, 8.0),
+            padding: const EdgeInsets.fromLTRB(16.0, 0.0, 16.0, 8.0),
             child: Text(
               'Jumlah barang',
               style: TextStyle(fontSize: 16.0, color: Colors.grey),
@@ -285,7 +288,6 @@ class CheckOutState extends State<CheckOut> {
           child: 
           TextFormField(
             inputFormatters: [WhitelistingTextInputFormatter.digitsOnly],
-            validator: (value) => value.isEmpty ? 'Order minimal 1' : null ,
             controller: quantityTxtCont,
             maxLength: 4,
             keyboardType: TextInputType.number,
@@ -304,7 +306,7 @@ class CheckOutState extends State<CheckOut> {
       children: <Widget>[
         Expanded(
           child: Container(
-            padding: const EdgeInsets.fromLTRB(16.0, 16.0, 0.0, 16.0),
+            padding: const EdgeInsets.fromLTRB(16.0, 16.0, 0.0, 24.0),
             child: Text(
               'Total Harga',
               style: TextStyle(fontSize: 16.0, color: Colors.grey),

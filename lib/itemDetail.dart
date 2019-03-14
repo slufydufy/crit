@@ -38,7 +38,6 @@ class ItemDetail extends StatelessWidget {
     double height = MediaQuery.of(context).size.height;
     return Container(
       height: height * 0.5,
-      padding: EdgeInsets.all(8.0),
       child: Image.network(item.data['url']),
     );
   }

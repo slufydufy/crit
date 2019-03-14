@@ -65,11 +65,11 @@ class MyHomePageState extends State<MyHomePage> {
       builder: (BuildContext context) {
         return AlertDialog(
           
-          title: Text('You are not signin'),
-          content: Text('Please Signin to continue'),
+          title: Text('You are not sign in'),
+          content: Text('Please sign in to continue'),
           actions: <Widget>[
             FlatButton(
-              child: Text('Signin'),
+              child: Text('Sign In'),
               textColor: Colors.lime,
               onPressed: () {
                 Navigator.pop(context);

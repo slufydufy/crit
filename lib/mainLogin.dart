@@ -62,7 +62,7 @@ class _MainLoginState extends State<MainLogin> {
       padding: const EdgeInsets.only(left: 16.0, right: 16.0),
       child: Row(
         children: <Widget>[
-          Text('Signin', style: TextStyle(
+          Text('Sign in', style: TextStyle(
             color: Colors.black45,
             fontSize: 22
           )),
