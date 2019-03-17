@@ -64,7 +64,6 @@ class MyHomePageState extends State<MyHomePage> {
       barrierDismissible: true,
       builder: (BuildContext context) {
         return AlertDialog(
-          
           title: Text('You are not sign in'),
           content: Text('Please sign in to continue'),
           actions: <Widget>[
@@ -94,7 +93,8 @@ class MyHomePageState extends State<MyHomePage> {
     return Scaffold(
       appBar: AppBar(
         centerTitle: true,
-        title: Image.asset('assets/images/logocr.png',),
+        title: Text('Crit')
+        // Image.asset('assets/images/logocr.png',),
       ),
       drawer: _showDrawer(context),
       body: ListView(
@@ -109,8 +109,9 @@ class MyHomePageState extends State<MyHomePage> {
 
   Widget _showDrawer(BuildContext context) {
     return Drawer(
-      child: ListView(
+      child: Column(
         children: <Widget>[
+          Container(height: 40.0,),
           ListTile(
             title: Text('Crit, buy to Donate', style: TextStyle(
               fontSize: 22.0,
@@ -123,9 +124,7 @@ class MyHomePageState extends State<MyHomePage> {
               fontSize: 16.0
             ),),
             trailing: Icon(Icons.person),
-            onTap: 
-            // () {}
-            checkLoginProfile
+            onTap:checkLoginProfile
           ),
           ListTile(
             title: Text('Order Saya', style: TextStyle(
@@ -171,7 +170,7 @@ class MyHomePageState extends State<MyHomePage> {
   Widget _textProduct() {
     return Container(
       padding: EdgeInsets.fromLTRB(8.0, 16.0, 8.0, .0),
-      child: Text('Buy and Donate Now', style: TextStyle(
+      child: Text('Buy to Donate Now', style: TextStyle(
         fontSize: 18.0,
         fontWeight: FontWeight.bold,
       ),
@@ -215,7 +214,8 @@ class MyHomePageState extends State<MyHomePage> {
             Stack(
               children: <Widget>[
                 Image.network(snapshot.data['url'],
-                fit: BoxFit.cover
+                fit: BoxFit.cover,
+                height: MediaQuery.of(context).size.width / 2,
                 ),
                 Positioned(
                   bottom: 0.0,

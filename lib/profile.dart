@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'adminPage.dart';
 
 class Profile extends StatefulWidget {
   @override
@@ -10,12 +11,18 @@ class Profile extends StatefulWidget {
 class _ProfileState extends State<Profile> {
 
   Future _userData;
-  // String name;
-  // String about = "";
+  Future _adminData;
+  String crntUid;
+
+  Future fetchAdmin() async {
+    QuerySnapshot admQuery = await Firestore.instance.collection('adminUid').getDocuments();
+    return admQuery.documents;
+  }
 
   Future fetchUser() async {
-    final cUser = await FirebaseAuth.instance.currentUser();
-    final _uid = cUser.uid;
+    final curentUser = await FirebaseAuth.instance.currentUser();
+    final _uid = curentUser.uid;
+    crntUid = _uid.toString();
     QuerySnapshot userQuery = await Firestore.instance.collection('users').where('uid', isEqualTo: '$_uid').getDocuments();
     return userQuery.documents;
   }
@@ -58,6 +65,8 @@ class _ProfileState extends State<Profile> {
   void initState() {
     super.initState();
     _userData = fetchUser();
+    _adminData = fetchAdmin();
+    
   }
 
   @override
@@ -79,7 +88,8 @@ class _ProfileState extends State<Profile> {
               _showName(snapshot.data[0]),
               _showEmail(snapshot.data[0]),
               Divider(),
-              _showSignOut()
+              _showSignOut(),
+              _showadmin()
         ],
       );
           }
@@ -110,6 +120,31 @@ class _ProfileState extends State<Profile> {
     ListTile(
       title: Text('SignOut'),
       onTap: _signOutDialog,
+    );
+  }
+
+  Widget _showadmin() {
+    return
+    FutureBuilder(
+      future: _adminData,
+      builder: (_, snapshot) {
+        if (snapshot.connectionState == ConnectionState.waiting) {
+          return
+          Center(child: Text('Loading'),);
+        } else {
+          if (crntUid == snapshot.data[0].data['admUid'] || crntUid == snapshot.data[1].data['admUid'] || crntUid == snapshot.data[2].data['admUid']) {
+            return
+            ListTile(
+              title: Text('Admin Page'),
+              onTap: () {
+                Navigator.push(context, MaterialPageRoute(builder: (context) => AdminPage()));
+              },
+            );
+          } else {
+            return Container();
+          }
+        }
+      },
     );
   }
 

@@ -23,6 +23,12 @@ class CrudMethod {
     });
   }
 
+  Future<void> confirmPayment(orderUid, confirmData) async {
+    Firestore.instance.collection('orderList').document('$orderUid').setData(confirmData, merge: true).catchError((e) {
+      print(e);
+    });
+  }
+
   Future<void> loginUser(email, password) async {
     FirebaseAuth.instance.signInWithEmailAndPassword(email: email, password: password).catchError((e) {
       print(e);

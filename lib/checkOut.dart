@@ -4,6 +4,7 @@ import 'package:flutter/services.dart';
 import 'crud.dart';
 import 'mainLogin.dart';
 import 'package:firebase_auth/firebase_auth.dart';
+import 'dart:math';
 
 class CheckOut extends StatefulWidget {
   final DocumentSnapshot itemCO;
@@ -37,12 +38,8 @@ class CheckOutState extends State<CheckOut> {
   }
 
   void createSnackBar(String message) {
-    final snackBar = SnackBar(content: Column(
-      mainAxisSize: MainAxisSize.min,
-      children: <Widget>[
-        Text(message, style: TextStyle(fontWeight: FontWeight.bold),),
-      ],
-    ),
+    final snackBar = SnackBar(content:
+    Text(message, style: TextStyle(fontWeight: FontWeight.bold),),
     backgroundColor: Colors.grey.withOpacity(0.8),
     );
     Scaffold.of(scafoldContext).showSnackBar(snackBar);
@@ -59,7 +56,11 @@ class CheckOutState extends State<CheckOut> {
   }
 
   submitOrder() {
-    var cDate = DateTime.now();
+    var today = DateTime.now();
+    String formatter = "${today.year.toString()}${today.month.toString().padLeft(2,'0')}${today.day.toString().padLeft(2,'0')}";
+    var charUid = _uid.substring(0, 3);
+    var rng = Random();
+    var code = rng.nextInt(9000) + 1000;
     if (finalSize == null) {
       createSnackBar('Pilih ukuran');
     } else if 
@@ -79,14 +80,12 @@ class CheckOutState extends State<CheckOut> {
         'address' : orderAddrTxtCont.text,
         'totalPrice' : finalPrice,
         'status' : 'menunggu pembayaran',
-        'orderNumber' : cDate
+        'orderNumber' : formatter + '/' + charUid + '/' + code.toString()
       }).then((result) {
         dismissOrderDialog(context);
       }).catchError((e) {
         print(e);
       });
-
-      
     } 
   }
 
@@ -97,7 +96,7 @@ class CheckOutState extends State<CheckOut> {
       builder: (BuildContext context) {
         return AlertDialog(
           title: Text('Order Status'),
-          content: Text('Order berhasil, lakukan konfirmasi pembayaran di menu \"order saya\"'),
+          content: Text('Order berhasil, lakukan konfirmasi pembayaran di menu \"Order Saya\"'),
           actions: <Widget>[
             FlatButton(
               child: Text('OK'),
