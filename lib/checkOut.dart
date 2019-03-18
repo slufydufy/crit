@@ -282,7 +282,7 @@ class CheckOutState extends State<CheckOut> {
           ),
         ),
         Container(
-          width: 70.0,
+          width: 80.0,
           padding: const EdgeInsets.fromLTRB(0.0, .0, 16.0, 16.0),
           child: 
           TextFormField(

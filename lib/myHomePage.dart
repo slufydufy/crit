@@ -27,7 +27,7 @@ class MyHomePageState extends State<MyHomePage> {
   }
 
   Future fetchDonateDesign() async {
-    QuerySnapshot fetchDesign = await ref.collection('donateDesign').getDocuments();
+    QuerySnapshot fetchDesign = await ref.collection('donateDesign').limit(8).getDocuments();
     return fetchDesign.documents;
   }
 
@@ -170,7 +170,7 @@ class MyHomePageState extends State<MyHomePage> {
   Widget _textProduct() {
     return Container(
       padding: EdgeInsets.fromLTRB(8.0, 16.0, 8.0, .0),
-      child: Text('Buy to Donate Now', style: TextStyle(
+      child: Text('Buy to Donate Design', style: TextStyle(
         fontSize: 18.0,
         fontWeight: FontWeight.bold,
       ),
@@ -196,14 +196,14 @@ class MyHomePageState extends State<MyHomePage> {
               itemCount: snapshot.data.length,
               itemBuilder: (context, index) {
                 return 
-                _itemCard(context, snapshot.data[index]);
+                _itemCard(snapshot.data[index]);
               },);
           }
       }
     ));
   }
 
-  Widget _itemCard(BuildContext context, DocumentSnapshot snapshot) {
+  Widget _itemCard(DocumentSnapshot snapshot) {
     return FlatButton(
       padding: EdgeInsets.all(0.0),
         onPressed: () => navigateToDetail(snapshot),

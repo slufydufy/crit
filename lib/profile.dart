@@ -136,6 +136,7 @@ class _ProfileState extends State<Profile> {
             return
             ListTile(
               title: Text('Admin Page'),
+              trailing: Icon(Icons.keyboard_arrow_right),
               onTap: () {
                 Navigator.push(context, MaterialPageRoute(builder: (context) => AdminPage()));
               },

@@ -136,7 +136,7 @@ class OrderListState extends State<OrderList> {
           ),
           
           Container(
-            padding: EdgeInsets.only(right: 16.0),
+            padding: EdgeInsets.only(top: 8.0, right: 16.0),
             child: Text(item.data['orderNumber'], style: TextStyle(
                 fontSize: 16.0,
                 color: Colors.grey),
@@ -325,7 +325,7 @@ class OrderListState extends State<OrderList> {
                 color: Colors.grey
               ),),
               onTap: () {
-                Clipboard.setData(ClipboardData(text: 'awsnumber'));
+                Clipboard.setData(ClipboardData(text: item.data['awb']));
                 createSnackBar('AWB / No resi berhasil di copy');
               }
             ),
