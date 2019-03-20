@@ -39,7 +39,6 @@ class ChangeOrderStatusState extends State<ChangeOrderStatus> {
           actions: <Widget>[
             FlatButton(
               child: Text('OK'),
-              textColor: Colors.lime,
               onPressed: orderproceed
             )
           ],

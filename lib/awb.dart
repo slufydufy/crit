@@ -41,7 +41,6 @@ class AWBState extends State<AWB> {
           actions: <Widget>[
             FlatButton(
               child: Text('OK'),
-              textColor: Colors.lime,
               onPressed: awbproceed
             )
           ],

@@ -141,8 +141,7 @@ class _MainLoginState extends State<MainLogin> {
       padding: const EdgeInsets.fromLTRB(16.0, 32.0, 16.0, 16.0),
       child: RaisedButton(
         onPressed: signInEmail,
-        color: Colors.lime.withOpacity(0.5),
-        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(20.0)),
+        color: Colors.grey[800],
         child: Text('Login', style: TextStyle(color: Colors.white),),
       ),
     );

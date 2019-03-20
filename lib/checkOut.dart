@@ -15,7 +15,6 @@ class CheckOut extends StatefulWidget {
 }
 
 class CheckOutState extends State<CheckOut> {
-
   BuildContext scafoldContext;
 
   String finalSize;
@@ -38,9 +37,12 @@ class CheckOutState extends State<CheckOut> {
   }
 
   void createSnackBar(String message) {
-    final snackBar = SnackBar(content:
-    Text(message, style: TextStyle(fontWeight: FontWeight.bold),),
-    backgroundColor: Colors.grey.withOpacity(0.8),
+    final snackBar = SnackBar(
+      content: Text(
+        message,
+        style: TextStyle(fontWeight: FontWeight.bold),
+      ),
+      backgroundColor: Colors.black,
     );
     Scaffold.of(scafoldContext).showSnackBar(snackBar);
   }
@@ -57,36 +59,35 @@ class CheckOutState extends State<CheckOut> {
 
   submitOrder() {
     var today = DateTime.now();
-    String formatter = "${today.year.toString()}${today.month.toString().padLeft(2,'0')}${today.day.toString().padLeft(2,'0')}";
+    String formatter =
+        "${today.year.toString()}${today.month.toString().padLeft(2, '0')}${today.day.toString().padLeft(2, '0')}";
     var charUid = _uid.substring(0, 3);
     var rng = Random();
     var code = rng.nextInt(9000) + 1000;
     if (finalSize == null) {
       createSnackBar('Pilih ukuran');
-    } else if 
-    (quantityTxtCont.text.isEmpty || quantityTxtCont.text == '0') {
+    } else if (quantityTxtCont.text.isEmpty || quantityTxtCont.text == '0') {
       createSnackBar('Jumlah minimum 1');
-    } else if 
-    (_formkey.currentState.validate()) {
+    } else if (_formkey.currentState.validate()) {
       crudObj.addOrder({
-        'uid' : _uid,
-        'itemTitle' : widget.itemCO.data['title'],
-        'itemPrice' : widget.itemCO.data['price'],
-        'itemImg' : widget.itemCO.data['url'],
-        'size' : finalSize,
-        'quantity' : quantityTxtCont.text,
-        'name' : orderNameTxtCont.text,
-        'phone' : orderPhoneTxtCont.text,
-        'address' : orderAddrTxtCont.text,
-        'totalPrice' : finalPrice,
-        'status' : 'menunggu pembayaran',
-        'orderNumber' : formatter + '/' + charUid + '/' + code.toString()
+        'uid': _uid,
+        'itemTitle': widget.itemCO.data['title'],
+        'itemPrice': widget.itemCO.data['price'],
+        'itemImg': widget.itemCO.data['url'],
+        'size': finalSize,
+        'quantity': quantityTxtCont.text,
+        'name': orderNameTxtCont.text,
+        'phone': orderPhoneTxtCont.text,
+        'address': orderAddrTxtCont.text,
+        'totalPrice': finalPrice,
+        'status': 'menunggu pembayaran',
+        'orderNumber': formatter + '/' + charUid + '/' + code.toString()
       }).then((result) {
         dismissOrderDialog(context);
       }).catchError((e) {
         print(e);
       });
-    } 
+    }
   }
 
   dismissOrderDialog(BuildContext context) async {
@@ -96,11 +97,11 @@ class CheckOutState extends State<CheckOut> {
       builder: (BuildContext context) {
         return AlertDialog(
           title: Text('Order Status'),
-          content: Text('Order berhasil, lakukan konfirmasi pembayaran di menu \"Order Saya\"'),
+          content: Text(
+              'Order berhasil, lakukan konfirmasi pembayaran di menu \"Order Saya\"'),
           actions: <Widget>[
             FlatButton(
               child: Text('OK'),
-              textColor: Colors.lime,
               onPressed: () {
                 Navigator.popUntil(context, ModalRoute.withName('/'));
               },
@@ -117,16 +118,15 @@ class CheckOutState extends State<CheckOut> {
       barrierDismissible: true,
       builder: (BuildContext context) {
         return AlertDialog(
-          
           title: Text('You are not sign in'),
           content: Text('Please sign in to make an order'),
           actions: <Widget>[
             FlatButton(
               child: Text('Sign In'),
-              textColor: Colors.lime,
               onPressed: () {
                 Navigator.pop(context);
-                Navigator.push(context, MaterialPageRoute(builder: (context) => MainLogin()));
+                Navigator.push(context,
+                    MaterialPageRoute(builder: (context) => MainLogin()));
               },
             )
           ],
@@ -150,36 +150,35 @@ class CheckOutState extends State<CheckOut> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(
-        title: Text('Checkout'),
-      ),
-      body: Builder(builder: (BuildContext context) {
-        scafoldContext = context;
-        return Column(
-        crossAxisAlignment: CrossAxisAlignment.stretch,
-        children: <Widget>[
-          Expanded(
-            child: ListView(
+        appBar: AppBar(
+          title: Text('Checkout'),
+        ),
+        body: Builder(
+          builder: (BuildContext context) {
+            scafoldContext = context;
+            return Column(
+              crossAxisAlignment: CrossAxisAlignment.stretch,
               children: <Widget>[
-                _showItemInfoText(),
-                Divider(),
-                _showItem(),
-                _showFinalSize(),
-                _showQuantity(),
-                _showTotalPrize(),
-                _showBuyerInfoText(),
-                Divider(),
-                _receipentForm()
+                Expanded(
+                  child: ListView(
+                    children: <Widget>[
+                      _showItemInfoText(),
+                      Divider(),
+                      _showItem(),
+                      _showFinalSize(),
+                      _showQuantity(),
+                      _showTotalPrize(),
+                      _showBuyerInfoText(),
+                      Divider(),
+                      _receipentForm()
+                    ],
+                  ),
+                ),
+                _showCheckoutButton(context)
               ],
-            ),
-          ),
-          _showCheckoutButton(context)
-        ],
-      );
-    
-      },)
-      
-    );
+            );
+          },
+        ));
   }
 
   Widget _showItemInfoText() {
@@ -209,6 +208,7 @@ class CheckOutState extends State<CheckOut> {
                 widget.itemCO.data['title'],
                 style: TextStyle(
                   fontSize: 16.0,
+                  color: Colors.grey
                 ),
                 maxLines: 2,
               ),
@@ -216,15 +216,16 @@ class CheckOutState extends State<CheckOut> {
           ),
           Container(
             padding: const EdgeInsets.fromLTRB(0.0, 16.0, 0.0, 16.0),
-            child: Text('IDR',
-              style: TextStyle(fontSize: 16.0, color: Colors.lime),
+            child: Text(
+              'IDR',
+              style: TextStyle(fontSize: 16.0, color: Colors.grey),
             ),
           ),
           Container(
             padding: const EdgeInsets.fromLTRB(8.0, 16.0, 0.0, 16.0),
             child: Text(
               widget.itemCO.data['price'].toString(),
-              style: TextStyle(fontSize: 16.0, color: Colors.lime),
+              style: TextStyle(fontSize: 16.0, color: Colors.grey),
             ),
           ),
         ],
@@ -248,12 +249,12 @@ class CheckOutState extends State<CheckOut> {
         Container(
             padding: const EdgeInsets.fromLTRB(0.0, 16.0, 16.0, 0.0),
             child: DropdownButton(
-              hint: Text(' Pilih ', style: TextStyle(color: Colors.lime)),
+              hint: Text(' Pilih ', style: TextStyle(color: Colors.grey)),
               items: sizeList.map((size) {
                 return DropdownMenuItem(
                   child: Text(
                     size,
-                    style: TextStyle(color: Colors.lime),
+                    style: TextStyle(color: Colors.grey),
                   ),
                   value: size,
                 );
@@ -282,20 +283,16 @@ class CheckOutState extends State<CheckOut> {
           ),
         ),
         Container(
-          width: 80.0,
-          padding: const EdgeInsets.fromLTRB(0.0, .0, 16.0, 16.0),
-          child: 
-          TextFormField(
-            inputFormatters: [WhitelistingTextInputFormatter.digitsOnly],
-            controller: quantityTxtCont,
-            maxLength: 4,
-            keyboardType: TextInputType.number,
-            textDirection: TextDirection.rtl,
-            style: TextStyle(color: Colors.lime),
-            decoration: InputDecoration(enabledBorder: UnderlineInputBorder(borderSide: BorderSide(color: Colors.lime))),
-            )
-        
-        ),
+            width: 80.0,
+            padding: const EdgeInsets.fromLTRB(0.0, .0, 16.0, 16.0),
+            child: TextFormField(
+              inputFormatters: [WhitelistingTextInputFormatter.digitsOnly],
+              controller: quantityTxtCont,
+              maxLength: 4,
+              keyboardType: TextInputType.number,
+              textDirection: TextDirection.rtl,
+              style: TextStyle(color: Colors.grey),
+            )),
       ],
     );
   }
@@ -314,8 +311,9 @@ class CheckOutState extends State<CheckOut> {
         ),
         Container(
           padding: const EdgeInsets.fromLTRB(0.0, 16.0, 16.0, 16.0),
-          child: Text('$finalPrice',
-            style: TextStyle(fontSize: 16.0, color: Colors.lime),
+          child: Text(
+            '$finalPrice',
+            style: TextStyle(fontSize: 16.0, color: Colors.grey),
           ),
         ),
       ],
@@ -336,11 +334,7 @@ class CheckOutState extends State<CheckOut> {
     return Form(
       key: _formkey,
       child: Column(
-        children: <Widget>[
-          _showName(),
-          _showMobile(),
-          _showAddress()
-        ],
+        children: <Widget>[_showName(), _showMobile(), _showAddress()],
       ),
     );
   }
@@ -349,7 +343,7 @@ class CheckOutState extends State<CheckOut> {
     return Container(
       padding: EdgeInsets.fromLTRB(16.0, 8.0, 16.0, 0.0),
       child: TextFormField(
-        controller: orderNameTxtCont,
+          controller: orderNameTxtCont,
           maxLines: 1,
           validator: (value) {
             if (value.isEmpty) {
@@ -373,10 +367,10 @@ class CheckOutState extends State<CheckOut> {
         inputFormatters: [WhitelistingTextInputFormatter.digitsOnly],
         maxLines: 1,
         validator: (value) {
-            if (value.isEmpty) {
-              return 'Nomor HP belum diisi';
-            }
-          },
+          if (value.isEmpty) {
+            return 'Nomor HP belum diisi';
+          }
+        },
         decoration: InputDecoration(
             labelText: 'Nomor HP',
             contentPadding:
@@ -393,10 +387,10 @@ class CheckOutState extends State<CheckOut> {
         controller: orderAddrTxtCont,
         maxLines: 5,
         validator: (value) {
-            if (value.isEmpty) {
-              return 'Alamat belum diisi';
-            }
-          },
+          if (value.isEmpty) {
+            return 'Alamat belum diisi';
+          }
+        },
         decoration: InputDecoration(
             labelText: 'Alamat Pengiriman',
             contentPadding:
@@ -407,18 +401,18 @@ class CheckOutState extends State<CheckOut> {
   }
 
   Widget _showCheckoutButton(BuildContext context) {
-    return Container(
-      padding: EdgeInsets.fromLTRB(16.0, 16.0, 16.0, 16.0),
-      child: ButtonTheme(
-        child: RaisedButton(
-          onPressed: checkLogin,
-          color: Colors.lime,
-          shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(20.0)),
-          child: Text('Checkout', style: TextStyle(color: Colors.white),
+    return GestureDetector(
+      child: Container(
+        padding: EdgeInsets.all(16.0),
+        color: Colors.grey,
+        child: Center(
+          child: Text(
+            'Checkout',
+            style: TextStyle(color: Colors.black, fontSize: 16),
           ),
         ),
       ),
+      onTap: checkLogin,
     );
   }
-
 }

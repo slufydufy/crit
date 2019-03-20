@@ -49,7 +49,6 @@ class ConfirmPaymentState extends State<ConfirmPayment> {
           actions: <Widget>[
             FlatButton(
               child: Text('OK'),
-              textColor: Colors.lime,
               onPressed: () {
                 Navigator.popUntil(context, ModalRoute.withName('/'));
               },
@@ -183,8 +182,6 @@ class ConfirmPaymentState extends State<ConfirmPayment> {
       child: ButtonTheme(
         child: RaisedButton(
           onPressed: confirm,
-          color: Colors.lime,
-          shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(20.0)),
           child: Text('Confirm', style: TextStyle(color: Colors.white),
           ),
         ),

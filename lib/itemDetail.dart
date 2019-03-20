@@ -6,6 +6,7 @@ import 'package:photo_view/photo_view.dart';
 class ItemDetail extends StatelessWidget {
   final DocumentSnapshot item;
   ItemDetail({this.item});
+    
 
   @override
   Widget build(BuildContext context) {
@@ -20,12 +21,15 @@ class ItemDetail extends StatelessWidget {
             child: ListView(
               children: <Widget>[
                 _showImage(context),
-                _showTitlePrice(),
-                _showTitleDesc(),
+                _showTitleSub(),
+                Divider(),
+                _showPrice(),
                 Divider(),
                 _showMaterial(),
+                Divider(),
                 _showSize(),
                 Divider(),
+                _showMoreImageText(),
                 _showMoreImage(),
               ],
             ),
@@ -49,15 +53,69 @@ class ItemDetail extends StatelessWidget {
     );
   }
 
+  Widget _showTitleSub() {
+    return 
+    Padding(
+      padding: EdgeInsets.only(top: 16.0),
+      child: ListTile(
+              title: Text(item.data['title'], style: TextStyle(
+                fontSize: 18.0,
+              ),),
+              subtitle: Text(item.data['desc']),
+            ),
+    );
+  }
+
+  Widget _showPrice() {
+    return
+    ListTile(
+            title: Text(item.data['price'].toString(), style: TextStyle(
+              fontSize: 18.0,
+            ),),
+            subtitle: Text('Price'),
+          );
+  }
+
+  Widget _showMaterial() {
+    return 
+    ListTile(
+            title: Text(item.data['material'], style: TextStyle(
+              fontSize: 18.0,
+            ),),
+            subtitle: Text('Material'),
+          );
+  }
+
+  Widget _showSize() {
+    List sizeList = item.data['size'];
+    String sizeAvail = sizeList.join(',');
+    return 
+    ListTile(
+            title: Text(sizeAvail, style: TextStyle(
+              fontSize: 18.0,
+            ),),
+            subtitle: Text('Available Size'),
+          );
+  }
+
+  Widget _showMoreImageText() {
+    return
+    ListTile(
+      title: Text('More Image', style: TextStyle(
+        fontSize: 18.0,
+      ),)
+    );
+  }
+
   Widget _showMoreImage() {
     List urlList = item.data['moreImg'];
     return
     Container(
-      padding: EdgeInsets.fromLTRB(6.0, 0.0, 4.0, 6.0),
+      padding: EdgeInsets.only(left: 4.0, right: 4.0),
       child: GridView.builder(
         physics: ScrollPhysics(),
         shrinkWrap: true,
-        gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(crossAxisCount: 4),
+        gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(crossAxisCount: 3),
         itemCount: urlList.length,
         itemBuilder: (context, i) {
           return 
@@ -78,114 +136,30 @@ class ItemDetail extends StatelessWidget {
               child: 
               Image.network(moreUrl,
                 fit: BoxFit.cover,
-                width: MediaQuery.of(context).size.width / 3,
+                height: MediaQuery.of(context).size.width / 3
                 ),
             ));
   }
 
-  Widget _showTitlePrice() {
-    return Padding(
-      padding: EdgeInsets.fromLTRB(16.0, 16.0, 16.0, 0.0),
-      child: Row(
-        children: <Widget>[
-          Expanded(
-            child: new Container(
-              child: Text(
-                item.data['title'],
-                style: TextStyle(
-                  fontSize: 20.0,
-                  color: Colors.grey,
-                ),
-                maxLines: 2,
-              ),
-            ),
-          ),
-          Text(
-            item.data['price'].toString(),
-            style: TextStyle(fontSize: 20.0, color: Colors.lime),
-            maxLines: 2,
-          )
-        ],
-      ),
-    );
-  }
-
-  Widget _showTitleDesc() {
-    return Padding(
-      padding: EdgeInsets.fromLTRB(16.0, 16.0, 16.0, 8.0),
-      child: Column(
-        children: <Widget>[
-          Text(
-            item.data['desc'],
-            style: TextStyle(color: Colors.grey),
-          )
-        ],
-      ),
-    );
-  }
-
-  Widget _showMaterial() {
-    return Row(
-      children: <Widget>[
-        Expanded(
-          child: Container(
-            padding: const EdgeInsets.fromLTRB(16.0, 16.0, 0.0, 16.0),
-            child: Text(
-              'Material',
-              style: TextStyle(color: Colors.grey),
-            ),
-          ),
-        ),
-        Container(
-          padding: const EdgeInsets.fromLTRB(0.0, 16.0, 16.0, 16.0),
-          child: Text(
-            item.data['material'],
-            style: TextStyle(color: Colors.lime),
-          ),
-        ),
-      ],
-    );
-  }
-
-  Widget _showSize() {
-    List sizeList = item.data['size'];
-    String sizeAvail = sizeList.join(',');
-    return Row(
-      children: <Widget>[
-        Expanded(
-          child: Container(
-            padding: const EdgeInsets.fromLTRB(16.0, 8.0, 16.0, 16.0),
-            child: Text(
-              'Available Size',
-              style: TextStyle(color: Colors.grey),
-            ),
-          ),
-        ),
-        Container(
-          padding: const EdgeInsets.fromLTRB(0.0, 8.0, 16.0, 16.0),
-          child: Text(
-            sizeAvail,
-            style: TextStyle(color: Colors.lime),
-          ),
-        ),
-      ],
-    );
-  }
-
   Widget _showButton(BuildContext context) {
-    return Padding(
-      padding: EdgeInsets.fromLTRB(16.0, 16.0, 16.0, 16.0),
-      child: ButtonTheme(
-        child: RaisedButton(
-          onPressed: () {
-            Navigator.push(context, MaterialPageRoute(builder: (context) => CheckOut(itemCO: item)));
-          },
-          color: Colors.lime,
-          shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(20.0)),
-          child: Text('Order Now', style: TextStyle(color: Colors.white),
+    return 
+      GestureDetector(
+        child: Container(
+          padding: EdgeInsets.all(16.0),
+          color: Colors.grey,
+          child: 
+          Center(
+            child: 
+              Text('Order Now', style: TextStyle(
+                color: Colors.black,
+                fontSize: 16
+                ),
+              ),
           ),
         ),
-      ),
+        onTap: () {
+          Navigator.push(context, MaterialPageRoute(builder: (context) => CheckOut(itemCO: item)));
+          },
     );
   }
 }
@@ -203,9 +177,10 @@ class ImageFull extends StatelessWidget {
               child: Center(
                 child: Hero(
                   tag: 'imageHero',
-                  child: PhotoView(
-                      imageProvider: NetworkImage(item.data['url']), 
-                      backgroundDecoration: BoxDecoration(color: Colors.white))
+                  child: 
+                  PhotoView(
+                    imageProvider: NetworkImage(item.data['url']), 
+                    backgroundDecoration: BoxDecoration(color: Colors.white))
                 )
               )
             ),

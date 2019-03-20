@@ -37,17 +37,12 @@ class _RegisterState extends State<Register> {
         'name' : nameTxtCont.text,
         'email' : email,
       }).then((result) {
-        // loginUser();
         Navigator.popUntil(context, ModalRoute.withName('/'));
       }).catchError((e) {
         print(e);
       });
     }
   }
-
-  // loginUser() {
-  //   crudObject.loginUser(emailTxtCont.text, passTxtCont.text);
-  // }
 
   @override
   Widget build(BuildContext context) {
@@ -151,8 +146,7 @@ class _RegisterState extends State<Register> {
             registerEmail(emailTxtCont.text, passTxtCont.text);
           } 
         },
-        color: Colors.lime,
-        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(20.0)),
+        color: Colors.grey,
         child: Text('Register', style: TextStyle(color: Colors.white),),
       ),
     );

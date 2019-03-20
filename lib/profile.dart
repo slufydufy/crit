@@ -45,14 +45,12 @@ class _ProfileState extends State<Profile> {
           actions: <Widget>[
             FlatButton(
               child: Text('Cancel'),
-              textColor: Colors.lime,
               onPressed: () {
                 Navigator.pop(context);
               },
             ),
             FlatButton(
               child: Text('OK'),
-              textColor: Colors.lime,
               onPressed: signOut
             ),
           ],

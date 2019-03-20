@@ -101,7 +101,7 @@ class OrderListState extends State<OrderList> {
             child: Container(
               padding: const EdgeInsets.fromLTRB(16.0, 8.0, 0.0, 0.0),
               child: Text(
-                'Status', style: TextStyle(
+                'Status :', style: TextStyle(
                   fontSize: 16.0,
                   color: Colors.grey
                 ),
@@ -112,7 +112,6 @@ class OrderListState extends State<OrderList> {
             padding: const EdgeInsets.fromLTRB(0.0, 8.0, 16.0, 0.0),
             child: Text(item.data['status'], style: TextStyle(
                   fontSize: 18.0,
-                  // fontWeight: FontWeight.bold,
                   color: Colors.lime
                 ),
               ),
@@ -128,7 +127,7 @@ class OrderListState extends State<OrderList> {
           Expanded(
                       child: Container(
               padding: const EdgeInsets.fromLTRB(16.0, 8.0, 0.0, 4.0),
-              child: Text('Order Number:', style: TextStyle(
+              child: Text('Order Number :', style: TextStyle(
                 fontSize: 16.0,
                 color: Colors.grey
               ),),
@@ -190,7 +189,7 @@ class OrderListState extends State<OrderList> {
             padding: const EdgeInsets.fromLTRB(0.0, 8.0, 16.0, 0.0),
             child: Text(item.data['size'], style: TextStyle(
                   fontSize: 16.0,
-                  color: Colors.lime
+                  color: Colors.grey
                 ),
               ),
           ),
@@ -215,7 +214,7 @@ class OrderListState extends State<OrderList> {
             padding: const EdgeInsets.fromLTRB(0.0, 8.0, 16.0, 0.0),
             child: Text(item.data['quantity'].toString(), style: TextStyle(
                   fontSize: 16.0,
-                  color: Colors.lime
+                  color: Colors.grey
                 ),
               ),
           ),
@@ -240,7 +239,7 @@ class OrderListState extends State<OrderList> {
             padding: const EdgeInsets.fromLTRB(0.0, 8.0, 16.0, 0.0),
             child: Text(item.data['itemPrice'].toString(), style: TextStyle(
                   fontSize: 16.0,
-                  color: Colors.lime
+                  color: Colors.grey
                 ),
               ),
           ),
@@ -265,7 +264,7 @@ class OrderListState extends State<OrderList> {
             padding: const EdgeInsets.fromLTRB(0.0, 8.0, 16.0, 0.0),
             child: Text(item.data['totalPrice'].toString(), style: TextStyle(
                   fontSize: 16.0,
-                  color: Colors.lime
+                  color: Colors.grey
                 ),
               ),
           ),
@@ -276,10 +275,10 @@ class OrderListState extends State<OrderList> {
   Widget _showConfirmBtn(item) {
     if (item.data['status'] != 'menunggu pembayaran') {
       return
-      Container(height: 16.0,);
+      Container(height: 8.0,);
     } else {
       return Container(
-      padding: EdgeInsets.only(left: 16.0, bottom: 16.0, top: 8.0),
+      padding: EdgeInsets.only(left: 16.0, bottom: 8.0, top: 0.0),
       child: ButtonTheme(
         child: RaisedButton(
           onPressed: () {

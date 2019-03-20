@@ -7,6 +7,7 @@ void main() {
     .then((_) {
       runApp(new MyApp());
     });
+    // SystemChrome.setEnabledSystemUIOverlays([]);
 }
 
 class MyApp extends StatelessWidget {
@@ -16,7 +17,7 @@ class MyApp extends StatelessWidget {
       title: 'Crit',
       debugShowCheckedModeBanner: false,
       theme: ThemeData(
-        primarySwatch: Colors.lime,
+        primarySwatch: Colors.grey,
       ),
       routes: {
         '/': (BuildContext context) => MyHomePage(),
