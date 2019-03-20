@@ -7,6 +7,7 @@ import 'mainLogin.dart';
 import 'crud.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'profile.dart';
+import 'donateJourney.dart';
 
 class MyHomePage extends StatefulWidget {
   @override
@@ -16,6 +17,7 @@ class MyHomePage extends StatefulWidget {
 class MyHomePageState extends State<MyHomePage> {
   Future _bannerData;
   Future _designData;
+  Future _donateJourneyData;
 
   var ref = Firestore.instance;
   CrudMethod crudObj = CrudMethod();
@@ -28,6 +30,12 @@ class MyHomePageState extends State<MyHomePage> {
   Future fetchDonateDesign() async {
     QuerySnapshot fetchDesign =
         await ref.collection('donateDesign').limit(8).getDocuments();
+    return fetchDesign.documents;
+  }
+
+  Future fetchDonateJourney() async {
+    QuerySnapshot fetchDesign =
+        await ref.collection('donateJourney').limit(3).getDocuments();
     return fetchDesign.documents;
   }
 
@@ -88,6 +96,7 @@ class MyHomePageState extends State<MyHomePage> {
     super.initState();
     _bannerData = fetchBanner();
     _designData = fetchDonateDesign();
+    _donateJourneyData =fetchDonateJourney();
   }
 
   @override
@@ -102,8 +111,8 @@ class MyHomePageState extends State<MyHomePage> {
           _showCarousel(),
           _buyToDonateText(),
           _gridView(),
-          _localBrandUpdateText(),
-          _brandUpdate()
+          _donateJourneyText(),
+          _donateJourney()
         ],
       ),
     );
@@ -261,14 +270,14 @@ class MyHomePageState extends State<MyHomePage> {
         ));
   }
 
-  Widget _localBrandUpdateText() {
+  Widget _donateJourneyText() {
     return Container(
         padding: EdgeInsets.fromLTRB(16.0, 32.0, 16.0, .0),
         child: Row(
           children: <Widget>[
             Expanded(
                 child: Text(
-              'Our Local Brand Update',
+              'Our Donation Journey',
               style: TextStyle(
                 fontSize: 24.0,
                 fontWeight: FontWeight.bold,
@@ -285,10 +294,10 @@ class MyHomePageState extends State<MyHomePage> {
         ));
   }
 
-  Widget _brandUpdate() {
+  Widget _donateJourney() {
     return Container(
         child: FutureBuilder(
-            future: _designData,
+            future: _donateJourneyData,
             builder: (context, snapshot) {
               if (snapshot.connectionState == ConnectionState.waiting) {
                 return Center(
@@ -300,18 +309,21 @@ class MyHomePageState extends State<MyHomePage> {
                   shrinkWrap: true,
                   itemCount: snapshot.data.length,
                   itemBuilder: (context, index) {
-                    return _brandUpdateCard(snapshot.data[index]);
+                    return _donateJourneyCard(snapshot.data[index]);
                   },
                 );
               }
             }));
   }
 
-  Widget _brandUpdateCard(DocumentSnapshot snapshot) {
+  Widget _donateJourneyCard(DocumentSnapshot snapshot) {
     return 
     FlatButton(
         padding: EdgeInsets.all(0.0),
-        onPressed: () => navigateToDetail(snapshot),
+        onPressed: () {
+          Navigator.push(context,
+              MaterialPageRoute(builder: (context) => DonateJourney(item: snapshot)));
+        },
         child:
         Padding(
           padding: EdgeInsets.all(8.0),
@@ -330,7 +342,7 @@ class MyHomePageState extends State<MyHomePage> {
                     color: Colors.white,
                     child: 
                       Image.network(
-                        snapshot.data['url'],
+                        snapshot.data['imgUrl'],
                         fit: BoxFit.cover,
                         height: MediaQuery.of(context).size.width / 1.5,
                         width: MediaQuery.of(context).size.width,
@@ -339,8 +351,9 @@ class MyHomePageState extends State<MyHomePage> {
                   Padding(
                     padding: const EdgeInsets.all(4.0),
                     child: 
-                    Text('title brand update', style: TextStyle(
-                      fontSize: 22.0
+                    Text(snapshot.data['title'],
+                    style: TextStyle(
+                      fontSize: 18.0
                     ),),
                   ),
                   

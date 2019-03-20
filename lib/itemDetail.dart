@@ -59,7 +59,7 @@ class ItemDetail extends StatelessWidget {
       padding: EdgeInsets.only(top: 16.0),
       child: ListTile(
               title: Text(item.data['title'], style: TextStyle(
-                fontSize: 18.0,
+                fontSize: 16.0,
               ),),
               subtitle: Text(item.data['desc']),
             ),
@@ -70,7 +70,7 @@ class ItemDetail extends StatelessWidget {
     return
     ListTile(
             title: Text(item.data['price'].toString(), style: TextStyle(
-              fontSize: 18.0,
+              fontSize: 16.0,
             ),),
             subtitle: Text('Price'),
           );
@@ -80,7 +80,7 @@ class ItemDetail extends StatelessWidget {
     return 
     ListTile(
             title: Text(item.data['material'], style: TextStyle(
-              fontSize: 18.0,
+              fontSize: 16.0,
             ),),
             subtitle: Text('Material'),
           );
@@ -92,7 +92,7 @@ class ItemDetail extends StatelessWidget {
     return 
     ListTile(
             title: Text(sizeAvail, style: TextStyle(
-              fontSize: 18.0,
+              fontSize: 16.0,
             ),),
             subtitle: Text('Available Size'),
           );
@@ -102,7 +102,7 @@ class ItemDetail extends StatelessWidget {
     return
     ListTile(
       title: Text('More Image', style: TextStyle(
-        fontSize: 18.0,
+        fontSize: 16.0,
       ),)
     );
   }
