@@ -408,7 +408,7 @@ class CheckOutState extends State<CheckOut> {
         child: Center(
           child: Text(
             'Checkout',
-            style: TextStyle(color: Colors.black, fontSize: 16),
+            style: TextStyle(color: Colors.black, fontSize: 16, fontWeight: FontWeight.bold),
           ),
         ),
       ),

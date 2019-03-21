@@ -100,8 +100,7 @@ class _ProfileState extends State<Profile> {
     return
     ListTile(
       title: Text('Name'),
-      subtitle: Text(item['name']),
-      trailing: Icon(Icons.keyboard_arrow_right),
+      subtitle: Text(item['name'])
     );
   }
 

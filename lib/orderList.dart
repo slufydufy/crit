@@ -13,12 +13,11 @@ class OrderListState extends State<OrderList> {
   BuildContext scafoldContext;
 
   Future _orderData;
-  var ref = Firestore.instance;
 
   Future fetchOrder() async {
     final user = await FirebaseAuth.instance.currentUser();
     final _uid = user.uid;
-    QuerySnapshot fetchOrder = await ref.collection('orderList').where('uid', isEqualTo: '$_uid').getDocuments();
+    QuerySnapshot fetchOrder = await Firestore.instance.collection('orderList').where('uid', isEqualTo: '$_uid').getDocuments();
     return fetchOrder.documents;
   }
 

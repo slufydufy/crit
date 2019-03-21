@@ -8,6 +8,8 @@ import 'crud.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'profile.dart';
 import 'donateJourney.dart';
+import 'donateDesignAll.dart';
+import 'donationJourneyAll.dart';
 
 class MyHomePage extends StatefulWidget {
   @override
@@ -29,14 +31,14 @@ class MyHomePageState extends State<MyHomePage> {
 
   Future fetchDonateDesign() async {
     QuerySnapshot fetchDesign =
-        await ref.collection('donateDesign').limit(8).getDocuments();
+        await ref.collection('donateDesign').limit(6).getDocuments();
     return fetchDesign.documents;
   }
 
   Future fetchDonateJourney() async {
-    QuerySnapshot fetchDesign =
+    QuerySnapshot fetchJourney =
         await ref.collection('donateJourney').limit(3).getDocuments();
-    return fetchDesign.documents;
+    return fetchJourney.documents;
   }
 
   navigateToDetail(DocumentSnapshot item) {
@@ -96,13 +98,13 @@ class MyHomePageState extends State<MyHomePage> {
     super.initState();
     _bannerData = fetchBanner();
     _designData = fetchDonateDesign();
-    _donateJourneyData =fetchDonateJourney();
+    _donateJourneyData = fetchDonateJourney();
   }
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(centerTitle: true, title: Text('Crit')
+      appBar: AppBar(centerTitle: true, title: Text('Crit'),
           // Image.asset('assets/images/logocr.png',),
           ),
       drawer: _showDrawer(),
@@ -123,9 +125,9 @@ class MyHomePageState extends State<MyHomePage> {
       child: Column(
         children: <Widget>[
           Container(
-            height: 40.0,
+            height: 32.0,
           ),
-          ListTile(
+        ListTile(
             title: Text(
               'Crit, buy to Donate',
               style: TextStyle(
@@ -135,19 +137,51 @@ class MyHomePageState extends State<MyHomePage> {
           ),
           Divider(),
           ListTile(
-              title: Text(
-                'Profile',
-                style: TextStyle(fontSize: 16.0),
-              ),
-              leading: Icon(Icons.person),
-              onTap: checkLoginProfile),
-          ListTile(
-              title: Text(
-                'Order Saya',
-                style: TextStyle(fontSize: 16.0),
-              ),
-              leading: Icon(Icons.add_shopping_cart),
-              onTap: checkLoginOrder),
+          title: Text(
+            'Home',
+            style: TextStyle(fontSize: 16.0),
+          ),
+          leading: Icon(Icons.home),
+          onTap: () {
+            Navigator.pop(context);
+            Navigator.push(context,
+                MaterialPageRoute(builder: (context) => MyHomePage()));
+          }),
+        ListTile(
+          title: Text(
+            'Order Saya',
+            style: TextStyle(fontSize: 16.0),
+          ),
+          leading: Icon(Icons.add_shopping_cart),
+          onTap: checkLoginOrder),
+        ListTile(
+          title: Text(
+            'Buy to donate design',
+            style: TextStyle(fontSize: 16.0),
+          ),
+          leading: Icon(Icons.hot_tub),
+          onTap: () {
+            Navigator.pop(context);
+                Navigator.push(context,
+                    MaterialPageRoute(builder: (context) => DonateDesignAll()));
+              }),
+        ListTile(
+          title: Text(
+            'Donation Journey',
+            style: TextStyle(fontSize: 16.0),
+          ),
+          leading: Icon(Icons.card_giftcard),
+          onTap: () {
+            Navigator.pop(context);
+            Navigator.push(context,MaterialPageRoute(builder: (context) => DonationJourneyAll()));
+              }),
+        ListTile(
+          title: Text(
+            'Profile',
+            style: TextStyle(fontSize: 16.0),
+          ),
+          leading: Icon(Icons.person),
+          onTap: checkLoginProfile),
         ],
       ),
     );
@@ -205,7 +239,9 @@ class MyHomePageState extends State<MyHomePage> {
                   style: TextStyle(
                     fontWeight: FontWeight.bold,
                   )),
-              onTap: () {print('buy tp dobatesection');},
+              onTap: () {
+                Navigator.push(context,MaterialPageRoute(builder: (context) => DonateDesignAll()));
+              },
             ),
           ],
         ));
@@ -213,7 +249,7 @@ class MyHomePageState extends State<MyHomePage> {
 
   Widget _gridView() {
     return Container(
-        padding: EdgeInsets.fromLTRB(4.0, 0.0, 8.0, 4.0),
+        padding: EdgeInsets.fromLTRB(4.0, 0.0, 4.0, 8.0),
         child: FutureBuilder(
             future: _designData,
             builder: (context, snapshot) {
@@ -272,12 +308,12 @@ class MyHomePageState extends State<MyHomePage> {
 
   Widget _donateJourneyText() {
     return Container(
-        padding: EdgeInsets.fromLTRB(16.0, 32.0, 16.0, .0),
+        padding: EdgeInsets.fromLTRB(8.0, 32.0, 8.0, .0),
         child: Row(
           children: <Widget>[
             Expanded(
                 child: Text(
-              'Our Donation Journey',
+              'Donation Journey',
               style: TextStyle(
                 fontSize: 24.0,
                 fontWeight: FontWeight.bold,
@@ -288,7 +324,10 @@ class MyHomePageState extends State<MyHomePage> {
                   style: TextStyle(
                     fontWeight: FontWeight.bold,
                   )),
-              onTap: () {print('local brand section');},
+              onTap: () {
+                Navigator.push(context,MaterialPageRoute(
+                  builder: (context) => DonationJourneyAll()));
+              },
             ),
           ],
         ));
@@ -296,6 +335,7 @@ class MyHomePageState extends State<MyHomePage> {
 
   Widget _donateJourney() {
     return Container(
+        padding: EdgeInsets.all(8.0),
         child: FutureBuilder(
             future: _donateJourneyData,
             builder: (context, snapshot) {
@@ -317,52 +357,50 @@ class MyHomePageState extends State<MyHomePage> {
   }
 
   Widget _donateJourneyCard(DocumentSnapshot snapshot) {
-    return 
-    FlatButton(
-        padding: EdgeInsets.all(0.0),
-        onPressed: () {
-          Navigator.push(context,
-              MaterialPageRoute(builder: (context) => DonateJourney(item: snapshot)));
-        },
-        child:
-        Padding(
-          padding: EdgeInsets.all(8.0),
-          child: 
-          // Card(
-          //   clipBehavior: Clip.antiAlias,
-          //   child: 
-            Container(
-              // padding: const EdgeInsets.all(8.0),
+    var today = snapshot.data['pubDate'];
+    String formatter =
+        "${today.year.toString()}${today.month.toString().padLeft(2, '0')}${today.day.toString().padLeft(2, '0')}";
+    return FlatButton(
+      padding: EdgeInsets.all(0.0),
+      onPressed: () {
+        Navigator.push(
+            context,
+            MaterialPageRoute(
+                builder: (context) => DonateJourney(item: snapshot)));
+      },
+        child: Column(
+          children: <Widget>[
+            Card(
+              clipBehavior: Clip.antiAlias,
               color: Colors.white,
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.stretch,
-                children: <Widget>[
-                  Card(
-                    clipBehavior: Clip.antiAlias,
-                    color: Colors.white,
-                    child: 
-                      Image.network(
-                        snapshot.data['imgUrl'],
-                        fit: BoxFit.cover,
-                        height: MediaQuery.of(context).size.width / 1.5,
-                        width: MediaQuery.of(context).size.width,
-                      ),
-                    ),
-                  Padding(
-                    padding: const EdgeInsets.all(4.0),
-                    child: 
-                    Text(snapshot.data['title'],
-                    style: TextStyle(
-                      fontSize: 18.0
-                    ),),
-                  ),
-                  
-                  // Divider(height: 8.0,)
-                ],
-              // ),
-          ),
+              child: Image.network(
+                snapshot.data['imgUrl'],
+                fit: BoxFit.cover,
+                height: MediaQuery.of(context).size.width / 1.5,
+                width: MediaQuery.of(context).size.width,
+              ),
             ),
+            Padding(
+              padding: const EdgeInsets.all(4.0),
+              child: Text(
+                snapshot.data['title'],
+                style: TextStyle(fontSize: 22.0, fontWeight: FontWeight.bold),
+              ),
+            ),
+            Padding(
+              padding: const EdgeInsets.all(4.0),
+              child: Row(
+                children: <Widget>[
+                  Icon(Icons.card_giftcard, color: Colors.grey,),
+                  Padding(padding :EdgeInsets.only(left: 4.0), child: Text(snapshot.data['listUser'].length.toString(), style: TextStyle(color: Colors.grey),),),
+                  Padding(padding: EdgeInsets.only(left: 16.0), child: Icon(Icons.calendar_today, color: Colors.grey,),),
+                  Padding(padding :EdgeInsets.only(left: 4.0), child: Text(formatter, style: TextStyle(color: Colors.grey),),),
+                ],
+              ),
+            ),
+            Divider()
+          ],
         ),
-        );
+    );
   }
 }

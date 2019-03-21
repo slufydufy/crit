@@ -20,8 +20,9 @@ class ItemDetail extends StatelessWidget {
           Expanded(
             child: ListView(
               children: <Widget>[
+                _showTitle(),
+                _showSub(),
                 _showImage(context),
-                _showTitleSub(),
                 Divider(),
                 _showPrice(),
                 Divider(),
@@ -40,6 +41,30 @@ class ItemDetail extends StatelessWidget {
     );
   }
 
+  Widget _showTitle() {
+    return
+    Padding(
+      padding: EdgeInsets.fromLTRB(16.0, 16.0, 16.0, 0.0),
+      child: 
+      Text(item.data['title'], textAlign: TextAlign.center, style: TextStyle(
+        fontSize: 24.0,
+        fontWeight: FontWeight.bold
+      ),),
+    );
+  }
+
+  Widget _showSub() {
+    return
+    Padding(
+      padding: EdgeInsets.fromLTRB(16.0, 8.0, 16.0, 8.0),
+      child: 
+      Text(item.data['desc'], textAlign: TextAlign.center, style: TextStyle(
+        fontSize: 16.0,
+        color: Colors.grey,
+      ),),
+    );
+  }
+
   Widget _showImage(BuildContext context) {
     return Container(
       child: GestureDetector(
@@ -50,19 +75,6 @@ class ItemDetail extends StatelessWidget {
         height: MediaQuery.of(context).size.width,
         fit: BoxFit.cover,
         )),
-    );
-  }
-
-  Widget _showTitleSub() {
-    return 
-    Padding(
-      padding: EdgeInsets.only(top: 16.0),
-      child: ListTile(
-              title: Text(item.data['title'], style: TextStyle(
-                fontSize: 16.0,
-              ),),
-              subtitle: Text(item.data['desc']),
-            ),
     );
   }
 
@@ -152,7 +164,8 @@ class ItemDetail extends StatelessWidget {
             child: 
               Text('Order Now', style: TextStyle(
                 color: Colors.black,
-                fontSize: 16
+                fontSize: 16,
+                fontWeight: FontWeight.bold
                 ),
               ),
           ),
