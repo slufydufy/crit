@@ -18,7 +18,7 @@ class DonateDesignAllState extends State<DonateDesignAll> {
   Future _designData;
 
   Future fetchDonateDesign() async {
-    QuerySnapshot fetchDesign = await Firestore.instance.collection('donateDesign').getDocuments();
+    QuerySnapshot fetchDesign = await Firestore.instance.collection('fl_content').where('mainCat', isEqualTo: 'design').getDocuments();
     return fetchDesign.documents;
   }
 
@@ -118,20 +118,21 @@ class DonateDesignAllState extends State<DonateDesignAll> {
           child: Stack(
             children: <Widget>[
               Image.network(
-                snapshot.data['url'],
+                snapshot.data['img'],
                 fit: BoxFit.cover,
                 height: MediaQuery.of(context).size.width / 2,
+                width: MediaQuery.of(context).size.width / 2
               ),
               Positioned(
                 bottom: 0.0,
                 child: Container(
                   padding: EdgeInsets.all(4),
                   width: (MediaQuery.of(context).size.width / 2) - 10.0,
-                  color: Colors.grey.withOpacity(0.6),
+                  color: Colors.black.withOpacity(0.5),
                   child: Column(
                     crossAxisAlignment: CrossAxisAlignment.center,
                     children: <Widget>[
-                      Text(snapshot.data['title'],
+                      Text(snapshot.data['title'], maxLines: 1,
                           style: TextStyle(color: Colors.white))
                     ],
                   ),

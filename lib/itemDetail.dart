@@ -23,7 +23,7 @@ class ItemDetail extends StatelessWidget {
                 _showTitle(),
                 _showSub(),
                 _showImage(context),
-                Divider(),
+                Divider(height: 8.0,),
                 _showPrice(),
                 Divider(),
                 _showMaterial(),
@@ -69,9 +69,9 @@ class ItemDetail extends StatelessWidget {
     return Container(
       child: GestureDetector(
         onTap: () {
-          Navigator.push(context, MaterialPageRoute(builder: (context) => ImageFull(item: item)));
+          Navigator.push(context, MaterialPageRoute(builder: (context) => ImageFull(item: item.data['img'])));
         },
-        child: Image.network(item.data['url'],
+        child: Image.network(item.data['img'],
         height: MediaQuery.of(context).size.width,
         fit: BoxFit.cover,
         )),
@@ -99,8 +99,12 @@ class ItemDetail extends StatelessWidget {
   }
 
   Widget _showSize() {
-    List sizeList = item.data['size'];
-    String sizeAvail = sizeList.join(',');
+    List sizeList = [];
+    for (var i = 0; i < item.data['size'].length; i++) {
+      sizeList.add(item.data['size'][i]['sizeEach']);
+    }
+    String sizeAvail = sizeList.join(', ');
+
     return 
     ListTile(
             title: Text(sizeAvail, style: TextStyle(
@@ -120,7 +124,11 @@ class ItemDetail extends StatelessWidget {
   }
 
   Widget _showMoreImage() {
-    List urlList = item.data['moreImg'];
+    List urlList = [];
+    for (var i = 0; i < item.data['moreImg'].length; i++) {
+      urlList.add(item.data['moreImg'][i]['imgUrl']);
+    }
+
     return
     Container(
       padding: EdgeInsets.only(left: 4.0, right: 4.0),
@@ -140,7 +148,7 @@ class ItemDetail extends StatelessWidget {
     return FlatButton(
       padding: EdgeInsets.all(0.0),
         onPressed: () {
-          Navigator.push(context, MaterialPageRoute(builder: (context) => ImageFull(item: item)));
+          Navigator.push(context, MaterialPageRoute(builder: (context) => ImageFull(item: moreUrl)));
         },
         child: new Card(
             clipBehavior: Clip.antiAlias,
@@ -178,7 +186,7 @@ class ItemDetail extends StatelessWidget {
 }
 
 class ImageFull extends StatelessWidget {
-  final DocumentSnapshot item;
+  final String item;
   ImageFull({this.item});
   @override
   Widget build(BuildContext context) {
@@ -192,7 +200,8 @@ class ImageFull extends StatelessWidget {
                   tag: 'imageHero',
                   child: 
                   PhotoView(
-                    imageProvider: NetworkImage(item.data['url']), 
+                    imageProvider: NetworkImage(item),
+                    initialScale: 1.5,
                     backgroundDecoration: BoxDecoration(color: Colors.white))
                 )
               )

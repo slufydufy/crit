@@ -20,7 +20,7 @@ class DonationJourneyAllState extends State<DonationJourneyAll> {
 
   Future fetchDonateJourney() async {
     QuerySnapshot fetchJourney =
-        await Firestore.instance.collection('donateJourney').getDocuments();
+        await Firestore.instance.collection('fl_content').where('mainCat', isEqualTo: 'story').getDocuments();
     return fetchJourney.documents;
   }
 
@@ -107,7 +107,7 @@ class DonationJourneyAllState extends State<DonationJourneyAll> {
   }
 
   Widget _donateJourneyCard(DocumentSnapshot item) {
-    var today = item.data['pubDate'];
+    var today = item.data['_fl_meta_']['createdDate'];
     String formatter =
         "${today.year.toString()}${today.month.toString().padLeft(2, '0')}${today.day.toString().padLeft(2, '0')}";
     return FlatButton(
@@ -119,6 +119,7 @@ class DonationJourneyAllState extends State<DonationJourneyAll> {
                 builder: (context) => DonateJourney(item: item)));
       },
         child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
           children: <Widget>[
             Card(
               clipBehavior: Clip.antiAlias,
@@ -134,7 +135,7 @@ class DonationJourneyAllState extends State<DonationJourneyAll> {
               padding: const EdgeInsets.all(4.0),
               child: Text(
                 item.data['title'],
-                style: TextStyle(fontSize: 22.0, fontWeight: FontWeight.bold),
+                style: TextStyle(fontSize: 16.0, fontWeight: FontWeight.bold),
               ),
             ),
             Padding(

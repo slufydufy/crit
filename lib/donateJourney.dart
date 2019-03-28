@@ -64,7 +64,7 @@ class DonateJourney extends StatelessWidget {
   }
 
   Widget _showEventInfo() {
-    var today = item.data['pubDate'];
+    var today = item.data['_fl_meta_']['createdDate'];
     String formatter =
         "${today.year.toString()}${today.month.toString().padLeft(2, '0')}${today.day.toString().padLeft(2, '0')}";
     return
@@ -105,25 +105,31 @@ class DonateJourney extends StatelessWidget {
   }
 
   Widget _donatorList() {
-    List userList = item.data['listUser'];
+    // List userList = item.data['listUser'];
+    List listUser = [];
+    List listOrder = [];
+    for (var i = 0; i < item.data['listUser'].length; i++) {
+      listUser.add(item.data['listUser'][i]['name']);
+      listOrder.add(item.data['listUser'][i]['orderId']);
+    }
     return 
       ListView.builder(
         physics: NeverScrollableScrollPhysics(),
         shrinkWrap: true,
-        itemCount: userList.length,
+        itemCount: listUser.length,
         itemBuilder: (context, i) {
-          return _donatorItem(userList[i]);
+          return _donatorItem(listUser[i], listOrder[i]);
         },
       );
   }
 
-  Widget _donatorItem(name) {
+  Widget _donatorItem(name, orderId) {
     return
     Column(
       children: <Widget>[
         ListTile(
           title: Text(name),
-          trailing: Text('OrderId: 20190314/WER/4431'),
+          trailing: Text(orderId),
         ),
         Divider()
       ],
@@ -133,7 +139,7 @@ class DonateJourney extends StatelessWidget {
   Widget _showDonateNowText(BuildContext context) {
     return
     Padding(
-      padding: EdgeInsets.fromLTRB(16.0, 16.0, 16.0, 0.0),
+      padding: EdgeInsets.all(16.0),
       child: 
       FlatButton(
         onPressed: () {

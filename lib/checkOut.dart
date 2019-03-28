@@ -197,7 +197,7 @@ class CheckOutState extends State<CheckOut> {
       child: Row(
         children: <Widget>[
           Image.network(
-            widget.itemCO.data['url'],
+            widget.itemCO.data['img'],
             height: 50,
             width: 50,
           ),
@@ -234,7 +234,11 @@ class CheckOutState extends State<CheckOut> {
   }
 
   Widget _showFinalSize() {
-    List sizeList = widget.itemCO.data['size'];
+    // List sizeList = widget.itemCO.data['size'];
+    List sizeList = [];
+    for (var i = 0; i < widget.itemCO.data['size'].length; i++) {
+      sizeList.add(widget.itemCO.data['size'][i]['sizeEach']);
+    }
     return Row(
       children: <Widget>[
         Expanded(

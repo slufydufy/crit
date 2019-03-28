@@ -31,13 +31,13 @@ class MyHomePageState extends State<MyHomePage> {
 
   Future fetchDonateDesign() async {
     QuerySnapshot fetchDesign =
-        await ref.collection('donateDesign').limit(6).getDocuments();
+        await ref.collection('fl_content').where('mainCat', isEqualTo: 'design').limit(6).getDocuments();
     return fetchDesign.documents;
   }
 
   Future fetchDonateJourney() async {
     QuerySnapshot fetchJourney =
-        await ref.collection('donateJourney').limit(3).getDocuments();
+        await ref.collection('fl_content').where('mainCat', isEqualTo: 'story').limit(3).getDocuments();
     return fetchJourney.documents;
   }
 
@@ -104,7 +104,7 @@ class MyHomePageState extends State<MyHomePage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(centerTitle: true, title: Text('Crit'),
+      appBar: AppBar(centerTitle: true, title: Text('CRIT'),
           // Image.asset('assets/images/logocr.png',),
           ),
       drawer: _showDrawer(),
@@ -113,6 +113,7 @@ class MyHomePageState extends State<MyHomePage> {
           _showCarousel(),
           _buyToDonateText(),
           _gridView(),
+          Divider(),
           _donateJourneyText(),
           _donateJourney()
         ],
@@ -230,13 +231,14 @@ class MyHomePageState extends State<MyHomePage> {
                 child: Text(
               'Buy to Donate',
               style: TextStyle(
-                fontSize: 24.0,
+                fontSize: 18.0,
                 fontWeight: FontWeight.bold,
               ),
             )),
             GestureDetector(
               child: Text('View All',
                   style: TextStyle(
+                    color: Colors.grey,
                     fontWeight: FontWeight.bold,
                   )),
               onTap: () {
@@ -262,7 +264,7 @@ class MyHomePageState extends State<MyHomePage> {
                   physics: ScrollPhysics(),
                   shrinkWrap: true,
                   gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
-                      crossAxisCount: 2),
+                      crossAxisCount: 3),
                   itemCount: snapshot.data.length,
                   itemBuilder: (context, index) {
                     return _itemCard(snapshot.data[index]);
@@ -282,20 +284,21 @@ class MyHomePageState extends State<MyHomePage> {
           child: Stack(
             children: <Widget>[
               Image.network(
-                snapshot.data['url'],
+                snapshot.data['img'],
                 fit: BoxFit.cover,
-                height: MediaQuery.of(context).size.width / 2,
+                height: MediaQuery.of(context).size.width / 3,
+                width: MediaQuery.of(context).size.width / 3,
               ),
               Positioned(
                 bottom: 0.0,
                 child: Container(
                   padding: EdgeInsets.all(4),
-                  width: (MediaQuery.of(context).size.width / 2) - 10.0,
-                  color: Colors.grey.withOpacity(0.6),
+                  width: (MediaQuery.of(context).size.width / 3) - 12.0,
+                  color: Colors.black.withOpacity(0.5),
                   child: Column(
                     crossAxisAlignment: CrossAxisAlignment.center,
                     children: <Widget>[
-                      Text(snapshot.data['title'],
+                      Text(snapshot.data['title'], maxLines: 1, textAlign: TextAlign.center,
                           style: TextStyle(color: Colors.white))
                     ],
                   ),
@@ -308,20 +311,21 @@ class MyHomePageState extends State<MyHomePage> {
 
   Widget _donateJourneyText() {
     return Container(
-        padding: EdgeInsets.fromLTRB(8.0, 32.0, 8.0, .0),
+        padding: EdgeInsets.all(8.0),
         child: Row(
           children: <Widget>[
             Expanded(
                 child: Text(
               'Donation Journey',
               style: TextStyle(
-                fontSize: 24.0,
+                fontSize: 18.0,
                 fontWeight: FontWeight.bold,
               ),
             )),
             GestureDetector(
               child: Text('View All',
                   style: TextStyle(
+                    color: Colors.grey,
                     fontWeight: FontWeight.bold,
                   )),
               onTap: () {
@@ -357,7 +361,7 @@ class MyHomePageState extends State<MyHomePage> {
   }
 
   Widget _donateJourneyCard(DocumentSnapshot snapshot) {
-    var today = snapshot.data['pubDate'];
+    var today = snapshot.data['_fl_meta_']['createdDate'];
     String formatter =
         "${today.year.toString()}${today.month.toString().padLeft(2, '0')}${today.day.toString().padLeft(2, '0')}";
     return FlatButton(
@@ -369,6 +373,7 @@ class MyHomePageState extends State<MyHomePage> {
                 builder: (context) => DonateJourney(item: snapshot)));
       },
         child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
           children: <Widget>[
             Card(
               clipBehavior: Clip.antiAlias,
@@ -376,23 +381,30 @@ class MyHomePageState extends State<MyHomePage> {
               child: Image.network(
                 snapshot.data['imgUrl'],
                 fit: BoxFit.cover,
-                height: MediaQuery.of(context).size.width / 1.5,
+                height: MediaQuery.of(context).size.width / 1.75,
                 width: MediaQuery.of(context).size.width,
               ),
             ),
             Padding(
               padding: const EdgeInsets.all(4.0),
               child: Text(
+                snapshot.data['category'],
+                style: TextStyle(fontSize: 16.0, color: Colors.grey),
+              ),
+            ),
+            Padding(
+              padding: const EdgeInsets.all(4.0),
+              child: Text(
                 snapshot.data['title'],
-                style: TextStyle(fontSize: 22.0, fontWeight: FontWeight.bold),
+                style: TextStyle(fontSize: 16.0, fontWeight: FontWeight.bold),
               ),
             ),
             Padding(
               padding: const EdgeInsets.all(4.0),
               child: Row(
                 children: <Widget>[
-                  Icon(Icons.card_giftcard, color: Colors.grey,),
-                  Padding(padding :EdgeInsets.only(left: 4.0), child: Text(snapshot.data['listUser'].length.toString(), style: TextStyle(color: Colors.grey),),),
+                  _giftIcon(snapshot.data['listUser']),
+                  _listDonator(snapshot.data['listUser']),
                   Padding(padding: EdgeInsets.only(left: 16.0), child: Icon(Icons.calendar_today, color: Colors.grey,),),
                   Padding(padding :EdgeInsets.only(left: 4.0), child: Text(formatter, style: TextStyle(color: Colors.grey),),),
                 ],
@@ -402,5 +414,28 @@ class MyHomePageState extends State<MyHomePage> {
           ],
         ),
     );
+  }
+
+  Widget _giftIcon(total) {
+    if (total == null) {
+      return Container();
+      
+    } else {
+      return
+      Icon(Icons.card_giftcard, color: Colors.grey);
+    }
+  }
+
+  Widget _listDonator(total) {
+    if (total == null) {
+      return Container();
+      
+    } else {
+      return
+      Padding(
+        padding :EdgeInsets.only(left: 4.0),
+        child: Text(total.length.toString() ?? "", style: TextStyle(
+          color: Colors.grey)));
+    }
   }
 }
