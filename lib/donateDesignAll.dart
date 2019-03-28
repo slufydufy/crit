@@ -5,7 +5,7 @@ import 'myHomePage.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'orderList.dart';
 import 'mainLogin.dart';
-import 'donationJourneyAll.dart';
+import 'storyAll.dart';
 import 'profile.dart';
 
 class DonateDesignAll extends StatefulWidget {
@@ -127,7 +127,7 @@ class DonateDesignAllState extends State<DonateDesignAll> {
                 bottom: 0.0,
                 child: Container(
                   padding: EdgeInsets.all(4),
-                  width: (MediaQuery.of(context).size.width / 2) - 10.0,
+                  width: (MediaQuery.of(context).size.width / 2) - 8.0,
                   color: Colors.black.withOpacity(0.5),
                   child: Column(
                     crossAxisAlignment: CrossAxisAlignment.center,
@@ -190,13 +190,13 @@ class DonateDesignAllState extends State<DonateDesignAll> {
               }),
         ListTile(
           title: Text(
-            'Donation Journey',
+            'All Story',
             style: TextStyle(fontSize: 16.0),
           ),
           leading: Icon(Icons.card_giftcard),
           onTap: () {
             Navigator.pop(context);
-            Navigator.push(context,MaterialPageRoute(builder: (context) => DonationJourneyAll()));
+            Navigator.push(context,MaterialPageRoute(builder: (context) => StoryAll()));
               }),
         ListTile(
           title: Text(

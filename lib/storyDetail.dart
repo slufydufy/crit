@@ -2,9 +2,9 @@ import 'package:flutter/material.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'donateDesignAll.dart';
 
-class DonateJourney extends StatelessWidget {
+class StoryDetail extends StatelessWidget {
   final DocumentSnapshot item;
-  DonateJourney({this.item});
+  StoryDetail({this.item});
 
   @override
   Widget build(BuildContext context) {
@@ -64,7 +64,7 @@ class DonateJourney extends StatelessWidget {
   }
 
   Widget _showEventInfo() {
-    var today = item.data['_fl_meta_']['createdDate'];
+    DateTime today = item.data['_fl_meta_']['createdDate'].toDate();
     String formatter =
         "${today.year.toString()}${today.month.toString().padLeft(2, '0')}${today.day.toString().padLeft(2, '0')}";
     return
@@ -72,14 +72,38 @@ class DonateJourney extends StatelessWidget {
       padding: const EdgeInsets.fromLTRB(16.0, 16.0, 16.0, 8.0),
       child: Row(
         children: <Widget>[
-          Icon(Icons.card_giftcard, color: Colors.grey,),
-          Padding(padding :EdgeInsets.only(left: 4.0), child: Text(item.data['listUser'].length.toString(), style: TextStyle(color: Colors.grey),),),
-          Padding(padding :EdgeInsets.only(left: 4.0), child: Text('donasi', style: TextStyle(color: Colors.grey),),),
-          Padding(padding: EdgeInsets.only(left: 16.0), child: Icon(Icons.calendar_today, color: Colors.grey,),),
+          Padding(padding: const EdgeInsets.only(right: 4.0),child: Icon(Icons.category, color: Colors.grey),),
+          Padding(padding :EdgeInsets.only(right: 24.0), child: Text(item.data['category'], style: TextStyle(color: Colors.grey),),),
+          _giftIcon(item.data['listUser']),
+          _listDonator(item.data['listUser']),
+          Icon(Icons.calendar_today, color: Colors.grey),
           Padding(padding :EdgeInsets.only(left: 4.0), child: Text(formatter, style: TextStyle(color: Colors.grey),),),
         ],
       ),
     );
+  }
+
+  Widget _giftIcon(total) {
+    if (total == null) {
+      return Container();
+      
+    } else {
+      return
+      Icon(Icons.card_giftcard, color: Colors.grey);
+    }
+  }
+
+  Widget _listDonator(total) {
+    if (total == null) {
+      return Container();
+      
+    } else {
+      return
+      Padding(
+        padding :EdgeInsets.only(left: 4.0, right: 24.0),
+        child: Text(total.length.toString() ?? "", style: TextStyle(
+          color: Colors.grey)));
+    }
   }
 
   Widget _showDesc() {
@@ -94,6 +118,9 @@ class DonateJourney extends StatelessWidget {
   }
 
   Widget _showDonaturText() {
+    if (item.data['listUser'] == null) {
+      return Container();
+    } else {
     return
     Padding(
       padding: EdgeInsets.fromLTRB(16.0, 16.0, 16.0, 8.0),
@@ -102,17 +129,20 @@ class DonateJourney extends StatelessWidget {
         fontWeight: FontWeight.bold
       ),),
     );
+    }
   }
 
   Widget _donatorList() {
-    // List userList = item.data['listUser'];
-    List listUser = [];
-    List listOrder = [];
-    for (var i = 0; i < item.data['listUser'].length; i++) {
-      listUser.add(item.data['listUser'][i]['name']);
-      listOrder.add(item.data['listUser'][i]['orderId']);
+    if (item.data['listUser'] == null) {
+      return Container();
+    } else {
+      List listUser = [];
+      List listOrder = [];
+      for (var i = 0; i < item.data['listUser'].length; i++) {
+        listUser.add(item.data['listUser'][i]['name']);
+        listOrder.add(item.data['listUser'][i]['orderId']);
     }
-    return 
+      return 
       ListView.builder(
         physics: NeverScrollableScrollPhysics(),
         shrinkWrap: true,
@@ -121,6 +151,7 @@ class DonateJourney extends StatelessWidget {
           return _donatorItem(listUser[i], listOrder[i]);
         },
       );
+    }
   }
 
   Widget _donatorItem(name, orderId) {

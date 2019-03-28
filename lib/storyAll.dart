@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
-import 'donateJourney.dart';
+import 'storyDetail.dart';
 import 'myHomePage.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'orderList.dart';
@@ -8,13 +8,13 @@ import 'mainLogin.dart';
 import 'profile.dart';
 import 'donateDesignAll.dart';
 
-class DonationJourneyAll extends StatefulWidget {
+class StoryAll extends StatefulWidget {
 
   @override
-  DonationJourneyAllState createState() => DonationJourneyAllState();
+  StoryAllAllState createState() => StoryAllAllState();
 }
 
-class DonationJourneyAllState extends State<DonationJourneyAll> {
+class StoryAllAllState extends State<StoryAll> {
 
   Future _donateJourneyData;
 
@@ -81,7 +81,7 @@ class DonationJourneyAllState extends State<DonationJourneyAll> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text('All Journey'),
+        title: Text('All Story'),
       ),
       drawer: _showDrawer(),
       body: FutureBuilder(
@@ -107,7 +107,7 @@ class DonationJourneyAllState extends State<DonationJourneyAll> {
   }
 
   Widget _donateJourneyCard(DocumentSnapshot item) {
-    var today = item.data['_fl_meta_']['createdDate'];
+    DateTime today = item.data['_fl_meta_']['createdDate'].toDate();
     String formatter =
         "${today.year.toString()}${today.month.toString().padLeft(2, '0')}${today.day.toString().padLeft(2, '0')}";
     return FlatButton(
@@ -116,7 +116,7 @@ class DonationJourneyAllState extends State<DonationJourneyAll> {
         Navigator.push(
             context,
             MaterialPageRoute(
-                builder: (context) => DonateJourney(item: item)));
+                builder: (context) => StoryDetail(item: item)));
       },
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
@@ -142,9 +142,11 @@ class DonationJourneyAllState extends State<DonationJourneyAll> {
               padding: const EdgeInsets.all(4.0),
               child: Row(
                 children: <Widget>[
-                  Icon(Icons.card_giftcard, color: Colors.grey,),
-                  Padding(padding :EdgeInsets.only(left: 4.0), child: Text(item.data['listUser'].length.toString(), style: TextStyle(color: Colors.grey),),),
-                  Padding(padding: EdgeInsets.only(left: 16.0), child: Icon(Icons.calendar_today, color: Colors.grey,),),
+                  Padding(padding: const EdgeInsets.only(right: 4.0),child: Icon(Icons.category, color: Colors.grey),),
+                  Padding(padding :EdgeInsets.only(right: 24.0), child: Text(item.data['category'], style: TextStyle(color: Colors.grey),),),
+                  _giftIcon(item.data['listUser']),
+                  _listDonator(item.data['listUser']),
+                  Icon(Icons.calendar_today, color: Colors.grey),
                   Padding(padding :EdgeInsets.only(left: 4.0), child: Text(formatter, style: TextStyle(color: Colors.grey),),),
                 ],
               ),
@@ -153,6 +155,29 @@ class DonationJourneyAllState extends State<DonationJourneyAll> {
           ],
         ),
     );
+  }
+
+  Widget _giftIcon(total) {
+    if (total == null) {
+      return Container();
+      
+    } else {
+      return
+      Icon(Icons.card_giftcard, color: Colors.grey);
+    }
+  }
+
+  Widget _listDonator(total) {
+    if (total == null) {
+      return Container();
+      
+    } else {
+      return
+      Padding(
+        padding :EdgeInsets.only(left: 4.0, right: 24.0),
+        child: Text(total.length.toString() ?? "", style: TextStyle(
+          color: Colors.grey)));
+    }
   }
 
   Widget _showDrawer() {
@@ -202,13 +227,13 @@ class DonationJourneyAllState extends State<DonationJourneyAll> {
               }),
         ListTile(
           title: Text(
-            'Donation Journey',
+            'All Story',
             style: TextStyle(fontSize: 16.0),
           ),
           leading: Icon(Icons.card_giftcard),
           onTap: () {
             Navigator.pop(context);
-            Navigator.push(context,MaterialPageRoute(builder: (context) => DonationJourneyAll()));
+            Navigator.push(context,MaterialPageRoute(builder: (context) => StoryAll()));
               }),
         ListTile(
           title: Text(

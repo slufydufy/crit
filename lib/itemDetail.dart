@@ -156,7 +156,8 @@ class ItemDetail extends StatelessWidget {
               child: 
               Image.network(moreUrl,
                 fit: BoxFit.cover,
-                height: MediaQuery.of(context).size.width / 3
+                height: MediaQuery.of(context).size.width / 3,
+                width: MediaQuery.of(context).size.width / 3
                 ),
             ));
   }

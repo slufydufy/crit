@@ -7,9 +7,9 @@ import 'mainLogin.dart';
 import 'crud.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'profile.dart';
-import 'donateJourney.dart';
+import 'storyDetail.dart';
 import 'donateDesignAll.dart';
-import 'donationJourneyAll.dart';
+import 'storyAll.dart';
 
 class MyHomePage extends StatefulWidget {
   @override
@@ -114,8 +114,8 @@ class MyHomePageState extends State<MyHomePage> {
           _buyToDonateText(),
           _gridView(),
           Divider(),
-          _donateJourneyText(),
-          _donateJourney()
+          _storyText(),
+          _story()
         ],
       ),
     );
@@ -168,13 +168,13 @@ class MyHomePageState extends State<MyHomePage> {
               }),
         ListTile(
           title: Text(
-            'Donation Journey',
+            'All Story',
             style: TextStyle(fontSize: 16.0),
           ),
           leading: Icon(Icons.card_giftcard),
           onTap: () {
             Navigator.pop(context);
-            Navigator.push(context,MaterialPageRoute(builder: (context) => DonationJourneyAll()));
+            Navigator.push(context,MaterialPageRoute(builder: (context) => StoryAll()));
               }),
         ListTile(
           title: Text(
@@ -293,7 +293,7 @@ class MyHomePageState extends State<MyHomePage> {
                 bottom: 0.0,
                 child: Container(
                   padding: EdgeInsets.all(4),
-                  width: (MediaQuery.of(context).size.width / 3) - 12.0,
+                  width: (MediaQuery.of(context).size.width / 3) - 10.0,
                   color: Colors.black.withOpacity(0.5),
                   child: Column(
                     crossAxisAlignment: CrossAxisAlignment.center,
@@ -309,14 +309,14 @@ class MyHomePageState extends State<MyHomePage> {
         ));
   }
 
-  Widget _donateJourneyText() {
+  Widget _storyText() {
     return Container(
         padding: EdgeInsets.all(8.0),
         child: Row(
           children: <Widget>[
             Expanded(
                 child: Text(
-              'Donation Journey',
+              'Story',
               style: TextStyle(
                 fontSize: 18.0,
                 fontWeight: FontWeight.bold,
@@ -330,14 +330,14 @@ class MyHomePageState extends State<MyHomePage> {
                   )),
               onTap: () {
                 Navigator.push(context,MaterialPageRoute(
-                  builder: (context) => DonationJourneyAll()));
+                  builder: (context) => StoryAll()));
               },
             ),
           ],
         ));
   }
 
-  Widget _donateJourney() {
+  Widget _story() {
     return Container(
         padding: EdgeInsets.all(8.0),
         child: FutureBuilder(
@@ -353,15 +353,15 @@ class MyHomePageState extends State<MyHomePage> {
                   shrinkWrap: true,
                   itemCount: snapshot.data.length,
                   itemBuilder: (context, index) {
-                    return _donateJourneyCard(snapshot.data[index]);
+                    return _storyCard(snapshot.data[index]);
                   },
                 );
               }
             }));
   }
 
-  Widget _donateJourneyCard(DocumentSnapshot snapshot) {
-    var today = snapshot.data['_fl_meta_']['createdDate'];
+  Widget _storyCard(DocumentSnapshot snapshot) {
+    DateTime today = snapshot.data['_fl_meta_']['createdDate'].toDate();
     String formatter =
         "${today.year.toString()}${today.month.toString().padLeft(2, '0')}${today.day.toString().padLeft(2, '0')}";
     return FlatButton(
@@ -370,7 +370,7 @@ class MyHomePageState extends State<MyHomePage> {
         Navigator.push(
             context,
             MaterialPageRoute(
-                builder: (context) => DonateJourney(item: snapshot)));
+                builder: (context) => StoryDetail(item: snapshot)));
       },
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
@@ -388,13 +388,6 @@ class MyHomePageState extends State<MyHomePage> {
             Padding(
               padding: const EdgeInsets.all(4.0),
               child: Text(
-                snapshot.data['category'],
-                style: TextStyle(fontSize: 16.0, color: Colors.grey),
-              ),
-            ),
-            Padding(
-              padding: const EdgeInsets.all(4.0),
-              child: Text(
                 snapshot.data['title'],
                 style: TextStyle(fontSize: 16.0, fontWeight: FontWeight.bold),
               ),
@@ -403,9 +396,11 @@ class MyHomePageState extends State<MyHomePage> {
               padding: const EdgeInsets.all(4.0),
               child: Row(
                 children: <Widget>[
+                  Padding(padding: const EdgeInsets.only(right: 4.0),child: Icon(Icons.category, color: Colors.grey),),
+                  Padding(padding :EdgeInsets.only(right: 24.0), child: Text(snapshot.data['category'], style: TextStyle(color: Colors.grey),),),
                   _giftIcon(snapshot.data['listUser']),
                   _listDonator(snapshot.data['listUser']),
-                  Padding(padding: EdgeInsets.only(left: 16.0), child: Icon(Icons.calendar_today, color: Colors.grey,),),
+                  Icon(Icons.calendar_today, color: Colors.grey),
                   Padding(padding :EdgeInsets.only(left: 4.0), child: Text(formatter, style: TextStyle(color: Colors.grey),),),
                 ],
               ),
@@ -433,7 +428,7 @@ class MyHomePageState extends State<MyHomePage> {
     } else {
       return
       Padding(
-        padding :EdgeInsets.only(left: 4.0),
+        padding :EdgeInsets.only(left: 4.0, right: 24.0),
         child: Text(total.length.toString() ?? "", style: TextStyle(
           color: Colors.grey)));
     }
