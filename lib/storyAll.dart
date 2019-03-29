@@ -107,7 +107,8 @@ class StoryAllAllState extends State<StoryAll> {
   }
 
   Widget _donateJourneyCard(DocumentSnapshot item) {
-    DateTime today = item.data['_fl_meta_']['createdDate'].toDate();
+    String date = item.data['pubDate'];
+    DateTime today = DateTime.parse(date);
     String formatter =
         "${today.year.toString()}${today.month.toString().padLeft(2, '0')}${today.day.toString().padLeft(2, '0')}";
     return FlatButton(

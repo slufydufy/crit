@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'donateDesignAll.dart';
+import 'itemDetail.dart';
 
 class StoryDetail extends StatelessWidget {
   final DocumentSnapshot item;
@@ -55,16 +56,23 @@ class StoryDetail extends StatelessWidget {
 
   Widget _showImage(BuildContext context) {
     return
-    Image.network(
-      item.data['imgUrl'],
-      fit: BoxFit.cover,
-      height: MediaQuery.of(context).size.width / 1.5,
-      width: MediaQuery.of(context).size.width,
+    FlatButton(
+      padding: EdgeInsets.all(0.0),
+      onPressed: () {
+        Navigator.push(context, MaterialPageRoute(builder: (context) => ImageFull(item: item.data['imgUrl'])));
+      },
+        child: Image.network(
+        item.data['imgUrl'],
+        fit: BoxFit.cover,
+        height: MediaQuery.of(context).size.width / 1.5,
+        width: MediaQuery.of(context).size.width,
+      ),
     );
   }
 
   Widget _showEventInfo() {
-    DateTime today = item.data['_fl_meta_']['createdDate'].toDate();
+    String date = item.data['pubDate'];
+    DateTime today = DateTime.parse(date);
     String formatter =
         "${today.year.toString()}${today.month.toString().padLeft(2, '0')}${today.day.toString().padLeft(2, '0')}";
     return

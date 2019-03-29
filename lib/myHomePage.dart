@@ -35,7 +35,7 @@ class MyHomePageState extends State<MyHomePage> {
     return fetchDesign.documents;
   }
 
-  Future fetchDonateJourney() async {
+  Future fetchStory() async {
     QuerySnapshot fetchJourney =
         await ref.collection('fl_content').where('mainCat', isEqualTo: 'story').limit(3).getDocuments();
     return fetchJourney.documents;
@@ -98,7 +98,7 @@ class MyHomePageState extends State<MyHomePage> {
     super.initState();
     _bannerData = fetchBanner();
     _designData = fetchDonateDesign();
-    _donateJourneyData = fetchDonateJourney();
+    _donateJourneyData = fetchStory();
   }
 
   @override
@@ -361,7 +361,8 @@ class MyHomePageState extends State<MyHomePage> {
   }
 
   Widget _storyCard(DocumentSnapshot snapshot) {
-    DateTime today = snapshot.data['_fl_meta_']['createdDate'].toDate();
+    String date = snapshot.data['pubDate'];
+    DateTime today = DateTime.parse(date);
     String formatter =
         "${today.year.toString()}${today.month.toString().padLeft(2, '0')}${today.day.toString().padLeft(2, '0')}";
     return FlatButton(
