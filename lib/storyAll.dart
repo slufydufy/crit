@@ -186,7 +186,8 @@ class StoryAllAllState extends State<StoryAll> {
       child: Column(
         children: <Widget>[
           Container(
-            height: 32.0,
+            color: Colors.grey,
+            height: MediaQuery.of(context).size.width / 4.5,
           ),
         ListTile(
             title: Text(
@@ -196,7 +197,6 @@ class StoryAllAllState extends State<StoryAll> {
               ),
             ),
           ),
-          Divider(),
           ListTile(
           title: Text(
             'Home',

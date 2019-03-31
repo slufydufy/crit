@@ -148,7 +148,8 @@ class DonateDesignAllState extends State<DonateDesignAll> {
       child: Column(
         children: <Widget>[
           Container(
-            height: 32.0,
+            color: Colors.grey,
+            height: MediaQuery.of(context).size.width / 4.5,
           ),
         ListTile(
             title: Text(
@@ -158,7 +159,6 @@ class DonateDesignAllState extends State<DonateDesignAll> {
               ),
             ),
           ),
-          Divider(),
           ListTile(
           title: Text(
             'Home',

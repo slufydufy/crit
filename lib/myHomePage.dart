@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:carousel_pro/carousel_pro.dart';
+import 'package:flutter_swiper/flutter_swiper.dart';
 import 'itemDetail.dart';
 import 'orderList.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
@@ -10,6 +10,7 @@ import 'profile.dart';
 import 'storyDetail.dart';
 import 'donateDesignAll.dart';
 import 'storyAll.dart';
+import 'bannerDetail.dart';
 
 class MyHomePage extends StatefulWidget {
   @override
@@ -25,7 +26,7 @@ class MyHomePageState extends State<MyHomePage> {
   CrudMethod crudObj = CrudMethod();
 
   Future fetchBanner() async {
-    QuerySnapshot fetchBanner = await ref.collection('banner').getDocuments();
+    QuerySnapshot fetchBanner = await ref.collection('fl_content').where('mainCat', isEqualTo: 'banner').getDocuments();
     return fetchBanner.documents;
   }
 
@@ -126,7 +127,8 @@ class MyHomePageState extends State<MyHomePage> {
       child: Column(
         children: <Widget>[
           Container(
-            height: 32.0,
+            color: Colors.grey,
+            height: MediaQuery.of(context).size.width / 4.5,
           ),
         ListTile(
             title: Text(
@@ -136,7 +138,6 @@ class MyHomePageState extends State<MyHomePage> {
               ),
             ),
           ),
-          Divider(),
           ListTile(
           title: Text(
             'Home',
@@ -196,26 +197,24 @@ class MyHomePageState extends State<MyHomePage> {
           return Center(child: CircularProgressIndicator());
         } else {
           return Container(
-            height: MediaQuery.of(context).size.height / 2.5,
-            child: InkWell(
-              onTap: () {
-                print('banner clicked');
+            height: MediaQuery.of(context).size.width / 1.25,
+            child: 
+            Swiper(
+              itemBuilder: (context, i) {
+                return Card(
+                  clipBehavior: Clip.antiAlias,
+                  child: Image.network(snapshot.data[i].data['imgUrl'],fit: BoxFit.cover,));
               },
-              child: Carousel(
-                boxFit: BoxFit.cover,
-                images: [
-                  NetworkImage(snapshot.data[0].data['url']),
-                  NetworkImage(snapshot.data[1].data['url']),
-                  NetworkImage(snapshot.data[2].data['url']),
-                  NetworkImage(snapshot.data[3].data['url']),
-                  NetworkImage(snapshot.data[4].data['url'])
-                ],
-                animationCurve: Curves.fastOutSlowIn,
-                animationDuration: Duration(milliseconds: 1500),
-                dotSize: 6.0,
-                indicatorBgPadding: 15.0,
-              ),
-            ),
+              itemCount: snapshot.data.length,
+              duration: 500,
+              autoplay: true,
+              pagination: SwiperPagination(),
+              onTap: (i) {
+                  Navigator.push(context,MaterialPageRoute(builder: (context) => BannerDetail(item: snapshot.data[i],)));
+              },
+              itemWidth: MediaQuery.of(context).size.width / 1.25,
+              layout: SwiperLayout.STACK,
+            )
           );
         }
       },

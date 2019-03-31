@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'checkOut.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:photo_view/photo_view.dart';
+import 'package:flutter_swiper/flutter_swiper.dart';
 
 class ItemDetail extends StatelessWidget {
   final DocumentSnapshot item;
@@ -31,7 +32,7 @@ class ItemDetail extends StatelessWidget {
                 _showSize(),
                 Divider(),
                 _showMoreImageText(),
-                _showMoreImage(),
+                _showMoreImage(context),
               ],
             ),
           ),
@@ -123,43 +124,26 @@ class ItemDetail extends StatelessWidget {
     );
   }
 
-  Widget _showMoreImage() {
-    List urlList = [];
-    for (var i = 0; i < item.data['moreImg'].length; i++) {
-      urlList.add(item.data['moreImg'][i]['imgUrl']);
-    }
-
+  Widget _showMoreImage(BuildContext context) {
     return
     Container(
-      padding: EdgeInsets.only(left: 4.0, right: 4.0),
-      child: GridView.builder(
-        physics: ScrollPhysics(),
-        shrinkWrap: true,
-        gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(crossAxisCount: 3),
-        itemCount: urlList.length,
+      height: MediaQuery.of(context).size.width / 1.5,
+      child: 
+      Swiper(
         itemBuilder: (context, i) {
-          return 
-          _itemCard(context, urlList[i]);
-        },),
-    );
-  }
-
-  Widget _itemCard(BuildContext context, moreUrl) {
-    return FlatButton(
-      padding: EdgeInsets.all(0.0),
-        onPressed: () {
-          Navigator.push(context, MaterialPageRoute(builder: (context) => ImageFull(item: moreUrl)));
-        },
-        child: new Card(
+          return Card(
             clipBehavior: Clip.antiAlias,
-            color: Colors.white,
-              child: 
-              Image.network(moreUrl,
-                fit: BoxFit.cover,
-                height: MediaQuery.of(context).size.width / 3,
-                width: MediaQuery.of(context).size.width / 3
-                ),
-            ));
+            child: Image.network(item.data['moreImg'][i]['imgUrl'],fit: BoxFit.cover,));
+        },
+        itemCount: item.data['moreImg'].length,
+        pagination: SwiperPagination(),
+        onTap: (i) {
+            Navigator.push(context,MaterialPageRoute(builder: (context) => ImageFull(item: item.data['moreImg'][i]['imgUrl'],)));
+        },
+        viewportFraction: 0.7,
+        scale: 0.8,
+      )
+    );
   }
 
   Widget _showButton(BuildContext context) {
