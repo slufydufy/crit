@@ -193,12 +193,17 @@ class ImageFull extends StatelessWidget {
             ),
             Positioned(
               top: 64.0, left: 16.0,
-              child: GestureDetector(
-                      child: Icon(Icons.arrow_back_ios),
-                      onTap: () {
-                        Navigator.pop(context);
-                      }
-                    ),
+              child: 
+              Container(
+                width: 30.0,
+                height: 30.0,
+                child: FloatingActionButton(
+                  child: Icon(Icons.close),
+                  onPressed: () {
+                    Navigator.pop(context);
+                  },
+                ),
+              )
             )
           ],
         )
