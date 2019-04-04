@@ -13,12 +13,14 @@ class ConfirmPayment extends StatefulWidget {
 class ConfirmPaymentState extends State<ConfirmPayment> {
 
   final _formConfirmKey = GlobalKey<FormState>();
+  final bankTxtCont = TextEditingController();
   final rekTxtCont = TextEditingController();
   final jumlahTxtCont = TextEditingController();
   CrudMethod crudObj = CrudMethod();
 
   @override
   void dispose() {
+    bankTxtCont.dispose();
     rekTxtCont.dispose();
     rekTxtCont.dispose();
     super.dispose();
@@ -28,6 +30,7 @@ class ConfirmPaymentState extends State<ConfirmPayment> {
     if (_formConfirmKey.currentState.validate()) {
       crudObj.confirmPayment(widget.itemConf.documentID, {
         "status" : 'konfirmasi by admin',
+        "bank" : bankTxtCont.text,
         "noRekCust" : rekTxtCont.text,
         "jmlBayar" : jumlahTxtCont.text
       }).then((result) {
@@ -121,11 +124,34 @@ class ConfirmPaymentState extends State<ConfirmPayment> {
       key: _formConfirmKey,
       child: Column(
         children: <Widget>[
+          _showBank(),
           _showRek(),
           _showTotalPaid()
         ],
       ),
     );
+  }
+
+  Widget _showBank() {
+    return
+    Padding(
+        padding: const EdgeInsets.only(left: 16.0, right: 16.0, top: 16.0),
+        child: TextFormField(
+        controller: bankTxtCont,
+        maxLines: 1,
+        validator: (value) {
+            if (value.isEmpty) {
+              return 'Nama bank belum diisi';
+            }
+          },
+              decoration: InputDecoration(
+                contentPadding:
+                new EdgeInsets.symmetric(vertical: 10.0, horizontal: 10.0),
+                labelText: 'Nama Bank',
+                border: OutlineInputBorder()
+              ),
+            ),
+          );
   }
 
   Widget _showRek() {

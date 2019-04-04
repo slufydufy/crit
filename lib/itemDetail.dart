@@ -195,9 +195,10 @@ class ImageFull extends StatelessWidget {
               top: 64.0, left: 16.0,
               child: 
               Container(
-                width: 30.0,
-                height: 30.0,
+                width: 32.0,
+                height: 32.0,
                 child: FloatingActionButton(
+                  elevation: 0.0,
                   child: Icon(Icons.close),
                   onPressed: () {
                     Navigator.pop(context);

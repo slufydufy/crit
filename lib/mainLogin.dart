@@ -11,10 +11,23 @@ class MainLogin extends StatefulWidget {
 }
 
 class _MainLoginState extends State<MainLogin> {
+  BuildContext scafoldContext;
+
   final _formLoginkey = GlobalKey<FormState>();
   final passwordTxtCont = TextEditingController();
   final emailTxtCont = TextEditingController();
   CrudMethod crudObj =CrudMethod();
+
+  void createSnackBar(String message) {
+    final snackBar = SnackBar(
+      content: Text(
+        message,
+        style: TextStyle(fontWeight: FontWeight.bold),
+      ),
+      backgroundColor: Colors.black,
+    );
+    Scaffold.of(scafoldContext).showSnackBar(snackBar);
+  }
 
 
   signInEmail() async {
@@ -23,13 +36,25 @@ class _MainLoginState extends State<MainLogin> {
       user = await FirebaseAuth.instance.
         signInWithEmailAndPassword(email: emailTxtCont.text, password: passwordTxtCont.text);
     } catch (e) {
-      print(e.toString());
+      print(e);
+      if (e.toString() == 'PlatformException(ERROR_WRONG_PASSWORD, The password is invalid or the user does not have a password., null)') {
+        createSnackBar('The password is invalid or the user does not have a password');
+      } else if (e.toString() == 'PlatformException(ERROR_INVALID_EMAIL, The email address is badly formatted., null)') {
+        createSnackBar('The email address is badly formatted');
+      } else if (e.toString() == 'PlatformException(ERROR_USER_NOT_FOUND, There is no user record corresponding to this identifier. The user may have been deleted., null)') {
+        createSnackBar('There is no user record found');
+      } else {
+        createSnackBar('Login Error');
+      }
+      
     } finally {
       if (user != null ) {
         print(user);
+        CircularProgressIndicator();
         Navigator.popUntil(context, ModalRoute.withName('/'));
       }
     }
+    FocusScope.of(context).requestFocus(new FocusNode());
   }
 
   @override
@@ -37,14 +62,20 @@ class _MainLoginState extends State<MainLogin> {
     return Scaffold(
       backgroundColor: Colors.grey[600],
       body: 
-      ListView(
-        children: <Widget>[
-            _showLogo(context),
-            _showSkipText(context),
-            _loginForm(),
-            _showButton(),
-            _showRegister(context)
-        ],
+      Builder(
+        builder: (BuildContext context) {
+          scafoldContext = context;
+          return
+            ListView(
+          children: <Widget>[
+              _showLogo(context),
+              _showSkipText(context),
+              _loginForm(),
+              _showButton(),
+              _showRegister(context)
+          ],
+        );
+        },
       ),
     );
   }

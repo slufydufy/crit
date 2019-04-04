@@ -34,6 +34,16 @@ class DonateDesignAllState extends State<DonateDesignAll> {
     }
   }
 
+  checkLoginOrderAppbar() async {
+    FirebaseUser status = await FirebaseAuth.instance.currentUser();
+    if (status == null) {
+      _dismissLoginDialog(context);
+    } else {
+      Navigator.push(
+          context, MaterialPageRoute(builder: (context) => OrderList()));
+    }
+  }
+
   _dismissLoginDialog(BuildContext context) async {
     return showDialog(
       context: context,
@@ -81,6 +91,13 @@ class DonateDesignAllState extends State<DonateDesignAll> {
     Scaffold(
       appBar: AppBar(
         title: Text('All Design For You'),
+        actions: <Widget>[
+          SizedBox(
+            width: 54.0,
+            child: FlatButton(child: Icon(Icons.shopping_cart),
+              onPressed: checkLoginOrderAppbar),
+          )
+        ],
       ),
       drawer: _showDrawer(),
       body: FutureBuilder(
@@ -90,16 +107,19 @@ class DonateDesignAllState extends State<DonateDesignAll> {
             return Center(child: CircularProgressIndicator());
           } else {
             return
-            GridView.builder(
-                  physics: ScrollPhysics(),
-                  shrinkWrap: true,
-                  gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
-                      crossAxisCount: 2),
-                  itemCount: snapshot.data.length,
-                  itemBuilder: (context, index) {
-                    return _itemCard(snapshot.data[index]);
-                  },
-                );
+            Padding(
+              padding: const EdgeInsets.all(4.0),
+              child: GridView.builder(
+                    physics: ScrollPhysics(),
+                    shrinkWrap: true,
+                    gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
+                        crossAxisCount: 2),
+                    itemCount: snapshot.data.length,
+                    itemBuilder: (context, index) {
+                      return _itemCard(snapshot.data[index]);
+                    },
+                  ),
+            );
           }
         },
       ),

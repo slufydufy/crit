@@ -36,6 +36,16 @@ class StoryAllAllState extends State<StoryAll> {
     }
   }
 
+  checkLoginOrderAppbar() async {
+    FirebaseUser status = await FirebaseAuth.instance.currentUser();
+    if (status == null) {
+      _dismissLoginDialog(context);
+    } else {
+      Navigator.push(
+          context, MaterialPageRoute(builder: (context) => OrderList()));
+    }
+  }
+
   _dismissLoginDialog(BuildContext context) async {
     return showDialog(
       context: context,
@@ -82,6 +92,13 @@ class StoryAllAllState extends State<StoryAll> {
     return Scaffold(
       appBar: AppBar(
         title: Text('All Story'),
+        actions: <Widget>[
+          SizedBox(
+            width: 54.0,
+            child: FlatButton(child: Icon(Icons.shopping_cart),
+              onPressed: checkLoginOrderAppbar),
+          )
+        ],
       ),
       drawer: _showDrawer(),
       body: FutureBuilder(
@@ -143,7 +160,7 @@ class StoryAllAllState extends State<StoryAll> {
               padding: const EdgeInsets.all(4.0),
               child: Row(
                 children: <Widget>[
-                  Padding(padding: const EdgeInsets.only(right: 4.0),child: Icon(Icons.category, color: Colors.grey),),
+                  Padding(padding: const EdgeInsets.only(right: 4.0),child: Icon(Icons.star, color: Colors.grey),),
                   Padding(padding :EdgeInsets.only(right: 24.0), child: Text(item.data['category'], style: TextStyle(color: Colors.grey),),),
                   _giftIcon(item.data['listUser']),
                   _listDonator(item.data['listUser']),

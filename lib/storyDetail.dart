@@ -11,7 +11,7 @@ class StoryDetail extends StatelessWidget {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text('Donate Journey'),
+        title: Text('Story Detail'),
       ),
       body: ListView(
         children: <Widget>[
@@ -80,7 +80,7 @@ class StoryDetail extends StatelessWidget {
       padding: const EdgeInsets.fromLTRB(16.0, 16.0, 16.0, 8.0),
       child: Row(
         children: <Widget>[
-          Padding(padding: const EdgeInsets.only(right: 4.0),child: Icon(Icons.category, color: Colors.grey),),
+          Padding(padding: const EdgeInsets.only(right: 4.0),child: Icon(Icons.star, color: Colors.grey),),
           Padding(padding :EdgeInsets.only(right: 24.0), child: Text(item.data['category'], style: TextStyle(color: Colors.grey),),),
           _giftIcon(item.data['listUser']),
           _listDonator(item.data['listUser']),
@@ -132,7 +132,7 @@ class StoryDetail extends StatelessWidget {
     return
     Padding(
       padding: EdgeInsets.fromLTRB(16.0, 16.0, 16.0, 8.0),
-      child: Text('List donatur :', style: TextStyle(
+      child: Text('Donation List', style: TextStyle(
         fontSize: 18.0,
         fontWeight: FontWeight.bold
       ),),
@@ -146,9 +146,11 @@ class StoryDetail extends StatelessWidget {
     } else {
       List listUser = [];
       List listOrder = [];
+      List listDonateImg = [];
       for (var i = 0; i < item.data['listUser'].length; i++) {
         listUser.add(item.data['listUser'][i]['name']);
         listOrder.add(item.data['listUser'][i]['orderId']);
+        listDonateImg.add(item.data['listUser'][i]['donateImg']);
     }
       return 
       ListView.builder(
@@ -156,19 +158,22 @@ class StoryDetail extends StatelessWidget {
         shrinkWrap: true,
         itemCount: listUser.length,
         itemBuilder: (context, i) {
-          return _donatorItem(listUser[i], listOrder[i]);
+          return _donatorItem(context, listUser[i], listOrder[i], listDonateImg[i]);
         },
       );
     }
   }
 
-  Widget _donatorItem(name, orderId) {
+  Widget _donatorItem(context, name, orderId, donateImg) {
     return
     Column(
       children: <Widget>[
         ListTile(
           title: Text(name),
           trailing: Text(orderId),
+          onTap: () {
+            Navigator.push(context, MaterialPageRoute(builder: (context) => ImageFull(item: donateImg)));
+          },
         ),
         Divider()
       ],
