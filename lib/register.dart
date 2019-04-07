@@ -9,6 +9,7 @@ class Register extends StatefulWidget {
 }
 
 class _RegisterState extends State<Register> {
+  BuildContext scafoldContext;
 
   final _formRegKey = GlobalKey<FormState>();
   final nameTxtCont = TextEditingController();
@@ -24,12 +25,22 @@ class _RegisterState extends State<Register> {
     super.dispose();
   }
 
+  void createSnackBar(String message) {
+    final snackBar = SnackBar(
+      content: Text(
+        message,
+        style: TextStyle(fontWeight: FontWeight.bold),
+      ),
+      backgroundColor: Colors.black,
+    );
+    Scaffold.of(scafoldContext).showSnackBar(snackBar);
+  }
+
   registerEmail(email, password) async {
-    final createUser = await FirebaseAuth.instance.
-      createUserWithEmailAndPassword(email: email, password: password).catchError((e) {
-      print(e);
-    });
-    if (createUser != null) {
+    FirebaseUser user;
+    try {
+      user = await FirebaseAuth.instance.createUserWithEmailAndPassword(email: email, password: password);
+      if (user !=null) {
       final user = await FirebaseAuth.instance.currentUser();
       final uid = user.uid;
       crudObject.addUser({
@@ -38,9 +49,16 @@ class _RegisterState extends State<Register> {
         'email' : email,
       }).then((result) {
         Navigator.popUntil(context, ModalRoute.withName('/'));
-      }).catchError((e) {
-        print(e);
+        user.sendEmailVerification();
       });
+      }
+    } catch (e) {
+      print(e);
+      if (e.toString() == 'PlatformException(ERROR_EMAIL_ALREADY_IN_USE, The email address is already in use by another account., null)' ) {
+        createSnackBar('The email address is already in use by another account');
+      } else {
+        createSnackBar('SignUp Error');
+      }
     }
   }
 
@@ -50,13 +68,20 @@ class _RegisterState extends State<Register> {
       appBar: AppBar(
         title: Text('Register'),
       ),
-      body: Column(
-        crossAxisAlignment: CrossAxisAlignment.stretch,
-        children: <Widget>[
-          _showRegForm(),
-          _showButton(context)
-        ],
-      ),
+      body: 
+      Builder(
+        builder: (BuildContext context) {
+          scafoldContext = context;
+          return
+          Column(
+          crossAxisAlignment: CrossAxisAlignment.stretch,
+          children: <Widget>[
+            _showRegForm(),
+            _showButton(context)
+          ],
+        );
+        },
+      )
     );
   }
 

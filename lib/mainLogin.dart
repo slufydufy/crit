@@ -3,6 +3,8 @@ import 'myHomePage.dart';
 import 'register.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'crud.dart';
+import 'package:google_sign_in/google_sign_in.dart';
+import 'package:cloud_firestore/cloud_firestore.dart';
 
 class MainLogin extends StatefulWidget {
 
@@ -16,7 +18,15 @@ class _MainLoginState extends State<MainLogin> {
   final _formLoginkey = GlobalKey<FormState>();
   final passwordTxtCont = TextEditingController();
   final emailTxtCont = TextEditingController();
-  CrudMethod crudObj =CrudMethod();
+  CrudMethod crudObj = CrudMethod();
+  GoogleSignIn _gSignIn = GoogleSignIn(
+    scopes: [
+      'email',
+      'https://www.googleapis.com/auth/contacts.readonly'
+    ]
+  );
+  GoogleSignInAccount _currentUser;
+  
 
   void createSnackBar(String message) {
     final snackBar = SnackBar(
@@ -50,11 +60,54 @@ class _MainLoginState extends State<MainLogin> {
     } finally {
       if (user != null ) {
         print(user);
-        CircularProgressIndicator();
         Navigator.popUntil(context, ModalRoute.withName('/'));
       }
     }
     FocusScope.of(context).requestFocus(new FocusNode());
+  }
+
+  googleSignIn() async {
+    try {
+      GoogleSignInAccount googleSignInAccount = await _gSignIn.signIn();
+      GoogleSignInAuthentication googleSignInAuthentication = await googleSignInAccount.authentication;
+      AuthCredential authCredential = GoogleAuthProvider.getCredential(
+        accessToken: googleSignInAuthentication.accessToken,
+        idToken: googleSignInAuthentication.idToken
+      );
+      FirebaseUser user = await FirebaseAuth.instance.signInWithCredential(authCredential);
+      FirebaseUser currentUser = await FirebaseAuth.instance.currentUser();
+
+      QuerySnapshot fetchUser = await Firestore.instance.collection('users').where('uid', isEqualTo: currentUser.uid).getDocuments();
+      if (fetchUser != null) {
+        Navigator.popUntil(context, ModalRoute.withName('/'));
+      } else {
+        crudObj.addUser({
+        'uid' : currentUser.uid,
+        'name' : user.displayName,
+        'email' : user.email,
+      }).then((result) {
+        Navigator.popUntil(context, ModalRoute.withName('/'));
+        currentUser.sendEmailVerification();
+      });
+      }
+    } 
+    catch (e) {
+      print(e);
+    }
+  }
+
+  @override
+  void initState() {
+    super.initState();
+    _gSignIn.onCurrentUserChanged.listen((GoogleSignInAccount account) {
+      setState(() {
+        _currentUser = account;
+      });
+      if (_currentUser != null) {
+        _gSignIn.signInSilently();
+      }
+    });
+    
   }
 
   @override
@@ -66,13 +119,14 @@ class _MainLoginState extends State<MainLogin> {
         builder: (BuildContext context) {
           scafoldContext = context;
           return
-            ListView(
+          ListView(
           children: <Widget>[
               _showLogo(context),
               _showSkipText(context),
               _loginForm(),
               _showButton(),
-              _showRegister(context)
+              _showRegister(context),
+              _showGoogleLogin()
           ],
         );
         },
@@ -82,7 +136,7 @@ class _MainLoginState extends State<MainLogin> {
 
   Widget _showLogo(BuildContext context) {
     return Image.asset('assets/images/loginimg.png',
-    height: MediaQuery.of(context).size.height / 2,
+    height: MediaQuery.of(context).size.width,
     fit: BoxFit.cover,
     );
   }
@@ -93,7 +147,7 @@ class _MainLoginState extends State<MainLogin> {
       padding: const EdgeInsets.only(left: 16.0, right: 16.0),
       child: Row(
         children: <Widget>[
-          Text('Sign in', style: TextStyle(
+          Text('Email Sign in', style: TextStyle(
             color: Colors.black45,
             fontSize: 22
           )),
@@ -169,11 +223,11 @@ class _MainLoginState extends State<MainLogin> {
   Widget _showButton() {
     return
     Padding(
-      padding: const EdgeInsets.fromLTRB(16.0, 32.0, 16.0, 16.0),
-      child: RaisedButton(
+      padding: const EdgeInsets.all(16.0),
+      child: FlatButton(
         onPressed: signInEmail,
         color: Colors.grey[800],
-        child: Text('Login', style: TextStyle(color: Colors.white),),
+        child: Text('Sign In', style: TextStyle(color: Colors.white),)
       ),
     );
   }
@@ -187,6 +241,20 @@ class _MainLoginState extends State<MainLogin> {
               Navigator.push(context, MaterialPageRoute(builder: (context) => Register()));
             },
           child: Text('Don\'t have account? Register', style: TextStyle(color: Colors.white),),
+      ),
+    );
+  }
+
+  Widget _showGoogleLogin() {
+    return
+    Padding(
+      padding: const EdgeInsets.fromLTRB(16.0, 32.0, 16.0, 16.0),
+      child: FlatButton.icon(
+        onPressed: googleSignIn,
+        color: Colors.white,
+        icon: Image.asset('assets/images/g.png', width: 30, height: 30),
+        label: Text('Sign In with Google', style: TextStyle(), textAlign: TextAlign.left,),
+        
       ),
     );
   }

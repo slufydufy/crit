@@ -154,6 +154,7 @@ class StoryAllAllState extends State<StoryAll> {
               child: Text(
                 item.data['title'],
                 style: TextStyle(fontSize: 16.0, fontWeight: FontWeight.bold),
+                maxLines: 2,
               ),
             ),
             Padding(

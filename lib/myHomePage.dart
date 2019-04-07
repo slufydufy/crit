@@ -171,7 +171,7 @@ class MyHomePageState extends State<MyHomePage> {
             'Order Saya',
             style: TextStyle(fontSize: 16.0),
           ),
-          leading: Icon(Icons.add_shopping_cart),
+          leading: Icon(Icons.shopping_cart),
           onTap: checkLoginOrder),
         ListTile(
           title: Text(
@@ -407,6 +407,7 @@ class MyHomePageState extends State<MyHomePage> {
               child: Text(
                 snapshot.data['title'],
                 style: TextStyle(fontSize: 16.0, fontWeight: FontWeight.bold),
+                maxLines: 2,
               ),
             ),
             Padding(

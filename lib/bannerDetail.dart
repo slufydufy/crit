@@ -73,7 +73,7 @@ class BannerDetail extends StatelessWidget {
       child: 
       Text(item.data['desc'], style: TextStyle(
         fontSize: 16.0,
-      ),),
+      ), textAlign: TextAlign.justify),
     );
   }
 

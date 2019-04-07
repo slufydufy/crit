@@ -73,7 +73,7 @@ class CheckOutState extends State<CheckOut> {
         'uid': _uid,
         'itemTitle': widget.itemCO.data['title'],
         'itemPrice': widget.itemCO.data['price'],
-        'itemImg': widget.itemCO.data['url'],
+        'itemImg': widget.itemCO.data['img'],
         'size': finalSize,
         'quantity': quantityTxtCont.text,
         'name': orderNameTxtCont.text,
