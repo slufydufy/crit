@@ -15,7 +15,6 @@ class BrandAll extends StatefulWidget {
 }
 
 class BrandAllState extends State<BrandAll> {
-
   Future _brandData;
 
   Future fetchBrand() async {
@@ -89,7 +88,7 @@ class BrandAllState extends State<BrandAll> {
             color: Colors.grey,
             height: MediaQuery.of(context).size.width / 4.5,
           ),
-        ListTile(
+          ListTile(
             title: Text(
               'Crit, buy to Donate',
               style: TextStyle(
@@ -98,62 +97,63 @@ class BrandAllState extends State<BrandAll> {
             ),
           ),
           ListTile(
-          title: Text(
-            'Home',
-            style: TextStyle(fontSize: 16.0),
-          ),
-          leading: Icon(Icons.home),
-          onTap: () {
-            Navigator.pop(context);
-            Navigator.push(context,
-                MaterialPageRoute(builder: (context) => MyHomePage()));
-          }),
-        ListTile(
-          title: Text(
-            'Order Saya',
-            style: TextStyle(fontSize: 16.0),
-          ),
-          leading: Icon(Icons.add_shopping_cart),
-          onTap: checkLoginOrder),
-        ListTile(
-          title: Text(
-            'Buy to donate design',
-            style: TextStyle(fontSize: 16.0),
-          ),
-          leading: Icon(Icons.hot_tub),
-          onTap: () {
-            Navigator.pop(context);
+              title: Text(
+                'Home',
+                style: TextStyle(fontSize: 16.0),
+              ),
+              leading: Icon(Icons.home),
+              onTap: () {
+                Navigator.pop(context);
+                Navigator.push(context,
+                    MaterialPageRoute(builder: (context) => MyHomePage()));
+              }),
+          ListTile(
+              title: Text(
+                'Order Saya',
+                style: TextStyle(fontSize: 16.0),
+              ),
+              leading: Icon(Icons.add_shopping_cart),
+              onTap: checkLoginOrder),
+          ListTile(
+              title: Text(
+                'Buy to donate design',
+                style: TextStyle(fontSize: 16.0),
+              ),
+              leading: Icon(Icons.hot_tub),
+              onTap: () {
+                Navigator.pop(context);
                 Navigator.push(context,
                     MaterialPageRoute(builder: (context) => DonateDesignAll()));
               }),
-        ListTile(
-          title: Text(
-            'All Brands',
-            style: TextStyle(fontSize: 16.0),
-          ),
-          leading: Icon(Icons.dashboard),
-          onTap: () {
-            Navigator.pop(context);
+          ListTile(
+              title: Text(
+                'All Brands',
+                style: TextStyle(fontSize: 16.0),
+              ),
+              leading: Icon(Icons.dashboard),
+              onTap: () {
+                Navigator.pop(context);
                 Navigator.push(context,
                     MaterialPageRoute(builder: (context) => BrandAll()));
-              }),      
-        ListTile(
-          title: Text(
-            'All Story',
-            style: TextStyle(fontSize: 16.0),
-          ),
-          leading: Icon(Icons.card_giftcard),
-          onTap: () {
-            Navigator.pop(context);
-            Navigator.push(context,MaterialPageRoute(builder: (context) => StoryAll()));
               }),
-        ListTile(
-          title: Text(
-            'Profile',
-            style: TextStyle(fontSize: 16.0),
-          ),
-          leading: Icon(Icons.person),
-          onTap: checkLoginProfile),
+          ListTile(
+              title: Text(
+                'All Story',
+                style: TextStyle(fontSize: 16.0),
+              ),
+              leading: Icon(Icons.card_giftcard),
+              onTap: () {
+                Navigator.pop(context);
+                Navigator.push(context,
+                    MaterialPageRoute(builder: (context) => StoryAll()));
+              }),
+          ListTile(
+              title: Text(
+                'Profile',
+                style: TextStyle(fontSize: 16.0),
+              ),
+              leading: Icon(Icons.person),
+              onTap: checkLoginProfile),
         ],
       ),
     );
@@ -173,13 +173,14 @@ class BrandAllState extends State<BrandAll> {
         actions: <Widget>[
           SizedBox(
             width: 54.0,
-            child: FlatButton(child: Icon(Icons.shopping_cart),
-              onPressed: checkLoginOrderAppbar),
+            child: FlatButton(
+                child: Icon(Icons.shopping_cart),
+                onPressed: checkLoginOrderAppbar),
           )
         ],
       ),
       drawer: _showDrawer(),
-      body: Column(
+      body: ListView(
         children: <Widget>[
           _showBanner(),
           _showBrand(),
@@ -189,65 +190,66 @@ class BrandAllState extends State<BrandAll> {
   }
 
   Widget _showBanner() {
-    return
-    Container(
-      width: MediaQuery.of(context).size.width,
-      height: MediaQuery.of(context).size.width / 2,
-      padding: EdgeInsets.all(16.0),
-      color: Colors.grey,
-      child: Card(
-        clipBehavior: Clip.antiAlias,
-        child: Image.network('http://socialzoomfactor.com/wp-content/uploads/2016/01/iStock_000015850715XSmall.jpg', 
-          width: MediaQuery.of(context).size.width / 1.5,
-          height: MediaQuery.of(context).size.width / 2.25,
-          fit: BoxFit.cover,),
-      ));
+    return Container(
+        width: MediaQuery.of(context).size.width,
+        height: MediaQuery.of(context).size.width / 2,
+        padding: EdgeInsets.all(16.0),
+        color: Colors.grey,
+        child: Card(
+          clipBehavior: Clip.antiAlias,
+          child: Image.network(
+            'http://socialzoomfactor.com/wp-content/uploads/2016/01/iStock_000015850715XSmall.jpg',
+            width: MediaQuery.of(context).size.width / 1.5,
+            height: MediaQuery.of(context).size.width / 2.25,
+            fit: BoxFit.cover,
+          ),
+        ));
   }
 
   Widget _showBrand() {
-    return
-    FutureBuilder(
-      future: _brandData,
-      builder:(_, snapshot) {
-        if (snapshot.connectionState == ConnectionState.waiting) {
-          return CircularProgressIndicator();
-        } else {
-          return 
-          Padding(
-            padding: const EdgeInsets.all(8.0),
-            child: StaggeredGridView.countBuilder(
-              physics: NeverScrollableScrollPhysics(),
-              shrinkWrap: true,
-              crossAxisCount: 2,
-              itemCount: snapshot.data.length,
-              itemBuilder: (context, index) {
-                return brandCard(snapshot.data[index]);
-              },
-              staggeredTileBuilder: (index) {
-                StaggeredTile.fit(2);
-              },
-            ),
-          );
-        }
-      }
-      
-    );
+    return FutureBuilder(
+        future: _brandData,
+        builder: (_, snapshot) {
+          if (snapshot.connectionState == ConnectionState.waiting) {
+            return Center(child: CircularProgressIndicator());
+          } else {
+            return 
+            Container(
+              color: Colors.white,
+              padding: const EdgeInsets.all(8.0),
+              child: StaggeredGridView.countBuilder(
+                shrinkWrap: true,
+                crossAxisCount: 4,
+                physics: NeverScrollableScrollPhysics(),
+                itemCount: snapshot.data.length,
+                itemBuilder: (BuildContext context, int index) => brandCard(snapshot.data[index]),
+                staggeredTileBuilder: (int index) =>
+                    new StaggeredTile.fit(2),
+                mainAxisSpacing: 8.0,
+                crossAxisSpacing: 8.0,
+              )
+            );
+          }
+        });
   }
 
   Widget brandCard(DocumentSnapshot item) {
-    return FlatButton(
-      onPressed: (){
-        
-      },
-      child: Card(
-        clipBehavior: Clip.antiAlias,
-        child: 
-        Image.network(item.data['imgUrl'],
-        // width: 100.0,
-        // height: 100.0,
+    return 
+      FlatButton(
+        padding: EdgeInsets.all(0.0),
+        onPressed: () {},
+        child: Column(
+          children: <Widget>[
+            Card(
+              clipBehavior: Clip.antiAlias,
+              child: Image.network(
+                item.data['imgUrl'],
+                // fit: BoxFit.cover,
+              ),
+            ),
+            Text(item.data['title'], style: TextStyle(color: Colors.grey),)
+          ],
         ),
-      ),
     );
   }
-
 }
