@@ -4,7 +4,6 @@ import 'itemDetail.dart';
 import 'orderList.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'mainLogin.dart';
-import 'crud.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'profile.dart';
 import 'storyDetail.dart';
@@ -20,10 +19,10 @@ class MyHomePage extends StatefulWidget {
 class MyHomePageState extends State<MyHomePage> {
   Future _bannerData;
   Future _designData;
-  Future _donateJourneyData;
+  Future _brandData;
+  Future _storyData;
 
   var ref = Firestore.instance;
-  CrudMethod crudObj = CrudMethod();
 
   Future fetchBanner() async {
     QuerySnapshot fetchBanner = await ref.collection('fl_content').where('mainCat', isEqualTo: 'banner').getDocuments();
@@ -36,9 +35,14 @@ class MyHomePageState extends State<MyHomePage> {
     return fetchDesign.documents;
   }
 
+  Future fetchBrand() async {
+    QuerySnapshot fetchBrandData = await ref.collection('brands').limit(6).getDocuments();
+    return fetchBrandData.documents;
+  }
+
   Future fetchStory() async {
     QuerySnapshot fetchJourney =
-        await ref.collection('fl_content').where('mainCat', isEqualTo: 'story').limit(3).getDocuments();
+        await ref.collection('fl_content').where('mainCat', isEqualTo: 'story').limit(6).getDocuments();
     return fetchJourney.documents;
   }
 
@@ -101,41 +105,6 @@ class MyHomePageState extends State<MyHomePage> {
           ],
         );
       },
-    );
-  }
-
-  @override
-  void initState() {
-    super.initState();
-    _bannerData = fetchBanner();
-    _designData = fetchDonateDesign();
-    _donateJourneyData = fetchStory();
-  }
-
-  @override
-  Widget build(BuildContext context) {
-    return Scaffold(
-      appBar: AppBar(title: Text('CRIT'),
-        actions: <Widget>[
-          SizedBox(
-            width: 54.0,
-            child: FlatButton(child: Icon(Icons.shopping_cart),
-              onPressed: checkLoginOrderAppbar),
-          )
-        ],
-          // Image.asset('assets/images/logocr.png',),
-          ),
-      drawer: _showDrawer(),
-      body: ListView(
-        children: <Widget>[
-          _showCarousel(),
-          _buyToDonateText(),
-          _gridView(),
-          Divider(),
-          _storyText(),
-          _story()
-        ],
-      ),
     );
   }
 
@@ -206,6 +175,43 @@ class MyHomePageState extends State<MyHomePage> {
     );
   }
 
+  @override
+  void initState() {
+    super.initState();
+    _bannerData = fetchBanner();
+    _designData = fetchDonateDesign();
+    _brandData = fetchBrand();
+    _storyData = fetchStory();
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return Scaffold(
+      appBar: AppBar(title: Text('CRIT'),
+        actions: <Widget>[
+          SizedBox(
+            width: 54.0,
+            child: FlatButton(child: Icon(Icons.shopping_cart),
+              onPressed: checkLoginOrderAppbar),
+          )
+        ],
+          // Image.asset('assets/images/logocr.png',),
+          ),
+      drawer: _showDrawer(),
+      body: ListView(
+        children: <Widget>[
+          _showCarousel(),
+          _buyToDonateText(),
+          _gridView(),
+          _brandText(),
+          _brands(),
+          _storyText(),
+          _story()
+        ],
+      ),
+    );
+  }
+
   Widget _showCarousel() {
     return FutureBuilder(
       future: _bannerData,
@@ -267,7 +273,7 @@ class MyHomePageState extends State<MyHomePage> {
 
   Widget _gridView() {
     return Container(
-        padding: EdgeInsets.fromLTRB(4.0, 0.0, 4.0, 8.0),
+        padding: EdgeInsets.fromLTRB(4.0, 0.0, 4.0, 16.0),
         child: FutureBuilder(
             future: _designData,
             builder: (context, snapshot) {
@@ -325,9 +331,93 @@ class MyHomePageState extends State<MyHomePage> {
         ));
   }
 
+  Widget _brandText() {
+    return Container(
+      color: Colors.grey,
+        padding: EdgeInsets.only(left: 8.0, top: 8.0, right: 8.0),
+        child: Row(
+          children: <Widget>[
+            Expanded(
+                child: Text(
+              'Local Brand',
+              style: TextStyle(
+                fontSize: 18.0,
+                fontWeight: FontWeight.bold,
+              ),
+            )),
+            GestureDetector(
+              child: Text('View All',
+                  style: TextStyle(
+                    color: Colors.white,
+                    // fontWeight: FontWeight.bold,
+                  )),
+              onTap: () {
+                Navigator.push(context,MaterialPageRoute(
+                  builder: (context) => StoryAll()));
+              },
+            ),
+          ],
+        ));
+  }
+
+  Widget _brands() {
+    return Container(
+      color: Colors.grey,
+      height: MediaQuery.of(context).size.width / 1.8,
+      padding: EdgeInsets.all(8.0),
+      child: FutureBuilder(
+        future: _brandData,
+        builder: (context, snapshot) {
+          if (snapshot.connectionState == ConnectionState.waiting) {
+            return Center(
+              child: CircularProgressIndicator(),
+                );
+          } else {
+            return ListView.builder(
+              scrollDirection: Axis.horizontal,
+              itemCount: snapshot.data.length,
+              itemBuilder: (context, i) {
+                return 
+                brandCard(snapshot.data[i]);
+              },
+            );
+          }
+        },
+      ),
+    );
+  }
+
+  Widget brandCard(DocumentSnapshot snapshot) {
+    return FlatButton(
+            padding: EdgeInsets.all(0.0),
+            onPressed: () {
+            },
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: <Widget>[
+                Card(
+                  clipBehavior: Clip.antiAlias,
+                  child: Image.network(snapshot.data['imgUrl'],
+                  fit: BoxFit.cover,
+                  width: MediaQuery.of(context).size.width / 1.5,
+                  height: MediaQuery.of(context).size.width / 2.25,
+                  ),
+                ),
+                Padding(
+                  padding: const EdgeInsets.only(left: 8.0),
+                  child: Text(snapshot.data['title'], style: TextStyle(
+                    fontSize: 16.0,
+                    color: Colors.black
+                  )),
+                )
+              ],
+            ),
+          );
+  }
+
   Widget _storyText() {
     return Container(
-        padding: EdgeInsets.all(8.0),
+        padding: EdgeInsets.fromLTRB(8.0, 16.0, 8.0, 0.0),
         child: Row(
           children: <Widget>[
             Expanded(
@@ -357,7 +447,7 @@ class MyHomePageState extends State<MyHomePage> {
     return Container(
         padding: EdgeInsets.all(8.0),
         child: FutureBuilder(
-            future: _donateJourneyData,
+            future: _storyData,
             builder: (context, snapshot) {
               if (snapshot.connectionState == ConnectionState.waiting) {
                 return Center(
@@ -432,7 +522,6 @@ class MyHomePageState extends State<MyHomePage> {
   Widget _giftIcon(total) {
     if (total == null) {
       return Container();
-      
     } else {
       return
       Icon(Icons.card_giftcard, color: Colors.grey);
@@ -442,7 +531,6 @@ class MyHomePageState extends State<MyHomePage> {
   Widget _listDonator(total) {
     if (total == null) {
       return Container();
-      
     } else {
       return
       Padding(

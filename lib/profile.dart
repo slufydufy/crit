@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'adminPage.dart';
-import 'package:google_sign_in/google_sign_in.dart';
+// import 'package:google_sign_in/google_sign_in.dart';
 
 class Profile extends StatefulWidget {
   @override
@@ -15,7 +15,7 @@ class _ProfileState extends State<Profile> {
   Future _adminData;
   String crntUid;
   String _email;
-  GoogleSignIn _gSignIn = GoogleSignIn();
+  // GoogleSignIn _gSignIn = GoogleSignIn();
 
 
   Future fetchAdmin() async {
@@ -147,6 +147,7 @@ class _ProfileState extends State<Profile> {
               _showName(snapshot.data[0]),
               _showEmail(snapshot.data[0]),
               _showReset(),
+              _showBrandPage(),
               Divider(),
               _showSignOut(),
               _showadmin()
@@ -181,6 +182,18 @@ class _ProfileState extends State<Profile> {
       subtitle: Text('Reset your account password'),
       trailing: Icon(Icons.arrow_forward_ios),
       onTap: _resetDialog
+    );
+  }
+
+  Widget _showBrandPage() {
+    return
+    ListTile(
+      title: Text('Brand Page'),
+      subtitle: Text('Create / Manage your Brand'),
+      trailing: Icon(Icons.arrow_forward_ios),
+      onTap: () {
+        Navigator.push(context, MaterialPageRoute(builder: (context) => AdminPage()));
+      }
     );
   }
 
