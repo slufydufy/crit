@@ -7,6 +7,7 @@ import 'orderList.dart';
 import 'mainLogin.dart';
 import 'profile.dart';
 import 'donateDesignAll.dart';
+import 'brandAll.dart';
 
 class StoryAll extends StatefulWidget {
 
@@ -16,12 +17,12 @@ class StoryAll extends StatefulWidget {
 
 class StoryAllAllState extends State<StoryAll> {
 
-  Future _donateJourneyData;
+  Future _storyData;
 
-  Future fetchDonateJourney() async {
-    QuerySnapshot fetchJourney =
+  Future fetchStory() async {
+    QuerySnapshot storyData =
         await Firestore.instance.collection('fl_content').where('mainCat', isEqualTo: 'story').getDocuments();
-    return fetchJourney.documents;
+    return storyData.documents;
   }
 
   checkLoginOrder() async {
@@ -84,7 +85,7 @@ class StoryAllAllState extends State<StoryAll> {
   @override
   void initState() {
     super.initState();
-    _donateJourneyData = fetchDonateJourney();
+    _storyData = fetchStory();
   }
 
   @override
@@ -102,7 +103,7 @@ class StoryAllAllState extends State<StoryAll> {
       ),
       drawer: _showDrawer(),
       body: FutureBuilder(
-        future: _donateJourneyData,
+        future: _storyData,
         builder: (_, snapshot) {
           if (snapshot.connectionState == ConnectionState.waiting) {
             return Center(child: CircularProgressIndicator());
@@ -136,42 +137,42 @@ class StoryAllAllState extends State<StoryAll> {
             MaterialPageRoute(
                 builder: (context) => StoryDetail(item: item)));
       },
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: <Widget>[
-            Card(
-              clipBehavior: Clip.antiAlias,
-              color: Colors.white,
-              child: Image.network(
-                item.data['imgUrl'],
-                fit: BoxFit.cover,
-                height: MediaQuery.of(context).size.width / 1.5,
-                width: MediaQuery.of(context).size.width,
-              ),
-            ),
+        child: Card(
+            clipBehavior: Clip.antiAlias,
+            color: Colors.white,
+            child: 
+              Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: <Widget>[
+                  Image.network(
+                    item.data['imgUrl'],
+                    fit: BoxFit.cover,
+                    height: MediaQuery.of(context).size.width / 1.75,
+                    width: MediaQuery.of(context).size.width,
+                  ),
+                  Padding(
+                  padding: const EdgeInsets.all(8.0),
+                    child: Text(
+                        item.data['title'],
+                        style: TextStyle(fontSize: 18.0),
+                        maxLines: 2,
+                        ),
+                  ),
             Padding(
-              padding: const EdgeInsets.all(4.0),
-              child: Text(
-                item.data['title'],
-                style: TextStyle(fontSize: 16.0, fontWeight: FontWeight.bold),
-                maxLines: 2,
-              ),
-            ),
-            Padding(
-              padding: const EdgeInsets.all(4.0),
+              padding: const EdgeInsets.all(8.0),
               child: Row(
                 children: <Widget>[
-                  Padding(padding: const EdgeInsets.only(right: 4.0),child: Icon(Icons.star, color: Colors.grey),),
+                  Padding(padding: const EdgeInsets.only(right: 4.0),child: Icon(Icons.lightbulb_outline, color: Colors.grey),),
                   Padding(padding :EdgeInsets.only(right: 24.0), child: Text(item.data['category'], style: TextStyle(color: Colors.grey),),),
                   _giftIcon(item.data['listUser']),
                   _listDonator(item.data['listUser']),
                   Icon(Icons.calendar_today, color: Colors.grey),
-                  Padding(padding :EdgeInsets.only(left: 4.0), child: Text(formatter, style: TextStyle(color: Colors.grey),),),
+                  Padding(padding :EdgeInsets.only(left: 4.0), child: Text(formatter, style: TextStyle(color: Colors.grey),),)
                 ],
               ),
             ),
-            Divider()
-          ],
+            ],
+          ),
         ),
     );
   }
@@ -246,6 +247,17 @@ class StoryAllAllState extends State<StoryAll> {
               }),
         ListTile(
           title: Text(
+            'All Brands',
+            style: TextStyle(fontSize: 16.0),
+          ),
+          leading: Icon(Icons.dashboard),
+          onTap: () {
+            Navigator.pop(context);
+                Navigator.push(context,
+                    MaterialPageRoute(builder: (context) => BrandAll()));
+              }),      
+        ListTile(
+          title: Text(
             'All Story',
             style: TextStyle(fontSize: 16.0),
           ),
@@ -265,5 +277,4 @@ class StoryAllAllState extends State<StoryAll> {
       ),
     );
   }
-
 }

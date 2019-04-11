@@ -10,6 +10,7 @@ import 'storyDetail.dart';
 import 'donateDesignAll.dart';
 import 'storyAll.dart';
 import 'bannerDetail.dart';
+import 'brandAll.dart';
 
 class MyHomePage extends StatefulWidget {
   @override
@@ -155,6 +156,17 @@ class MyHomePageState extends State<MyHomePage> {
               }),
         ListTile(
           title: Text(
+            'All Brands',
+            style: TextStyle(fontSize: 16.0),
+          ),
+          leading: Icon(Icons.dashboard),
+          onTap: () {
+            Navigator.pop(context);
+                Navigator.push(context,
+                    MaterialPageRoute(builder: (context) => BrandAll()));
+              }),      
+        ListTile(
+          title: Text(
             'All Story',
             style: TextStyle(fontSize: 16.0),
           ),
@@ -203,7 +215,6 @@ class MyHomePageState extends State<MyHomePage> {
           _showCarousel(),
           _buyToDonateText(),
           _gridView(),
-          _brandText(),
           _brands(),
           _storyText(),
           _story()
@@ -220,7 +231,7 @@ class MyHomePageState extends State<MyHomePage> {
           return Center(child: CircularProgressIndicator());
         } else {
           return Container(
-            height: MediaQuery.of(context).size.width / 1.25,
+            height: MediaQuery.of(context).size.width / 1.2,
             child: 
             Swiper(
               itemBuilder: (context, i) {
@@ -253,7 +264,7 @@ class MyHomePageState extends State<MyHomePage> {
                 child: Text(
               'Buy to Donate',
               style: TextStyle(
-                fontSize: 18.0,
+                fontSize: 20.0,
                 fontWeight: FontWeight.bold,
               ),
             )),
@@ -341,7 +352,7 @@ class MyHomePageState extends State<MyHomePage> {
                 child: Text(
               'Local Brand',
               style: TextStyle(
-                fontSize: 18.0,
+                fontSize: 20.0,
                 fontWeight: FontWeight.bold,
               ),
             )),
@@ -349,11 +360,10 @@ class MyHomePageState extends State<MyHomePage> {
               child: Text('View All',
                   style: TextStyle(
                     color: Colors.white,
-                    // fontWeight: FontWeight.bold,
                   )),
               onTap: () {
                 Navigator.push(context,MaterialPageRoute(
-                  builder: (context) => StoryAll()));
+                  builder: (context) => BrandAll()));
               },
             ),
           ],
@@ -361,28 +371,37 @@ class MyHomePageState extends State<MyHomePage> {
   }
 
   Widget _brands() {
-    return Container(
+    return 
+    Container(
       color: Colors.grey,
-      height: MediaQuery.of(context).size.width / 1.8,
-      padding: EdgeInsets.all(8.0),
-      child: FutureBuilder(
-        future: _brandData,
-        builder: (context, snapshot) {
-          if (snapshot.connectionState == ConnectionState.waiting) {
-            return Center(
-              child: CircularProgressIndicator(),
-                );
-          } else {
-            return ListView.builder(
-              scrollDirection: Axis.horizontal,
-              itemCount: snapshot.data.length,
-              itemBuilder: (context, i) {
-                return 
-                brandCard(snapshot.data[i]);
+      child: Column(
+        children: <Widget>[
+          _brandText(),
+          Container(
+            color: Colors.grey,
+            height: MediaQuery.of(context).size.width / 1.7,
+            padding: EdgeInsets.all(8.0),
+            child: FutureBuilder(
+              future: _brandData,
+              builder: (context, snapshot) {
+                if (snapshot.connectionState == ConnectionState.waiting) {
+                  return Center(
+                    child: CircularProgressIndicator(),
+                      );
+                } else {
+                  return ListView.builder(
+                    scrollDirection: Axis.horizontal,
+                    itemCount: snapshot.data.length,
+                    itemBuilder: (context, i) {
+                      return 
+                      brandCard(snapshot.data[i]);
+                    },
+                  );
+                }
               },
-            );
-          }
-        },
+            ),
+          ),
+        ],
       ),
     );
   }
@@ -424,7 +443,7 @@ class MyHomePageState extends State<MyHomePage> {
                 child: Text(
               'Story',
               style: TextStyle(
-                fontSize: 18.0,
+                fontSize: 20.0,
                 fontWeight: FontWeight.bold,
               ),
             )),
@@ -479,32 +498,32 @@ class MyHomePageState extends State<MyHomePage> {
             MaterialPageRoute(
                 builder: (context) => StoryDetail(item: snapshot)));
       },
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: <Widget>[
-            Card(
+        child: Card(
               clipBehavior: Clip.antiAlias,
               color: Colors.white,
-              child: Image.network(
-                snapshot.data['imgUrl'],
-                fit: BoxFit.cover,
-                height: MediaQuery.of(context).size.width / 1.75,
-                width: MediaQuery.of(context).size.width,
-              ),
-            ),
-            Padding(
-              padding: const EdgeInsets.all(4.0),
-              child: Text(
-                snapshot.data['title'],
-                style: TextStyle(fontSize: 16.0, fontWeight: FontWeight.bold),
-                maxLines: 2,
-              ),
-            ),
-            Padding(
-              padding: const EdgeInsets.all(4.0),
-              child: Row(
+              child: 
+              Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
                 children: <Widget>[
-                  Padding(padding: const EdgeInsets.only(right: 4.0),child: Icon(Icons.star, color: Colors.grey),),
+                  Image.network(
+                    snapshot.data['imgUrl'],
+                    fit: BoxFit.cover,
+                    height: MediaQuery.of(context).size.width / 1.75,
+                    width: MediaQuery.of(context).size.width,
+                  ),
+                  Padding(
+                    padding: const EdgeInsets.all(8.0),
+                    child: Text(
+                      snapshot.data['title'],
+                      style: TextStyle(fontSize: 18.0),
+                      maxLines: 2,
+                      ),
+                    ),
+                  Padding(
+                    padding: const EdgeInsets.all(8.0),
+                    child: Row(
+                      children: <Widget>[
+                  Padding(padding: const EdgeInsets.only(right: 4.0),child: Icon(Icons.lightbulb_outline, color: Colors.grey),),
                   Padding(padding :EdgeInsets.only(right: 24.0), child: Text(snapshot.data['category'], style: TextStyle(color: Colors.grey),),),
                   _giftIcon(snapshot.data['listUser']),
                   _listDonator(snapshot.data['listUser']),
@@ -513,9 +532,9 @@ class MyHomePageState extends State<MyHomePage> {
                 ],
               ),
             ),
-            Divider()
-          ],
-        ),
+                ],
+              ),
+            ),
     );
   }
 
