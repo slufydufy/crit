@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'adminPage.dart';
+import 'brandPage.dart';
 // import 'package:google_sign_in/google_sign_in.dart';
 
 class Profile extends StatefulWidget {
@@ -192,7 +193,7 @@ class _ProfileState extends State<Profile> {
       subtitle: Text('Create / Manage your Brand'),
       trailing: Icon(Icons.arrow_forward_ios),
       onTap: () {
-        Navigator.push(context, MaterialPageRoute(builder: (context) => AdminPage()));
+        Navigator.push(context, MaterialPageRoute(builder: (context) => BrandPage()));
       }
     );
   }

@@ -8,6 +8,7 @@ import 'storyAll.dart';
 import 'donateDesignAll.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter_staggered_grid_view/flutter_staggered_grid_view.dart';
+import 'brandDetail.dart';
 
 class BrandAll extends StatefulWidget {
   @override
@@ -168,6 +169,7 @@ class BrandAllState extends State<BrandAll> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      backgroundColor: Colors.white,
       appBar: AppBar(
         title: Text('All Brands'),
         actions: <Widget>[
@@ -192,15 +194,15 @@ class BrandAllState extends State<BrandAll> {
   Widget _showBanner() {
     return Container(
         width: MediaQuery.of(context).size.width,
-        height: MediaQuery.of(context).size.width / 2,
+        height: MediaQuery.of(context).size.width / 1.5,
         padding: EdgeInsets.all(16.0),
         color: Colors.grey,
         child: Card(
           clipBehavior: Clip.antiAlias,
           child: Image.network(
             'http://socialzoomfactor.com/wp-content/uploads/2016/01/iStock_000015850715XSmall.jpg',
-            width: MediaQuery.of(context).size.width / 1.5,
-            height: MediaQuery.of(context).size.width / 2.25,
+            width: MediaQuery.of(context).size.width,
+            height: MediaQuery.of(context).size.width / 1.5,
             fit: BoxFit.cover,
           ),
         ));
@@ -215,7 +217,6 @@ class BrandAllState extends State<BrandAll> {
           } else {
             return 
             Container(
-              color: Colors.white,
               padding: const EdgeInsets.all(8.0),
               child: StaggeredGridView.countBuilder(
                 shrinkWrap: true,
@@ -237,7 +238,9 @@ class BrandAllState extends State<BrandAll> {
     return 
       FlatButton(
         padding: EdgeInsets.all(0.0),
-        onPressed: () {},
+        onPressed: () {
+          Navigator.push(context,MaterialPageRoute(builder: (context) => BrandDetail(item: item)));
+        },
         child: Column(
           children: <Widget>[
             Card(

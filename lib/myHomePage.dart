@@ -11,6 +11,7 @@ import 'donateDesignAll.dart';
 import 'storyAll.dart';
 import 'bannerDetail.dart';
 import 'brandAll.dart';
+import 'brandDetail.dart';
 
 class MyHomePage extends StatefulWidget {
   @override
@@ -410,6 +411,7 @@ class MyHomePageState extends State<MyHomePage> {
     return FlatButton(
             padding: EdgeInsets.all(0.0),
             onPressed: () {
+              Navigator.push(context,MaterialPageRoute(builder: (context) => BrandDetail(item: snapshot)));
             },
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
