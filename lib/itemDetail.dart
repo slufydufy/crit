@@ -25,11 +25,13 @@ class ItemDetail extends StatelessWidget {
                 _showSub(),
                 _showImage(context),
                 Divider(height: 8.0,),
+                _showBrandName(),
+                Divider(),
                 _showPrice(),
                 Divider(),
                 _showMaterial(),
                 Divider(),
-                _showSize(),
+                _showAddInfo(),
                 Divider(),
                 _showMoreImageText(),
                 _showMoreImage(context),
@@ -47,10 +49,11 @@ class ItemDetail extends StatelessWidget {
     Padding(
       padding: EdgeInsets.fromLTRB(16.0, 16.0, 16.0, 0.0),
       child: 
-      Text(item.data['title'], textAlign: TextAlign.center, style: TextStyle(
+      Text(item.data['itemName'], textAlign: TextAlign.center, style: TextStyle(
         fontSize: 24.0,
         fontWeight: FontWeight.bold
-      ),),
+      ),
+      maxLines: 2,),
     );
   }
 
@@ -59,10 +62,11 @@ class ItemDetail extends StatelessWidget {
     Padding(
       padding: EdgeInsets.fromLTRB(16.0, 8.0, 16.0, 8.0),
       child: 
-      Text(item.data['desc'], textAlign: TextAlign.center, style: TextStyle(
+      Text(item.data['itemDesc'], textAlign: TextAlign.center, style: TextStyle(
         fontSize: 16.0,
         color: Colors.grey,
-      ),),
+      ),
+      maxLines: 5),
     );
   }
 
@@ -70,23 +74,33 @@ class ItemDetail extends StatelessWidget {
     return Container(
       child: GestureDetector(
         onTap: () {
-          Navigator.push(context, MaterialPageRoute(builder: (context) => ImageFull(item: item.data['img'])));
+          Navigator.push(context, MaterialPageRoute(builder: (context) => ImageFull(item: item.data['mainImg'])));
         },
-        child: Image.network(item.data['img'],
+        child: Image.network(item.data['mainImg'],
         height: MediaQuery.of(context).size.width,
         fit: BoxFit.cover,
         )),
     );
   }
 
+  Widget _showBrandName() {
+    return
+    ListTile(
+      title: Text(item.data['brandName'].toString(), style: TextStyle(
+        fontSize: 16.0,
+      ),),
+      subtitle: Text('Brand'),
+    );
+  }
+
   Widget _showPrice() {
     return
     ListTile(
-            title: Text(item.data['price'].toString(), style: TextStyle(
-              fontSize: 16.0,
-            ),),
-            subtitle: Text('Price'),
-          );
+      title: Text(item.data['price'].toString(), style: TextStyle(
+        fontSize: 16.0,
+      ),),
+      subtitle: Text('Price'),
+    );
   }
 
   Widget _showMaterial() {
@@ -99,20 +113,15 @@ class ItemDetail extends StatelessWidget {
           );
   }
 
-  Widget _showSize() {
-    List sizeList = [];
-    for (var i = 0; i < item.data['size'].length; i++) {
-      sizeList.add(item.data['size'][i]['sizeEach']);
-    }
-    String sizeAvail = sizeList.join(', ');
-
+  Widget _showAddInfo() {
     return 
     ListTile(
-            title: Text(sizeAvail, style: TextStyle(
+            title: Text('Info Tambahan', style: TextStyle(
               fontSize: 16.0,
             ),),
-            subtitle: Text('Available Size'),
-          );
+            subtitle: Text(item.data['addInfo'] ?? "",
+          )
+    );
   }
 
   Widget _showMoreImageText() {
@@ -125,6 +134,11 @@ class ItemDetail extends StatelessWidget {
   }
 
   Widget _showMoreImage(BuildContext context) {
+    List moreImgList = [];
+      moreImgList.add(item.data['moreImg1'] ?? "");
+      moreImgList.add(item.data['moreImg2'] ?? "");
+      moreImgList.add(item.data['moreImg3'] ?? "");
+          
     return
     Container(
       height: MediaQuery.of(context).size.width / 1.5,
@@ -133,12 +147,12 @@ class ItemDetail extends StatelessWidget {
         itemBuilder: (context, i) {
           return Card(
             clipBehavior: Clip.antiAlias,
-            child: Image.network(item.data['moreImg'][i]['imgUrl'],fit: BoxFit.cover,));
+            child: Image.network(moreImgList[i],fit: BoxFit.cover,));
         },
-        itemCount: item.data['moreImg'].length,
+        itemCount: moreImgList.length,
         pagination: SwiperPagination(),
         onTap: (i) {
-            Navigator.push(context,MaterialPageRoute(builder: (context) => ImageFull(item: item.data['moreImg'][i]['imgUrl'],)));
+            Navigator.push(context,MaterialPageRoute(builder: (context) => ImageFull(item: moreImgList[i],)));
         },
         viewportFraction: 0.7,
         scale: 0.8,

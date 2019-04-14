@@ -16,6 +16,18 @@ class CrudMethod {
       print(e);
     });
   }
+  
+  Future<void> addBrand(brandData) async {
+    Firestore.instance.collection('brands').add(brandData).catchError((e) {
+      print(e);
+    });
+  }
+
+  Future<void> addItem(itemData) async {
+    Firestore.instance.collection('items').add(itemData).catchError((e) {
+      print(e);
+    });
+  }
 
   Future<void> addUser(userData) async {
     Firestore.instance.collection('users').add(userData).catchError((e) {

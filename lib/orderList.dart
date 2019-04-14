@@ -4,6 +4,7 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'confirmPayment.dart';
 import 'package:flutter/services.dart';
 
+
 class OrderList extends StatefulWidget {
   @override
   OrderListState createState() => OrderListState();
@@ -13,12 +14,41 @@ class OrderListState extends State<OrderList> {
   BuildContext scafoldContext;
 
   Future _orderData;
+  String _documentId;
 
   Future fetchOrder() async {
     final user = await FirebaseAuth.instance.currentUser();
     final _uid = user.uid;
     QuerySnapshot fetchOrder = await Firestore.instance.collection('orderList').where('uid', isEqualTo: '$_uid').getDocuments();
     return fetchOrder.documents;
+  }
+
+  deleteOrderDialog() {
+    return showDialog(
+      context: context,
+      barrierDismissible: true,
+      builder: (BuildContext context) {
+        return AlertDialog(
+          title: Text('Delete Order'),
+          content: Text('Hapus order ini ?'),
+          actions: <Widget>[
+            FlatButton(
+              child: Text('Cancel'),
+              onPressed: () {
+                Navigator.pop(context);
+              },
+            ),
+            FlatButton(
+              child: Text('OK'),
+              onPressed: () {
+                Firestore.instance.collection('orderList').document(_documentId).delete();
+                Navigator.popUntil(context, ModalRoute.withName('/'));
+              },
+            )
+          ],
+        );
+      },
+    );
   }
 
   void createSnackBar(String message) {
@@ -40,7 +70,7 @@ class OrderListState extends State<OrderList> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text('Order List'),
+        title: Text('My Order'),
       ),
       body: 
       Builder(builder: (BuildContext context) {
@@ -53,7 +83,7 @@ class OrderListState extends State<OrderList> {
           return Center(child: CircularProgressIndicator());
         } else {
           if (snapshot.data.length == 0) {
-            return Center(child: Text('You\'re not order any item yet, buy to donate now.'));
+            return Center(child: Text('You\'re not order any item yet, buy from our local brand now.'));
           } else {
           return 
           ListView.builder(
@@ -71,8 +101,8 @@ class OrderListState extends State<OrderList> {
                     Divider(),
                     _showItem(snapshot.data[i]),
                     _showPrice(snapshot.data[i]),
-                    _showFinalSize(snapshot.data[i]),
                     _showQuantity(snapshot.data[i]),
+                    _showAddInfo(snapshot.data[i]),
                     _showTotalPrize(snapshot.data[i]),
                     Divider(),
                     _showConfirmBtn(snapshot.data[i]),
@@ -170,30 +200,37 @@ class OrderListState extends State<OrderList> {
     );
   }
 
-  Widget _showFinalSize(item) {
-    return Row(
-        children: <Widget>[
-          Expanded(
-            child: Container(
-              padding: const EdgeInsets.fromLTRB(16.0, 8.0, 0.0, 0.0),
-              child: Text(
-                'Ukuran', style: TextStyle(
-                  fontSize: 16.0,
-                  color: Colors.grey
+  Widget _showAddInfo(item) {
+    return Padding(
+      padding: const EdgeInsets.all(16.0),
+      child: Container(
+        decoration: BoxDecoration(
+          border: Border.all(color: Colors.grey)
+        ),
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.stretch,
+            children: <Widget>[
+              Container(
+                  padding: EdgeInsets.all(8.0),
+                  child: Text(
+                    'Info tambahan :', style: TextStyle(
+                      fontSize: 14.0,
+                      color: Colors.grey
+                    ),
+                  ),
                 ),
+              Container(
+                padding: EdgeInsets.all(8.0),
+                child: Text(item.data['addInfo'] ?? "", style: TextStyle(
+                      fontSize: 16.0,
+                      color: Colors.grey
+                    ),
+                  ),
               ),
-            ),
+            ],
           ),
-          Container(
-            padding: const EdgeInsets.fromLTRB(0.0, 8.0, 16.0, 0.0),
-            child: Text(item.data['size'], style: TextStyle(
-                  fontSize: 16.0,
-                  color: Colors.grey
-                ),
-              ),
-          ),
-        ],
-      );
+      ),
+    );
   }
 
   Widget _showQuantity(item) {
@@ -272,22 +309,34 @@ class OrderListState extends State<OrderList> {
   }
 
   Widget _showConfirmBtn(item) {
+    final _docId = item.documentID;
+    _documentId = _docId;
     if (item.data['status'] != 'menunggu pembayaran') {
       return
       Container(height: 8.0,);
     } else {
       return Container(
       padding: EdgeInsets.only(left: 16.0, bottom: 8.0, top: 0.0),
-      child: ButtonTheme(
-        child: RaisedButton(
-          onPressed: () {
-            Navigator.push(context, MaterialPageRoute(builder: (context) => ConfirmPayment(itemConf: item,)));
-          },
-          color: Colors.lime,
-          shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(5.0)),
-          child: Text('Konfirmasi', style: TextStyle(color: Colors.white),
-          ),
-        ),
+      child: Row(
+        children: <Widget>[
+          ButtonTheme(
+              child: RaisedButton(
+                onPressed: () {
+                  Navigator.push(context, MaterialPageRoute(builder: (context) => ConfirmPayment(itemConf: item,)));
+                },
+                color: Colors.lime,
+                shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(5.0)),
+                child: Text('Konfirmasi Pembayaran', style: TextStyle(color: Colors.white),
+                ),
+              ),
+            ),
+          Spacer(),
+          IconButton(
+            icon: Icon(Icons.cancel),
+            color: Colors.lime,
+            onPressed: deleteOrderDialog,
+          )
+        ],
       ),
     );
     }

@@ -1,97 +1,23 @@
 import 'package:flutter/material.dart';
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/services.dart';
-import 'crud.dart';
-import 'package:firebase_auth/firebase_auth.dart';
 
-class BrandCreate extends StatefulWidget {
-
+class BrandEdit extends StatefulWidget {
+  final Future item;
+  BrandEdit({this.item});
   @override
-  BrandCreateState createState() => BrandCreateState();
+  BrandEditState createState() => BrandEditState();
 }
 
-class BrandCreateState extends State<BrandCreate> {
+class BrandEditState extends State<BrandEdit> {
 
   final titleTxtCont = TextEditingController();
   final descTxtCont = TextEditingController();
   final imgUrlTxtCont = TextEditingController();
   final emailTxtCont = TextEditingController();
   final mobileTxtCont = TextEditingController();
-  CrudMethod crudObj = CrudMethod();
+  // CrudMethod crudObj = CrudMethod();
   final _formkey = GlobalKey<FormState>();
-  String _uid;
-
-  checkBrandDialog() async {
-    FirebaseUser status = await FirebaseAuth.instance.currentUser();
-    _uid = status.uid;
-    return showDialog(
-      context: context,
-      barrierDismissible: true,
-      builder: (BuildContext context) {
-        return AlertDialog(
-          title: Text('Create Brand'),
-          content: Text(
-              'Apakah semua data yang dimasukkan telah benar ?'),
-          actions: <Widget>[
-            FlatButton(
-              child: Text('Cancel'),
-              onPressed: () {
-                Navigator.pop(context);
-              },
-            ),
-            FlatButton(
-              child: Text('OK'),
-              onPressed: submitBrand,
-            )
-          ],
-        );
-      },
-    );
-  }
-
-  submitBrand(){
-    var today = DateTime.now();
-    String formatter =
-        "${today.year.toString()}${today.month.toString().padLeft(2, '0')}${today.day.toString().padLeft(2, '0')}";
-    if (_formkey.currentState.validate()) {
-      crudObj.addBrand({
-        'brandId': 'br_' + _uid,
-        'cDate' : formatter,
-        'imgUrl': imgUrlTxtCont.text,
-        'title': titleTxtCont.text,
-        'desc': descTxtCont.text,
-        'email': emailTxtCont.text,
-        'mobile': mobileTxtCont.text,
-      }).then((result) {
-        dismissBrandDialog(context);
-      }).catchError((e) {
-        print(e);
-      });
-    } else {
-        Navigator.pop(context);
-    }
-  }
-
-  dismissBrandDialog(BuildContext context) async {
-    return showDialog(
-      context: context,
-      barrierDismissible: false,
-      builder: (BuildContext context) {
-        return AlertDialog(
-          title: Text('Create Brand'),
-          content: Text(
-              'Brand berhasil dibuat, anda dapat mengubah data pada halaman : Profile > Brand Page'),
-          actions: <Widget>[
-            FlatButton(
-              child: Text('OK'),
-              onPressed: () {
-                Navigator.popUntil(context, ModalRoute.withName('/'));
-              },
-            )
-          ],
-        );
-      },
-    );
-  }
 
   @override
   void dispose() {
@@ -107,20 +33,37 @@ class BrandCreateState extends State<BrandCreate> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text('Create Brand'),
-      ),
-      body: Column(
-        children: <Widget>[
-          Expanded(
-            child: ListView(
-              children: <Widget>[
-                _brandForm()
-              ],
-            ),
-          ),
-          _showSubmitButton(context)
+        title: Text('Edit Brand'),
+        actions: <Widget>[
+          SizedBox(
+            width: 60.0,
+            child: FlatButton(child: Icon(Icons.check_circle, size: 32,),
+              onPressed: (){}
+              ),
+          )
         ],
       ),
+      body: FutureBuilder(
+        future: widget.item,
+        builder: (_, snapshot) {
+          if (snapshot.connectionState == ConnectionState.waiting) {
+            return Center(child: CircularProgressIndicator());
+          } else {
+            titleTxtCont.text = snapshot.data[0].data['title'];
+            descTxtCont.text = snapshot.data[0].data['desc'];
+            imgUrlTxtCont.text = snapshot.data[0].data['imgUrl'];
+            emailTxtCont.text = snapshot.data[0].data['email'];
+            mobileTxtCont.text = snapshot.data[0].data['mobile'];
+            return ListView(
+              children: <Widget>[
+                _brandForm(),
+            
+              ],
+            );
+          }
+        },
+      )
+      
     );
   }
 
@@ -230,22 +173,6 @@ class BrandCreateState extends State<BrandCreate> {
                 new EdgeInsets.symmetric(vertical: 10.0, horizontal: 10.0),
             border: OutlineInputBorder()),
       ),
-    );
-  }
-
-  Widget _showSubmitButton(BuildContext context) {
-    return GestureDetector(
-      child: Container(
-        padding: EdgeInsets.all(16.0),
-        color: Colors.grey,
-        child: Center(
-          child: Text(
-            'Submit',
-            style: TextStyle(color: Colors.black, fontSize: 16, fontWeight: FontWeight.bold),
-          ),
-        ),
-      ),
-      onTap: checkBrandDialog,
     );
   }
 }

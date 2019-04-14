@@ -208,7 +208,6 @@ class MyHomePageState extends State<MyHomePage> {
               onPressed: checkLoginOrderAppbar),
           )
         ],
-          // Image.asset('assets/images/logocr.png',),
           ),
       drawer: _showDrawer(),
       body: ListView(

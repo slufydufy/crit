@@ -14,7 +14,7 @@ class BrandDetailState extends State<BrandDetail> {
   Future _designData;
 
   Future fetchDonateDesign() async {
-    QuerySnapshot fetchDesign = await Firestore.instance.collection('fl_content').where('mainCat', isEqualTo: 'design').getDocuments();
+    QuerySnapshot fetchDesign = await Firestore.instance.collection('items').where('brandId', isEqualTo: widget.item.data['brandId']).getDocuments();
     return fetchDesign.documents;
   }
 
@@ -33,8 +33,8 @@ class BrandDetailState extends State<BrandDetail> {
       body: ListView(
         children: <Widget>[
           _showTitle(),
-          _showImage(context),
           _showDesc(),
+          _showImage(context),
           Divider(),
           _showContact(),
           Divider(),
@@ -55,7 +55,21 @@ class BrandDetailState extends State<BrandDetail> {
       Text(widget.item.data['title'], textAlign: TextAlign.center, style: TextStyle(
         fontSize: 24.0,
         fontWeight: FontWeight.bold
-      ),),
+      ),
+      maxLines: 2,),
+    );
+  }
+
+  Widget _showDesc() {
+    return
+    Padding(
+      padding: EdgeInsets.fromLTRB(16.0, 8.0, 16.0, 8.0),
+      child: 
+      Text(widget.item.data['desc'], textAlign: TextAlign.center, style: TextStyle(
+        fontSize: 16.0,
+        color: Colors.grey,
+      ),
+      maxLines: 5,),
     );
   }
 
@@ -72,22 +86,10 @@ class BrandDetailState extends State<BrandDetail> {
     );
   }
 
-  Widget _showDesc() {
-    return
-    Padding(
-      padding: EdgeInsets.fromLTRB(16.0, 8.0, 16.0, 8.0),
-      child: 
-      Text(widget.item.data['desc'], textAlign: TextAlign.justify, style: TextStyle(
-        fontSize: 16.0,
-        color: Colors.grey,
-      ),),
-    );
-  }
-
   Widget _showContact() {
     return 
     ListTile(
-            title: Text('Jhon@gmail.com', style: TextStyle(
+            title: Text(widget.item.data['email'], style: TextStyle(
               fontSize: 16.0,
             ),),
             subtitle: Text('Email'),
@@ -97,7 +99,7 @@ class BrandDetailState extends State<BrandDetail> {
   Widget _showPhone() {
     return 
     ListTile(
-            title: Text('+628188888888', style: TextStyle(
+            title: Text(widget.item.data['mobile'], style: TextStyle(
               fontSize: 16.0,
             ),),
             subtitle: Text('Phone'),
@@ -106,7 +108,6 @@ class BrandDetailState extends State<BrandDetail> {
 
   Widget _brandItemsText() {
     return Container(
-      // color: Colors.green,
         padding: EdgeInsets.fromLTRB(16.0, 16.0, 8.0, 8.0),
         child: Text(
               'Brand Items',
@@ -156,7 +157,7 @@ class BrandDetailState extends State<BrandDetail> {
           child: Stack(
             children: <Widget>[
               Image.network(
-                snapshot.data['img'],
+                snapshot.data['mainImg'],
                 fit: BoxFit.cover,
                 height: MediaQuery.of(context).size.width / 2,
                 width: MediaQuery.of(context).size.width / 2
@@ -170,7 +171,7 @@ class BrandDetailState extends State<BrandDetail> {
                   child: Column(
                     crossAxisAlignment: CrossAxisAlignment.center,
                     children: <Widget>[
-                      Text(snapshot.data['title'], maxLines: 1,
+                      Text(snapshot.data['itemName'], maxLines: 1,
                           style: TextStyle(color: Colors.white))
                     ],
                   ),

@@ -17,12 +17,13 @@ class CheckOut extends StatefulWidget {
 class CheckOutState extends State<CheckOut> {
   BuildContext scafoldContext;
 
-  String finalSize;
+  // String finalSize;
   int finalPrice = 0;
   final quantityTxtCont = TextEditingController();
   final orderNameTxtCont = TextEditingController();
   final orderPhoneTxtCont = TextEditingController();
   final orderAddrTxtCont = TextEditingController();
+  final addInfoTxtCont = TextEditingController();
   final _formkey = GlobalKey<FormState>();
   String _uid;
   CrudMethod crudObj = CrudMethod();
@@ -33,6 +34,7 @@ class CheckOutState extends State<CheckOut> {
     orderNameTxtCont.dispose();
     orderPhoneTxtCont.dispose();
     orderAddrTxtCont.dispose();
+    addInfoTxtCont.dispose();
     super.dispose();
   }
 
@@ -64,18 +66,19 @@ class CheckOutState extends State<CheckOut> {
     var charUid = _uid.substring(0, 3);
     var rng = Random();
     var code = rng.nextInt(9000) + 1000;
-    if (finalSize == null) {
-      createSnackBar('Pilih ukuran');
-    } else if (quantityTxtCont.text.isEmpty || quantityTxtCont.text == '0') {
+    // if (finalSize == null) {
+    //   createSnackBar('Pilih ukuran');
+    // } else 
+    if (quantityTxtCont.text.isEmpty || quantityTxtCont.text == '0') {
       createSnackBar('Jumlah minimum 1');
     } else if (_formkey.currentState.validate()) {
       crudObj.addOrder({
         'uid': _uid,
-        'itemTitle': widget.itemCO.data['title'],
+        'itemTitle': widget.itemCO.data['itemName'],
         'itemPrice': widget.itemCO.data['price'],
-        'itemImg': widget.itemCO.data['img'],
-        'size': finalSize,
+        'itemImg': widget.itemCO.data['mainImg'],
         'quantity': quantityTxtCont.text,
+        'addInfo': addInfoTxtCont.text,
         'name': orderNameTxtCont.text,
         'phone': orderPhoneTxtCont.text,
         'address': orderAddrTxtCont.text,
@@ -138,7 +141,7 @@ class CheckOutState extends State<CheckOut> {
   @override
   void initState() {
     quantityTxtCont.addListener(() {
-      num price = widget.itemCO.data['price'];
+      int price = int.tryParse(widget.itemCO.data['price']);
       int qty = int.tryParse(quantityTxtCont.text);
       setState(() {
         finalPrice = price * qty;
@@ -165,8 +168,9 @@ class CheckOutState extends State<CheckOut> {
                       _showItemInfoText(),
                       Divider(),
                       _showItem(),
-                      _showFinalSize(),
+                      // _showFinalSize(),
                       _showQuantity(),
+                      _showAddInfo(),
                       _showTotalPrize(),
                       _showBuyerInfoText(),
                       Divider(),
@@ -197,7 +201,7 @@ class CheckOutState extends State<CheckOut> {
       child: Row(
         children: <Widget>[
           Image.network(
-            widget.itemCO.data['img'],
+            widget.itemCO.data['mainImg'],
             height: 50,
             width: 50,
           ),
@@ -205,7 +209,7 @@ class CheckOutState extends State<CheckOut> {
             child: Padding(
               padding: const EdgeInsets.all(16.0),
               child: Text(
-                widget.itemCO.data['title'],
+                widget.itemCO.data['itemName'],
                 style: TextStyle(
                   fontSize: 16.0,
                   color: Colors.grey
@@ -224,7 +228,7 @@ class CheckOutState extends State<CheckOut> {
           Container(
             padding: const EdgeInsets.fromLTRB(8.0, 16.0, 0.0, 16.0),
             child: Text(
-              widget.itemCO.data['price'].toString(),
+              widget.itemCO.data['price'],
               style: TextStyle(fontSize: 16.0, color: Colors.grey),
             ),
           ),
@@ -233,53 +237,12 @@ class CheckOutState extends State<CheckOut> {
     );
   }
 
-  Widget _showFinalSize() {
-    // List sizeList = widget.itemCO.data['size'];
-    List sizeList = [];
-    for (var i = 0; i < widget.itemCO.data['size'].length; i++) {
-      sizeList.add(widget.itemCO.data['size'][i]['sizeEach']);
-    }
-    return Row(
-      children: <Widget>[
-        Expanded(
-          child: Container(
-            padding: const EdgeInsets.fromLTRB(16.0, 16.0, 0.0, 0.0),
-            child: Text(
-              'Ukuran',
-              style: TextStyle(fontSize: 16.0, color: Colors.grey),
-            ),
-          ),
-        ),
-        Container(
-            padding: const EdgeInsets.fromLTRB(0.0, 16.0, 16.0, 0.0),
-            child: DropdownButton(
-              hint: Text(' Pilih ', style: TextStyle(color: Colors.grey)),
-              items: sizeList.map((size) {
-                return DropdownMenuItem(
-                  child: Text(
-                    size,
-                    style: TextStyle(color: Colors.grey),
-                  ),
-                  value: size,
-                );
-              }).toList(),
-              onChanged: (newVal) {
-                setState(() {
-                  finalSize = newVal;
-                });
-              },
-              value: finalSize,
-            )),
-      ],
-    );
-  }
-
   Widget _showQuantity() {
     return Row(
       children: <Widget>[
         Expanded(
           child: Container(
-            padding: const EdgeInsets.fromLTRB(16.0, 0.0, 16.0, 8.0),
+            padding: const EdgeInsets.fromLTRB(16.0, 0.0, 16.0, 0.0),
             child: Text(
               'Jumlah barang',
               style: TextStyle(fontSize: 16.0, color: Colors.grey),
@@ -288,7 +251,7 @@ class CheckOutState extends State<CheckOut> {
         ),
         Container(
             width: 80.0,
-            padding: const EdgeInsets.fromLTRB(0.0, .0, 16.0, 16.0),
+            padding: const EdgeInsets.fromLTRB(0.0, 0.0, 16.0, 0.0),
             child: TextFormField(
               inputFormatters: [WhitelistingTextInputFormatter.digitsOnly],
               controller: quantityTxtCont,
@@ -306,7 +269,7 @@ class CheckOutState extends State<CheckOut> {
       children: <Widget>[
         Expanded(
           child: Container(
-            padding: const EdgeInsets.fromLTRB(16.0, 16.0, 0.0, 24.0),
+            padding: const EdgeInsets.fromLTRB(16.0, 16.0, 0.0, 0.0),
             child: Text(
               'Total Harga',
               style: TextStyle(fontSize: 16.0, color: Colors.grey),
@@ -314,12 +277,39 @@ class CheckOutState extends State<CheckOut> {
           ),
         ),
         Container(
-          padding: const EdgeInsets.fromLTRB(0.0, 16.0, 16.0, 16.0),
+          padding: const EdgeInsets.fromLTRB(0.0, 16.0, 16.0, 0.0),
           child: Text(
             '$finalPrice',
             style: TextStyle(fontSize: 16.0, color: Colors.grey),
           ),
         ),
+      ],
+    );
+  }
+
+  Widget _showAddInfo() {
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: <Widget>[
+          Container(
+            padding: const EdgeInsets.fromLTRB(16.0, 16.0, 0.0, 0.0),
+            child: Text(
+              'Info Tambahan (Size, Warna, Dll)',
+              style: TextStyle(fontSize: 16.0, color: Colors.grey),
+            ),
+          ),
+        Padding(
+          padding: EdgeInsets.fromLTRB(16.0, 16.0, 16.0, 0.0),
+          child: TextFormField(
+            controller: addInfoTxtCont,
+            maxLines: 2,
+            maxLength: 80,
+            decoration: InputDecoration(
+                contentPadding:
+                  EdgeInsets.symmetric(vertical: 10.0, horizontal: 10.0),
+                border: OutlineInputBorder()),
+          ),
+        )
       ],
     );
   }
