@@ -125,7 +125,8 @@ class BrandPageState extends State<BrandPage> {
       subtitle: Text('Brand Image Theme'),
       trailing: Image.network(item,
         height: 50,
-        width: 50,),
+        width: 50,
+        fit: BoxFit.cover,),
     );
   }
 

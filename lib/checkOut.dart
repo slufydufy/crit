@@ -17,7 +17,6 @@ class CheckOut extends StatefulWidget {
 class CheckOutState extends State<CheckOut> {
   BuildContext scafoldContext;
 
-  // String finalSize;
   int finalPrice = 0;
   final quantityTxtCont = TextEditingController();
   final orderNameTxtCont = TextEditingController();
@@ -140,6 +139,7 @@ class CheckOutState extends State<CheckOut> {
 
   @override
   void initState() {
+    quantityTxtCont.text = "";
     quantityTxtCont.addListener(() {
       int price = int.tryParse(widget.itemCO.data['price']);
       int qty = int.tryParse(quantityTxtCont.text);
@@ -168,7 +168,6 @@ class CheckOutState extends State<CheckOut> {
                       _showItemInfoText(),
                       Divider(),
                       _showItem(),
-                      // _showFinalSize(),
                       _showQuantity(),
                       _showAddInfo(),
                       _showTotalPrize(),

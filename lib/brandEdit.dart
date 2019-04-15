@@ -16,8 +16,52 @@ class BrandEditState extends State<BrandEdit> {
   final imgUrlTxtCont = TextEditingController();
   final emailTxtCont = TextEditingController();
   final mobileTxtCont = TextEditingController();
-  // CrudMethod crudObj = CrudMethod();
   final _formkey = GlobalKey<FormState>();
+  String _documentId;
+  // String _imgUrl = "";
+  // String _title = "";
+  // String _desc = "";
+  // String _email = "";
+  // String _mobile = "";
+
+  updateBrandDialog() {
+    return showDialog(
+      context: context,
+      barrierDismissible: true,
+      builder: (BuildContext context) {
+        return AlertDialog(
+          title: Text('Edit Brand'),
+          content: Text('Submit new data ?'),
+          actions: <Widget>[
+            FlatButton(
+              child: Text('Cancel'),
+              onPressed: () {
+                Navigator.pop(context);
+              },
+            ),
+            FlatButton(
+              child: Text('OK'),
+              onPressed: () {
+                Firestore.instance.collection('brands').document(_documentId).updateData({
+                  'imgUrl': imgUrlTxtCont.text,
+                  // _imgUrl,
+                  'title': titleTxtCont.text,
+                  // _title,
+                  'desc': descTxtCont.text,
+                  // _desc,
+                  'email': emailTxtCont.text,
+                  // _email,
+                  'mobile': mobileTxtCont.text
+                  // _mobile,
+                });
+                Navigator.popUntil(context, ModalRoute.withName('/'));
+              },
+            )
+          ],
+        );
+      },
+    );
+  }
 
   @override
   void dispose() {
@@ -29,6 +73,14 @@ class BrandEditState extends State<BrandEdit> {
     super.dispose();
   }
 
+  // @override
+  // void initState() {
+  //   super.initState();
+  //   titleTxtCont.addListener(() {
+      
+  //   });
+  // }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -38,7 +90,7 @@ class BrandEditState extends State<BrandEdit> {
           SizedBox(
             width: 60.0,
             child: FlatButton(child: Icon(Icons.check_circle, size: 32,),
-              onPressed: (){}
+              onPressed: updateBrandDialog
               ),
           )
         ],
@@ -54,16 +106,24 @@ class BrandEditState extends State<BrandEdit> {
             imgUrlTxtCont.text = snapshot.data[0].data['imgUrl'];
             emailTxtCont.text = snapshot.data[0].data['email'];
             mobileTxtCont.text = snapshot.data[0].data['mobile'];
-            return ListView(
+            final _docId = snapshot.data[0].documentID;
+            _documentId = _docId;
+            print(_documentId);
+            return Column(
               children: <Widget>[
-                _brandForm(),
-            
+                Expanded(
+                  child: ListView(
+                    children: <Widget>[
+                      _brandForm(),
+                    ],
+                  ),
+                ),
+                _showCheckoutButton()
               ],
             );
           }
         },
       )
-      
     );
   }
 
@@ -173,6 +233,22 @@ class BrandEditState extends State<BrandEdit> {
                 new EdgeInsets.symmetric(vertical: 10.0, horizontal: 10.0),
             border: OutlineInputBorder()),
       ),
+    );
+  }
+
+  Widget _showCheckoutButton() {
+    return GestureDetector(
+      child: Container(
+        padding: EdgeInsets.all(16.0),
+        color: Colors.grey,
+        child: Center(
+          child: Text(
+            'Checkout',
+            style: TextStyle(color: Colors.black, fontSize: 16, fontWeight: FontWeight.bold),
+          ),
+        ),
+      ),
+      onTap: updateBrandDialog,
     );
   }
 }

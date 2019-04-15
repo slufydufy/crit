@@ -117,7 +117,7 @@ class BrandAllState extends State<BrandAll> {
               onTap: checkLoginOrder),
           ListTile(
               title: Text(
-                'Buy to donate design',
+                'All Items',
                 style: TextStyle(fontSize: 16.0),
               ),
               leading: Icon(Icons.hot_tub),

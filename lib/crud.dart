@@ -36,7 +36,7 @@ class CrudMethod {
   }
 
   Future<void> confirmPayment(orderUid, confirmData) async {
-    Firestore.instance.collection('orderList').document('$orderUid').setData(confirmData, merge: true).catchError((e) {
+    Firestore.instance.collection('orderList').document(orderUid).setData(confirmData, merge: true).catchError((e) {
       print(e);
     });
   }

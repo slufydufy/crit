@@ -19,7 +19,8 @@ class DonateDesignAllState extends State<DonateDesignAll> {
   Future _designData;
 
   Future fetchDonateDesign() async {
-    QuerySnapshot fetchDesign = await Firestore.instance.collection('fl_content').where('mainCat', isEqualTo: 'design').getDocuments();
+    // QuerySnapshot fetchDesign = await Firestore.instance.collection('fl_content').where('mainCat', isEqualTo: 'design').getDocuments();
+    QuerySnapshot fetchDesign = await Firestore.instance.collection('items').limit(6).getDocuments();
     return fetchDesign.documents;
   }
 
@@ -91,7 +92,7 @@ class DonateDesignAllState extends State<DonateDesignAll> {
     return
     Scaffold(
       appBar: AppBar(
-        title: Text('All Design For You'),
+        title: Text('All Items'),
         actions: <Widget>[
           SizedBox(
             width: 54.0,
@@ -139,7 +140,7 @@ class DonateDesignAllState extends State<DonateDesignAll> {
           child: Stack(
             children: <Widget>[
               Image.network(
-                snapshot.data['img'],
+                snapshot.data['mainImg'],
                 fit: BoxFit.cover,
                 height: MediaQuery.of(context).size.width / 2,
                 width: MediaQuery.of(context).size.width / 2
@@ -153,7 +154,7 @@ class DonateDesignAllState extends State<DonateDesignAll> {
                   child: Column(
                     crossAxisAlignment: CrossAxisAlignment.center,
                     children: <Widget>[
-                      Text(snapshot.data['title'], maxLines: 1,
+                      Text(snapshot.data['itemName'], maxLines: 1,
                           style: TextStyle(color: Colors.white))
                     ],
                   ),
@@ -200,7 +201,7 @@ class DonateDesignAllState extends State<DonateDesignAll> {
           onTap: checkLoginOrder),
         ListTile(
           title: Text(
-            'Buy to donate design',
+            'All Items',
             style: TextStyle(fontSize: 16.0),
           ),
           leading: Icon(Icons.hot_tub),

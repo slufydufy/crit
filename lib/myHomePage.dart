@@ -33,7 +33,8 @@ class MyHomePageState extends State<MyHomePage> {
 
   Future fetchDonateDesign() async {
     QuerySnapshot fetchDesign =
-        await ref.collection('fl_content').where('mainCat', isEqualTo: 'design').limit(6).getDocuments();
+        // await ref.collection('fl_content').where('mainCat', isEqualTo: 'design').limit(6).getDocuments();
+        await ref.collection('items').limit(6).getDocuments();
     return fetchDesign.documents;
   }
 
@@ -146,7 +147,7 @@ class MyHomePageState extends State<MyHomePage> {
           onTap: checkLoginOrder),
         ListTile(
           title: Text(
-            'Buy to donate design',
+            'All Items',
             style: TextStyle(fontSize: 16.0),
           ),
           leading: Icon(Icons.hot_tub),
@@ -262,7 +263,7 @@ class MyHomePageState extends State<MyHomePage> {
           children: <Widget>[
             Expanded(
                 child: Text(
-              'Buy to Donate',
+              'All Items',
               style: TextStyle(
                 fontSize: 20.0,
                 fontWeight: FontWeight.bold,
@@ -317,7 +318,7 @@ class MyHomePageState extends State<MyHomePage> {
           child: Stack(
             children: <Widget>[
               Image.network(
-                snapshot.data['img'],
+                snapshot.data['mainImg'],
                 fit: BoxFit.cover,
                 height: MediaQuery.of(context).size.width / 3,
                 width: MediaQuery.of(context).size.width / 3,
@@ -331,7 +332,7 @@ class MyHomePageState extends State<MyHomePage> {
                   child: Column(
                     crossAxisAlignment: CrossAxisAlignment.center,
                     children: <Widget>[
-                      Text(snapshot.data['title'], maxLines: 1, textAlign: TextAlign.center,
+                      Text(snapshot.data['itemName'], maxLines: 1, textAlign: TextAlign.center,
                           style: TextStyle(color: Colors.white))
                     ],
                   ),
