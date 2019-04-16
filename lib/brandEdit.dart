@@ -4,7 +4,12 @@ import 'package:flutter/services.dart';
 
 class BrandEdit extends StatefulWidget {
   final Future item;
-  BrandEdit({this.item});
+  final String title;
+  final String desc;
+  final String imgUrl;
+  final String email;
+  final String mobile;
+  BrandEdit({this.item, this.title, this.desc, this.imgUrl, this.email, this.mobile});
   @override
   BrandEditState createState() => BrandEditState();
 }
@@ -41,26 +46,23 @@ class BrandEditState extends State<BrandEdit> {
             ),
             FlatButton(
               child: Text('OK'),
-              onPressed: () {
-                Firestore.instance.collection('brands').document(_documentId).updateData({
-                  'imgUrl': imgUrlTxtCont.text,
-                  // _imgUrl,
-                  'title': titleTxtCont.text,
-                  // _title,
-                  'desc': descTxtCont.text,
-                  // _desc,
-                  'email': emailTxtCont.text,
-                  // _email,
-                  'mobile': mobileTxtCont.text
-                  // _mobile,
-                });
-                Navigator.popUntil(context, ModalRoute.withName('/'));
-              },
+              onPressed: updateData
             )
           ],
         );
       },
     );
+  }
+
+  updateData() {
+    Firestore.instance.collection('brands').document(_documentId).updateData({
+        'imgUrl': imgUrlTxtCont.text,
+        'title': titleTxtCont.text,
+        'desc': descTxtCont.text,
+        'email': emailTxtCont.text,
+        'mobile': mobileTxtCont.text
+      });
+      Navigator.popUntil(context, ModalRoute.withName('/'));
   }
 
   @override
@@ -73,13 +75,15 @@ class BrandEditState extends State<BrandEdit> {
     super.dispose();
   }
 
-  // @override
-  // void initState() {
-  //   super.initState();
-  //   titleTxtCont.addListener(() {
-      
-  //   });
-  // }
+  @override
+  void initState() {
+    super.initState();
+    titleTxtCont.text = widget.title;
+    descTxtCont.text = widget.desc;
+    imgUrlTxtCont.text = widget.imgUrl;
+    emailTxtCont.text = widget.email;
+    mobileTxtCont.text = widget.mobile;
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -101,11 +105,8 @@ class BrandEditState extends State<BrandEdit> {
           if (snapshot.connectionState == ConnectionState.waiting) {
             return Center(child: CircularProgressIndicator());
           } else {
-            titleTxtCont.text = snapshot.data[0].data['title'];
-            descTxtCont.text = snapshot.data[0].data['desc'];
-            imgUrlTxtCont.text = snapshot.data[0].data['imgUrl'];
-            emailTxtCont.text = snapshot.data[0].data['email'];
-            mobileTxtCont.text = snapshot.data[0].data['mobile'];
+            // titleTxtCont.text = snapshot.data[0].data['title'];
+            // descTxtCont.text = snapshot.data[0].data['desc'];7 s 
             final _docId = snapshot.data[0].documentID;
             _documentId = _docId;
             print(_documentId);
