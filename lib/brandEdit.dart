@@ -3,13 +3,13 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/services.dart';
 
 class BrandEdit extends StatefulWidget {
-  final Future item;
+  final String docId;
   final String title;
   final String desc;
   final String imgUrl;
   final String email;
   final String mobile;
-  BrandEdit({this.item, this.title, this.desc, this.imgUrl, this.email, this.mobile});
+  BrandEdit({this.docId, this.title, this.desc, this.imgUrl, this.email, this.mobile});
   @override
   BrandEditState createState() => BrandEditState();
 }
@@ -22,14 +22,8 @@ class BrandEditState extends State<BrandEdit> {
   final emailTxtCont = TextEditingController();
   final mobileTxtCont = TextEditingController();
   final _formkey = GlobalKey<FormState>();
-  String _documentId;
-  // String _imgUrl = "";
-  // String _title = "";
-  // String _desc = "";
-  // String _email = "";
-  // String _mobile = "";
 
-  updateBrandDialog() {
+  updateBrandDialog() async {
     return showDialog(
       context: context,
       barrierDismissible: true,
@@ -55,14 +49,43 @@ class BrandEditState extends State<BrandEdit> {
   }
 
   updateData() {
-    Firestore.instance.collection('brands').document(_documentId).updateData({
+    if(_formkey.currentState.validate()) {
+      Firestore.instance.collection('brands').document(widget.docId).updateData({
         'imgUrl': imgUrlTxtCont.text,
         'title': titleTxtCont.text,
         'desc': descTxtCont.text,
         'email': emailTxtCont.text,
         'mobile': mobileTxtCont.text
+      }).then((result) {
+        dismissEditBrandDialog(context);
+      }).catchError((e) {
+        print(e);
       });
-      Navigator.popUntil(context, ModalRoute.withName('/'));
+    } else {
+      Navigator.pop(context);
+    }
+  }
+
+  dismissEditBrandDialog(BuildContext context) async {
+    return showDialog(
+      context: context,
+      barrierDismissible: false,
+      builder: (BuildContext context) {
+        return AlertDialog(
+          title: Text('Create Brand'),
+          content: Text(
+              'Data brand berhasil diubah, anda dapat melihat data baru pada halaman : Profile > Brand Page'),
+          actions: <Widget>[
+            FlatButton(
+              child: Text('OK'),
+              onPressed: () {
+                Navigator.popUntil(context, ModalRoute.withName('/'));
+              },
+            )
+          ],
+        );
+      },
+    );
   }
 
   @override
@@ -99,32 +122,11 @@ class BrandEditState extends State<BrandEdit> {
           )
         ],
       ),
-      body: FutureBuilder(
-        future: widget.item,
-        builder: (_, snapshot) {
-          if (snapshot.connectionState == ConnectionState.waiting) {
-            return Center(child: CircularProgressIndicator());
-          } else {
-            // titleTxtCont.text = snapshot.data[0].data['title'];
-            // descTxtCont.text = snapshot.data[0].data['desc'];7 s 
-            final _docId = snapshot.data[0].documentID;
-            _documentId = _docId;
-            print(_documentId);
-            return Column(
+      body: ListView(
               children: <Widget>[
-                Expanded(
-                  child: ListView(
-                    children: <Widget>[
-                      _brandForm(),
-                    ],
-                  ),
-                ),
-                _showCheckoutButton()
+                _brandForm(),
               ],
-            );
-          }
-        },
-      )
+            )
     );
   }
 
@@ -132,27 +134,8 @@ class BrandEditState extends State<BrandEdit> {
     return Form(
       key: _formkey,
       child: Column(
-        children: <Widget>[_showImgUrl(), _showTitle(), _showDesc(), _showEmail(), _showMobile()],
+        children: <Widget>[_showTitle(), _showDesc(), _showImgUrl(), _showEmail(), _showMobile()],
       ),
-    );
-  }
-
-  Widget _showImgUrl() {
-    return Container(
-      padding: EdgeInsets.fromLTRB(16.0, 16.0, 16.0, 0.0),
-      child: TextFormField(
-          controller: imgUrlTxtCont,
-          maxLines: 1,
-          validator: (value) {
-            if (value.isEmpty) {
-              return 'URL Gambar belum diisi';
-            }
-          },
-          decoration: InputDecoration(
-              labelText: 'URL Gambar Brand',
-              contentPadding:
-                  new EdgeInsets.symmetric(vertical: 10.0, horizontal: 10.0),
-              border: OutlineInputBorder())),
     );
   }
 
@@ -195,6 +178,25 @@ class BrandEditState extends State<BrandEdit> {
     );
   }
 
+  Widget _showImgUrl() {
+    return Container(
+      padding: EdgeInsets.fromLTRB(16.0, 16.0, 16.0, 0.0),
+      child: TextFormField(
+          controller: imgUrlTxtCont,
+          maxLines: 1,
+          validator: (value) {
+            if (value.isEmpty) {
+              return 'URL Gambar belum diisi';
+            }
+          },
+          decoration: InputDecoration(
+              labelText: 'URL Gambar Brand',
+              contentPadding:
+                  new EdgeInsets.symmetric(vertical: 10.0, horizontal: 10.0),
+              border: OutlineInputBorder())),
+    );
+  }
+
   Widget _showEmail() {
     return Container(
       padding: EdgeInsets.fromLTRB(16.0, 16.0, 16.0, 0.0),
@@ -234,22 +236,6 @@ class BrandEditState extends State<BrandEdit> {
                 new EdgeInsets.symmetric(vertical: 10.0, horizontal: 10.0),
             border: OutlineInputBorder()),
       ),
-    );
-  }
-
-  Widget _showCheckoutButton() {
-    return GestureDetector(
-      child: Container(
-        padding: EdgeInsets.all(16.0),
-        color: Colors.grey,
-        child: Center(
-          child: Text(
-            'Checkout',
-            style: TextStyle(color: Colors.black, fontSize: 16, fontWeight: FontWeight.bold),
-          ),
-        ),
-      ),
-      onTap: updateBrandDialog,
     );
   }
 }

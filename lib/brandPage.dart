@@ -4,6 +4,7 @@ import 'brandCreate.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'addItem.dart';
 import 'brandEdit.dart';
+import 'itemDetail.dart';
 
 class BrandPage extends StatefulWidget {
 
@@ -14,6 +15,12 @@ class BrandPage extends StatefulWidget {
 class BrandPageState extends State<BrandPage> {
   Future _brandData;
   Future _itemData;
+  String _documentId;
+  String title;
+  String desc;
+  String imgUrl;
+  String email;
+  String mobile;
 
   Future fetchBrand() async {
     String _uid;
@@ -50,7 +57,7 @@ class BrandPageState extends State<BrandPage> {
             width: 60.0,
             child: FlatButton(child: Icon(Icons.edit),
               onPressed: (){
-                Navigator.push(context, MaterialPageRoute(builder: (context) => BrandEdit(item: _brandData,)));
+                Navigator.push(context, MaterialPageRoute(builder: (context) => BrandEdit(docId: _documentId, title: title, desc: desc, imgUrl: imgUrl, email: email, mobile: mobile)));
               }
               ),
           )
@@ -83,6 +90,13 @@ class BrandPageState extends State<BrandPage> {
               ),
             );
           } else {
+            final _docId = snapshot.data[0].documentID;
+            _documentId = _docId;
+            title = snapshot.data[0].data['title'];
+            desc = snapshot.data[0].data['desc'];
+            imgUrl = snapshot.data[0].data['imgUrl'];
+            email = snapshot.data[0].data['email'];
+            mobile = snapshot.data[0].data['mobile'];
             return ListView(
               children: <Widget>[
                 _showBrandTitle(snapshot.data[0].data['title']),
@@ -200,7 +214,10 @@ class BrandPageState extends State<BrandPage> {
   Widget _itemCard(DocumentSnapshot snapshot) {
     return FlatButton(
         padding: EdgeInsets.all(0.0),
-        onPressed: () {},
+        onPressed: () {
+          Navigator.push(context,
+            MaterialPageRoute(builder: (context) => ItemDetail(item: snapshot)));
+        },
         child: new Card(
           clipBehavior: Clip.antiAlias,
           color: Colors.white,
@@ -226,6 +243,27 @@ class BrandPageState extends State<BrandPage> {
                     ],
                   ),
                 ),
+              ),
+              Center(
+                child: Container(
+                  width: 40.0,
+                  height: 40.0,
+                  decoration: new BoxDecoration(
+                    shape: BoxShape.circle,
+                    color: Colors.black.withOpacity(0.5),
+                    border: new Border.all(
+                      width: 0.0,
+                      color: Colors.white,
+                    ),
+                  ),
+                  child: IconButton(
+                    onPressed: (){print('okokok');},
+                    color: Colors.lime,
+                    icon: Icon(Icons.edit),
+                    iconSize: 24.0,
+          ),
+                ),
+                
               )
             ],
           ),
