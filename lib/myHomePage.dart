@@ -7,7 +7,7 @@ import 'mainLogin.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'profile.dart';
 import 'storyDetail.dart';
-import 'donateDesignAll.dart';
+import 'itemAll.dart';
 import 'storyAll.dart';
 import 'bannerDetail.dart';
 import 'brandAll.dart';
@@ -150,18 +150,18 @@ class MyHomePageState extends State<MyHomePage> {
             'All Items',
             style: TextStyle(fontSize: 16.0),
           ),
-          leading: Icon(Icons.hot_tub),
+          leading: Icon(Icons.blur_on),
           onTap: () {
             Navigator.pop(context);
                 Navigator.push(context,
-                    MaterialPageRoute(builder: (context) => DonateDesignAll()));
+                    MaterialPageRoute(builder: (context) => ItemAll()));
               }),
         ListTile(
           title: Text(
             'All Brands',
             style: TextStyle(fontSize: 16.0),
           ),
-          leading: Icon(Icons.dashboard),
+          leading: Icon(Icons.store_mall_directory),
           onTap: () {
             Navigator.pop(context);
                 Navigator.push(context,
@@ -172,7 +172,7 @@ class MyHomePageState extends State<MyHomePage> {
             'All Story',
             style: TextStyle(fontSize: 16.0),
           ),
-          leading: Icon(Icons.card_giftcard),
+          leading: Icon(Icons.fiber_new),
           onTap: () {
             Navigator.pop(context);
             Navigator.push(context,MaterialPageRoute(builder: (context) => StoryAll()));
@@ -276,7 +276,7 @@ class MyHomePageState extends State<MyHomePage> {
                     fontWeight: FontWeight.bold,
                   )),
               onTap: () {
-                Navigator.push(context,MaterialPageRoute(builder: (context) => DonateDesignAll()));
+                Navigator.push(context,MaterialPageRoute(builder: (context) => ItemAll()));
               },
             ),
           ],

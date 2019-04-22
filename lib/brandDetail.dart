@@ -11,17 +11,17 @@ class BrandDetail extends StatefulWidget {
 }
 
 class BrandDetailState extends State<BrandDetail> {
-  Future _designData;
+  Future _itemData;
 
-  Future fetchDonateDesign() async {
-    QuerySnapshot fetchDesign = await Firestore.instance.collection('items').where('brandId', isEqualTo: widget.item.data['brandId']).getDocuments();
-    return fetchDesign.documents;
+  Future fetchItem() async {
+    QuerySnapshot itemData = await Firestore.instance.collection('items').where('brandId', isEqualTo: widget.item.data['brandId']).getDocuments();
+    return itemData.documents;
   }
 
   @override
   void initState() {
     super.initState();
-    _designData = fetchDonateDesign();
+    _itemData = fetchItem();
   }
 
   @override
@@ -121,7 +121,7 @@ class BrandDetailState extends State<BrandDetail> {
   Widget _brandItem() {
     return
     FutureBuilder(
-        future: _designData,
+        future: _itemData,
         builder: (_, snapshot) {
           if (snapshot.connectionState == ConnectionState.waiting) {
             return Center(child: CircularProgressIndicator());

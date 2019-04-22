@@ -1,18 +1,28 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
-import 'crud.dart';
-import 'package:firebase_auth/firebase_auth.dart';
 
-class AddItem extends StatefulWidget {
-  final String brandName;
-  AddItem({this.brandName});
+class ItemEdit extends StatefulWidget {
+  final String itemId;
+  final String title;
+  final String desc;
+  final String mainImg;
+  final String price;
+  final String material;
+  final String addInfo;
+  final String moreImg1;
+  final String moreImg2;
+  final String moreImg3;
+  final String category;
+
+
+  ItemEdit({this.itemId, this.title, this.desc, this.mainImg, this.price, this.material, this.addInfo, this.moreImg1, this.moreImg2, this.moreImg3, this.category});
 
   @override
-  AddItemState createState() => AddItemState();
+  ItemEditState createState() => ItemEditState();
 }
 
-class AddItemState extends State<AddItem> {
+class ItemEditState extends State<ItemEdit> {
   BuildContext scafoldContext;
 
   Future _catData;
@@ -34,8 +44,6 @@ class AddItemState extends State<AddItem> {
   final otherImage2TxtCont = TextEditingController();
   final otherImage3TxtCont = TextEditingController();
   String _itemCategory;
-  String _uid;
-  CrudMethod crudObj = CrudMethod();
 
   @override
   void dispose() {
@@ -51,6 +59,31 @@ class AddItemState extends State<AddItem> {
     super.dispose();
   }
 
+  updateItemdDialog() async {
+    return showDialog(
+      context: context,
+      barrierDismissible: true,
+      builder: (BuildContext context) {
+        return AlertDialog(
+          title: Text('Edit Item'),
+          content: Text('Submit new data ?'),
+          actions: <Widget>[
+            FlatButton(
+              child: Text('Cancel'),
+              onPressed: () {
+                Navigator.pop(context);
+              },
+            ),
+            FlatButton(
+              child: Text('OK'),
+              onPressed: updateData
+            )
+          ],
+        );
+      },
+    );
+  }
+
   void createSnackBar(String message) {
     final snackBar = SnackBar(
       content: Text(
@@ -62,49 +95,15 @@ class AddItemState extends State<AddItem> {
     Scaffold.of(scafoldContext).showSnackBar(snackBar);
   }
 
-  checkItemDialog() async {
-    FirebaseUser status = await FirebaseAuth.instance.currentUser();
-    _uid = status.uid;
-    return showDialog(
-      context: context,
-      barrierDismissible: true,
-      builder: (BuildContext context) {
-        return AlertDialog(
-          title: Text('Create Item'),
-          content: Text(
-              'Apakah semua data yang dimasukkan telah benar ?'),
-          actions: <Widget>[
-            FlatButton(
-              child: Text('Cancel'),
-              onPressed: () {
-                Navigator.pop(context);
-              },
-            ),
-            FlatButton(
-              child: Text('OK'),
-              onPressed: submitItem,
-            )
-          ],
-        );
-      },
-    );
-  }
-
-  submitItem(){
-    var today = DateTime.now();
-    String formatter =
-        "${today.year.toString()}${today.month.toString().padLeft(2, '0')}${today.day.toString().padLeft(2, '0')}";
+  updateData() {
     if (_itemCategory == null) {
       Navigator.pop(context);
       createSnackBar('Pilih Kategori');
-    } else if (_formkey.currentState.validate()) {
-      crudObj.addItem({
-        'brandId': 'br_' + _uid,
-        'brandName': widget.brandName,
-        'cDate' : formatter,
-        'mainImg': mainImageTxtCont.text,
+    } else if(_formkey.currentState.validate()) {
+      Firestore.instance.collection('items').document(widget.itemId).updateData({
         'itemName': itemNameTxtCont.text,
         'itemDesc': itemDescTxtCont.text,
+        'mainImg': mainImageTxtCont.text,
         'price': priceTxtCont.text,
         'material': materialTxtCont.text,
         'addInfo': addInfoTxtCont.text,
@@ -113,24 +112,24 @@ class AddItemState extends State<AddItem> {
         'moreImg3': otherImage3TxtCont.text,
         'category': _itemCategory,
       }).then((result) {
-        dismissItemDialog(context);
+        dismissEditItemDialog(context);
       }).catchError((e) {
         print(e);
       });
     } else {
-        Navigator.pop(context);
+      Navigator.pop(context);
     }
   }
 
-  dismissItemDialog(BuildContext context) async {
+  dismissEditItemDialog(BuildContext context) async {
     return showDialog(
       context: context,
       barrierDismissible: false,
       builder: (BuildContext context) {
         return AlertDialog(
-          title: Text('Add Item'),
+          title: Text('Create Brand'),
           content: Text(
-              'Item berhasil dibuat, anda dapat mengubah data pada halaman : Profile > Brand Page'),
+              'Data item berhasil diubah, anda dapat melihat data baru pada halaman : Profile > Brand Page'),
           actions: <Widget>[
             FlatButton(
               child: Text('OK'),
@@ -148,31 +147,44 @@ class AddItemState extends State<AddItem> {
   void initState() {
     super.initState();
     _catData = fetchCategory();
+    itemNameTxtCont.text = widget.title;
+    itemDescTxtCont.text = widget.desc;
+    mainImageTxtCont.text = widget.mainImg;
+    priceTxtCont.text = widget.price;
+    materialTxtCont.text = widget.material;
+    addInfoTxtCont.text = widget.addInfo ?? "";
+    otherImage1TxtCont.text = widget.moreImg1 ?? "";
+    otherImage2TxtCont.text = widget.moreImg2 ?? "";
+    otherImage3TxtCont.text = widget.moreImg3 ?? "";
   }
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
+    return
+    Scaffold(
       appBar: AppBar(
-        title: Text('Add Item'),
+        title: Text('Item Edit'),
+        actions: <Widget>[
+          SizedBox(
+            width: 60.0,
+            child: FlatButton(child: Icon(Icons.check_circle, size: 32,),
+              onPressed: updateItemdDialog
+              ),
+          )
+        ],
       ),
       body: Builder(
           builder: (BuildContext context) {
             scafoldContext = context;
-            return Column(
-        children: <Widget>[
-          Expanded(
-            child: ListView(
+            return
+            ListView(
               children: <Widget>[
                 _brandForm(),
-                _showCategory()
+                _showCategory(),
               ],
-            ),
-          ),
-          _showSubmitButton(context)
-        ],
-      );
-      })
+            );
+            }
+          )
     );
   }
 
@@ -387,22 +399,6 @@ class AddItemState extends State<AddItem> {
         );
         }
       },
-    );
-  }
-
-  Widget _showSubmitButton(BuildContext context) {
-    return GestureDetector(
-      child: Container(
-        padding: EdgeInsets.all(16.0),
-        color: Colors.grey,
-        child: Center(
-          child: Text(
-            'Submit',
-            style: TextStyle(color: Colors.black, fontSize: 16, fontWeight: FontWeight.bold),
-          ),
-        ),
-      ),
-      onTap: checkItemDialog,
     );
   }
 }

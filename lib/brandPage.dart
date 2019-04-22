@@ -2,9 +2,11 @@ import 'package:flutter/material.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'brandCreate.dart';
 import 'package:firebase_auth/firebase_auth.dart';
-import 'addItem.dart';
+import 'itemAdd.dart';
 import 'brandEdit.dart';
 import 'itemDetail.dart';
+import 'itemEdit.dart';
+import 'penjualan.dart';
 
 class BrandPage extends StatefulWidget {
 
@@ -51,17 +53,7 @@ class BrandPageState extends State<BrandPage> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text('Brand Page'),
-        actions: <Widget>[
-          SizedBox(
-            width: 60.0,
-            child: FlatButton(child: Icon(Icons.edit),
-              onPressed: (){
-                Navigator.push(context, MaterialPageRoute(builder: (context) => BrandEdit(docId: _documentId, title: title, desc: desc, imgUrl: imgUrl, email: email, mobile: mobile)));
-              }
-              ),
-          )
-        ],
+        title: Text('Brand Page')
       ),
       body: FutureBuilder(
         future: _brandData,
@@ -99,20 +91,101 @@ class BrandPageState extends State<BrandPage> {
             mobile = snapshot.data[0].data['mobile'];
             return ListView(
               children: <Widget>[
+                _showPenjualanText(),
+                _showBrandInfo(),
                 _showBrandTitle(snapshot.data[0].data['title']),
                 _showBrandDesc(snapshot.data[0].data['desc']),
                 _showBrandImg(snapshot.data[0].data['imgUrl']),
                 _showBrandEmail(snapshot.data[0].data['email']),
                 _showBrandPhone(snapshot.data[0].data['mobile']),
-                _showItems(),
-                _showAddItem(snapshot.data[0].data['title']),
-                Divider(),
+                _showItemText(snapshot.data[0].data['title']),
                 _gridView()
               ],
             );
           }
         },
       )
+    );
+  }
+
+  Widget _showEditBrand() {
+    return
+    FutureBuilder(
+      future: _brandData,
+      builder: (_, snapshot) {
+        if (snapshot.connectionState == ConnectionState.waiting) {
+            return Center(
+              child: CircularProgressIndicator(),
+            );
+          } else if (snapshot.data.length < 1) {
+          return
+          IconButton(
+            icon: Icon(Icons.add_circle),
+            iconSize: 30,
+            onPressed: () {
+              Navigator.push(context, MaterialPageRoute(builder: (context) => BrandCreate()));
+            },
+          );
+        } else {
+          return
+          SizedBox(
+          width: 60.0,
+          child: FlatButton(child: Icon(Icons.edit),
+            onPressed: (){
+              Navigator.push(context, MaterialPageRoute(builder: (context) => BrandEdit(docId: _documentId, title: title, desc: desc, imgUrl: imgUrl, email: email, mobile: mobile)));
+            }));
+        }
+      },
+        
+    );
+  }
+
+  Widget _showPenjualanText() {
+    return 
+    Container(
+      color: Colors.white,
+      padding: const EdgeInsets.all(32.0),
+      child: Center(
+        child: 
+        GestureDetector(
+          onTap: () {
+            Navigator.push(context, MaterialPageRoute(builder: (context) => Penjualan()));
+          },
+          child: Container(
+            padding: EdgeInsets.all(16.0),
+            decoration: BoxDecoration(
+              borderRadius: BorderRadius.circular(15.0),
+              border: Border.all(color: Colors.lime, width: 2.0)
+            ),
+            child: Text('Cek Penjualan', style: TextStyle(
+                  fontSize: 16.0,
+                ),),
+          ),
+        ),
+      ),
+    );
+  }
+
+  Widget _showBrandInfo() {
+    return Container(
+      color: Colors.grey,
+      child: Row(
+        children: <Widget>[
+          Expanded(
+            child: Padding(
+              padding: EdgeInsets.only(left: 16),
+                child: Text(
+                'Brand Info',
+                style: TextStyle(
+                  fontSize: 16.0,
+                  fontWeight: FontWeight.bold
+                ),
+              ),
+            ),
+          ),
+          _showEditBrand()
+        ],
+      ),
     );
   }
 
@@ -160,29 +233,36 @@ class BrandPageState extends State<BrandPage> {
     );
   }
 
-  Widget _showItems() {
+  Widget _showItemText(brandName) {
     return Container(
       color: Colors.grey,
-      padding: const EdgeInsets.only(left: 16.0, top: 16.0, bottom: 16.0),
-      child: Text(
-        'My Items',
-        style: TextStyle(
-          fontSize: 16.0,
-          fontWeight: FontWeight.bold
-        ),
+      child: Row(
+        children: <Widget>[
+          Expanded(
+            child: Padding(
+              padding: EdgeInsets.only(left: 16),
+                child: Text(
+                'My Items',
+                style: TextStyle(
+                  fontSize: 16.0,
+                  fontWeight: FontWeight.bold
+                ),
+              ),
+            ),
+          ),
+          Padding(
+            padding: EdgeInsets.only(right: 8.0),
+              child: IconButton(
+              icon: Icon(Icons.add_circle),
+              iconSize: 30,
+              color: Colors.black,
+              onPressed: () {
+                Navigator.push(context, MaterialPageRoute(builder: (context) => ItemAdd(brandName: brandName)));
+              },
+            ),
+          )
+        ],
       ),
-    );
-  }
-
-  Widget _showAddItem(brandName) {
-    return
-    ListTile(
-      title: Text('Add Item'),
-      subtitle: Text('Add item to your brand page'),
-      trailing: Icon(Icons.add_circle),
-      onTap: (){
-        Navigator.push(context, MaterialPageRoute(builder: (context) => AddItem(brandName: brandName,)));
-      },
     );
   }
 
@@ -257,8 +337,22 @@ class BrandPageState extends State<BrandPage> {
                     ),
                   ),
                   child: IconButton(
-                    onPressed: (){print('okokok');},
-                    color: Colors.lime,
+                    onPressed: (){
+                      Navigator.push(context,
+                        MaterialPageRoute(builder: (context) => ItemEdit(
+                          itemId: snapshot.documentID,
+                          title: snapshot.data['itemName'],
+                          desc: snapshot.data['itemDesc'],
+                          mainImg: snapshot.data['mainImg'],
+                          price: snapshot.data['price'],
+                          material: snapshot.data['material'],
+                          addInfo: snapshot.data['addInfo'],
+                          moreImg1: snapshot.data['moreImg1'],
+                          moreImg2: snapshot.data['moreImg2'],
+                          moreImg3: snapshot.data['moreImg3'],
+                          )));
+                    },
+                    color: Colors.white,
                     icon: Icon(Icons.edit),
                     iconSize: 24.0,
           ),

@@ -3,6 +3,7 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'confirmPayment.dart';
 import 'package:flutter/services.dart';
+import 'itemAll.dart';
 
 
 class OrderList extends StatefulWidget {
@@ -83,7 +84,23 @@ class OrderListState extends State<OrderList> {
           return Center(child: CircularProgressIndicator());
         } else {
           if (snapshot.data.length == 0) {
-            return Center(child: Text('You\'re not order any item yet, buy from our local brand now.'));
+            return Padding(
+              padding: const EdgeInsets.all(16.0),
+              child: Column(
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: <Widget>[
+                  Text('You\'re not order any item yet, buy our local brand now.', textAlign: TextAlign.center,),
+                  RaisedButton(
+                    onPressed: () {
+                      Navigator.push(context, MaterialPageRoute(builder: (context) => ItemAll()));
+                    },
+                    color: Colors.lime,
+                    child: Text('View All Items'),
+                  ),
+
+                ],
+              ),
+            );
           } else {
           return 
           ListView.builder(
@@ -225,6 +242,7 @@ class OrderListState extends State<OrderList> {
                       fontSize: 16.0,
                       color: Colors.grey
                     ),
+                    maxLines: 2,
                   ),
               ),
             ],
@@ -333,6 +351,7 @@ class OrderListState extends State<OrderList> {
           Spacer(),
           IconButton(
             icon: Icon(Icons.cancel),
+            iconSize: 32,
             color: Colors.lime,
             onPressed: deleteOrderDialog,
           )
@@ -393,6 +412,7 @@ class OrderListState extends State<OrderList> {
               fontSize: 16.0,
               color: Colors.lime
             ),
+            maxLines: 2,
           ),
       );
     }

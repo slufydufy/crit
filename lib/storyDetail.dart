@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
-import 'donateDesignAll.dart';
+import 'itemAll.dart';
 import 'itemDetail.dart';
 
 class StoryDetail extends StatelessWidget {
@@ -188,7 +188,7 @@ class StoryDetail extends StatelessWidget {
       FlatButton(
         onPressed: () {
           Navigator.push(context,
-            MaterialPageRoute(builder: (context) => DonateDesignAll()));
+            MaterialPageRoute(builder: (context) => ItemAll()));
         },
         child: Text('Join us!, Buy to donate now!', textAlign: TextAlign.center, style: TextStyle(
           fontSize: 24.0,

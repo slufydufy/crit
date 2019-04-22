@@ -62,12 +62,12 @@ class AdminDetailPageState extends State<AdminDetailPage> {
             subtitle: Text(widget.item.data['itemTitle']),
           ),
           ListTile(
-            title: Text('Item Size'),
-            subtitle: Text(widget.item.data['size']),
-          ),
-          ListTile(
             title: Text('Item Quantity'),
             subtitle: Text(widget.item.data['quantity']),
+          ),
+          ListTile(
+            title: Text('Info Tambahan'),
+            subtitle: Text(widget.item.data['addInfo'] ?? ""),
           ),
           ListTile(
             title: Text('Item Price'),

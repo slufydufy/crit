@@ -3,11 +3,31 @@ import 'checkOut.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:photo_view/photo_view.dart';
 import 'package:flutter_swiper/flutter_swiper.dart';
+import 'brandDetail.dart';
 
-class ItemDetail extends StatelessWidget {
+class ItemDetail extends StatefulWidget {
   final DocumentSnapshot item;
   ItemDetail({this.item});
-    
+
+  @override
+  ItemDetailState createState() => ItemDetailState();
+}
+
+class ItemDetailState extends State<ItemDetail> {
+  
+  Future _brandData;
+
+  Future fetchBrand() async {
+    final String _id = widget.item.data['brandId'];
+    QuerySnapshot data = await Firestore.instance.collection('brands').where('brandId', isEqualTo: _id).getDocuments();
+    return data.documents;
+  }
+
+  @override
+  void initState() {
+    super.initState();
+    _brandData = fetchBrand();
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -49,7 +69,7 @@ class ItemDetail extends StatelessWidget {
     Padding(
       padding: EdgeInsets.fromLTRB(16.0, 16.0, 16.0, 0.0),
       child: 
-      Text(item.data['itemName'], textAlign: TextAlign.center, style: TextStyle(
+      Text(widget.item.data['itemName'], textAlign: TextAlign.center, style: TextStyle(
         fontSize: 24.0,
         fontWeight: FontWeight.bold
       ),
@@ -62,7 +82,7 @@ class ItemDetail extends StatelessWidget {
     Padding(
       padding: EdgeInsets.fromLTRB(16.0, 8.0, 16.0, 8.0),
       child: 
-      Text(item.data['itemDesc'], textAlign: TextAlign.center, style: TextStyle(
+      Text(widget.item.data['itemDesc'], textAlign: TextAlign.center, style: TextStyle(
         fontSize: 16.0,
         color: Colors.grey,
       ),
@@ -74,9 +94,9 @@ class ItemDetail extends StatelessWidget {
     return Container(
       child: GestureDetector(
         onTap: () {
-          Navigator.push(context, MaterialPageRoute(builder: (context) => ImageFull(item: item.data['mainImg'])));
+          Navigator.push(context, MaterialPageRoute(builder: (context) => ImageFull(item: widget.item.data['mainImg'])));
         },
-        child: Image.network(item.data['mainImg'],
+        child: Image.network(widget.item.data['mainImg'],
         height: MediaQuery.of(context).size.width,
         fit: BoxFit.cover,
         )),
@@ -85,18 +105,34 @@ class ItemDetail extends StatelessWidget {
 
   Widget _showBrandName() {
     return
-    ListTile(
-      title: Text(item.data['brandName'].toString(), style: TextStyle(
-        fontSize: 16.0,
-      ),),
-      subtitle: Text('Brand'),
+    FutureBuilder(
+      future: _brandData,
+      builder: (_, snapshot) {
+        if (snapshot.connectionState == ConnectionState.waiting) {
+          return
+          ListTile(
+            subtitle: Text('Brand'),
+          );
+        } else {
+          return
+          ListTile(
+            title: Text(widget.item.data['brandName'].toString(), style: TextStyle(
+              fontSize: 16.0,
+            ),),
+            subtitle: Text('Brand'),
+            onTap:  () {
+                Navigator.push(context, MaterialPageRoute(builder: (context) => BrandDetail(item: snapshot.data[0])));
+              },
+          );
+        }
+      },
     );
   }
 
   Widget _showPrice() {
     return
     ListTile(
-      title: Text(item.data['price'].toString(), style: TextStyle(
+      title: Text(widget.item.data['price'].toString(), style: TextStyle(
         fontSize: 16.0,
       ),),
       subtitle: Text('Price'),
@@ -106,7 +142,7 @@ class ItemDetail extends StatelessWidget {
   Widget _showMaterial() {
     return 
     ListTile(
-            title: Text(item.data['material'], style: TextStyle(
+            title: Text(widget.item.data['material'], style: TextStyle(
               fontSize: 16.0,
             ),),
             subtitle: Text('Material'),
@@ -119,7 +155,7 @@ class ItemDetail extends StatelessWidget {
             title: Text('Info Tambahan', style: TextStyle(
               fontSize: 16.0,
             ),),
-            subtitle: Text(item.data['addInfo'] ?? "",
+            subtitle: Text(widget.item.data['addInfo'] ?? "",
           )
     );
   }
@@ -135,9 +171,9 @@ class ItemDetail extends StatelessWidget {
 
   Widget _showMoreImage(BuildContext context) {
     List moreImgList = [];
-      moreImgList.add(item.data['moreImg1'] ?? "");
-      moreImgList.add(item.data['moreImg2'] ?? "");
-      moreImgList.add(item.data['moreImg3'] ?? "");
+      moreImgList.add(widget.item.data['moreImg1'] ?? "");
+      moreImgList.add(widget.item.data['moreImg2'] ?? "");
+      moreImgList.add(widget.item.data['moreImg3'] ?? "");
           
     return
     Container(
@@ -178,7 +214,7 @@ class ItemDetail extends StatelessWidget {
           ),
         ),
         onTap: () {
-          Navigator.push(context, MaterialPageRoute(builder: (context) => CheckOut(itemCO: item)));
+          Navigator.push(context, MaterialPageRoute(builder: (context) => CheckOut(itemCO: widget.item)));
           },
     );
   }

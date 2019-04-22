@@ -128,27 +128,8 @@ class BrandCreateState extends State<BrandCreate> {
     return Form(
       key: _formkey,
       child: Column(
-        children: <Widget>[_showImgUrl(), _showTitle(), _showDesc(), _showEmail(), _showMobile()],
+        children: <Widget>[ _showTitle(), _showDesc(), _showImgUrl(), _showEmail(), _showMobile()],
       ),
-    );
-  }
-
-  Widget _showImgUrl() {
-    return Container(
-      padding: EdgeInsets.fromLTRB(16.0, 16.0, 16.0, 0.0),
-      child: TextFormField(
-          controller: imgUrlTxtCont,
-          maxLines: 1,
-          validator: (value) {
-            if (value.isEmpty) {
-              return 'URL Gambar belum diisi';
-            }
-          },
-          decoration: InputDecoration(
-              labelText: 'URL Gambar Brand',
-              contentPadding:
-                  new EdgeInsets.symmetric(vertical: 10.0, horizontal: 10.0),
-              border: OutlineInputBorder())),
     );
   }
 
@@ -188,6 +169,25 @@ class BrandCreateState extends State<BrandCreate> {
                 new EdgeInsets.symmetric(vertical: 10.0, horizontal: 10.0),
             border: OutlineInputBorder()),
       ),
+    );
+  }
+
+  Widget _showImgUrl() {
+    return Container(
+      padding: EdgeInsets.fromLTRB(16.0, 16.0, 16.0, 0.0),
+      child: TextFormField(
+          controller: imgUrlTxtCont,
+          maxLines: 1,
+          validator: (value) {
+            if (value.isEmpty) {
+              return 'URL Gambar belum diisi';
+            }
+          },
+          decoration: InputDecoration(
+              labelText: 'URL Gambar Brand',
+              contentPadding:
+                  new EdgeInsets.symmetric(vertical: 10.0, horizontal: 10.0),
+              border: OutlineInputBorder())),
     );
   }
 

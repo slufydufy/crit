@@ -5,7 +5,7 @@ import 'mainLogin.dart';
 import 'profile.dart';
 import 'myHomePage.dart';
 import 'storyAll.dart';
-import 'donateDesignAll.dart';
+import 'itemAll.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter_staggered_grid_view/flutter_staggered_grid_view.dart';
 import 'brandDetail.dart';
@@ -120,18 +120,18 @@ class BrandAllState extends State<BrandAll> {
                 'All Items',
                 style: TextStyle(fontSize: 16.0),
               ),
-              leading: Icon(Icons.hot_tub),
+              leading: Icon(Icons.blur_on),
               onTap: () {
                 Navigator.pop(context);
                 Navigator.push(context,
-                    MaterialPageRoute(builder: (context) => DonateDesignAll()));
+                    MaterialPageRoute(builder: (context) => ItemAll()));
               }),
           ListTile(
               title: Text(
                 'All Brands',
                 style: TextStyle(fontSize: 16.0),
               ),
-              leading: Icon(Icons.dashboard),
+              leading: Icon(Icons.store_mall_directory),
               onTap: () {
                 Navigator.pop(context);
                 Navigator.push(context,
@@ -142,7 +142,7 @@ class BrandAllState extends State<BrandAll> {
                 'All Story',
                 style: TextStyle(fontSize: 16.0),
               ),
-              leading: Icon(Icons.card_giftcard),
+              leading: Icon(Icons.fiber_new),
               onTap: () {
                 Navigator.pop(context);
                 Navigator.push(context,
