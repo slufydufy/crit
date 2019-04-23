@@ -6,7 +6,7 @@ import 'itemAdd.dart';
 import 'brandEdit.dart';
 import 'itemDetail.dart';
 import 'itemEdit.dart';
-import 'penjualan.dart';
+import 'sales.dart';
 
 class BrandPage extends StatefulWidget {
 
@@ -69,7 +69,7 @@ class BrandPageState extends State<BrandPage> {
                 children: <Widget>[
                   Padding(
                     padding: const EdgeInsets.all(16.0),
-                    child: Text('You are currently dont own any brand, Create your brand now!', textAlign: TextAlign.center,),
+                    child: Text('You dont own any brand, Create your brand now!', textAlign: TextAlign.center,),
                   ),
                   RaisedButton(
                     onPressed: () {
@@ -149,13 +149,13 @@ class BrandPageState extends State<BrandPage> {
         child: 
         GestureDetector(
           onTap: () {
-            Navigator.push(context, MaterialPageRoute(builder: (context) => Penjualan()));
+            Navigator.push(context, MaterialPageRoute(builder: (context) => SalesMain()));
           },
           child: Container(
             padding: EdgeInsets.all(16.0),
             decoration: BoxDecoration(
               borderRadius: BorderRadius.circular(15.0),
-              border: Border.all(color: Colors.lime, width: 2.0)
+              border: Border.all(color: Colors.lime, width: 1.0)
             ),
             child: Text('Cek Penjualan', style: TextStyle(
                   fontSize: 16.0,

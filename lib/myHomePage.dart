@@ -214,7 +214,7 @@ class MyHomePageState extends State<MyHomePage> {
       body: ListView(
         children: <Widget>[
           _showCarousel(),
-          _buyToDonateText(),
+          _allItemText(),
           _gridView(),
           _brands(),
           _storyText(),
@@ -256,9 +256,9 @@ class MyHomePageState extends State<MyHomePage> {
     );
   }
 
-  Widget _buyToDonateText() {
+  Widget _allItemText() {
     return Container(
-        padding: EdgeInsets.fromLTRB(8.0, 16.0, 8.0, 8.0),
+        padding: EdgeInsets.fromLTRB(8.0, 32.0, 8.0, 8.0),
         child: Row(
           children: <Widget>[
             Expanded(
@@ -285,7 +285,7 @@ class MyHomePageState extends State<MyHomePage> {
 
   Widget _gridView() {
     return Container(
-        padding: EdgeInsets.fromLTRB(4.0, 0.0, 4.0, 16.0),
+        padding: EdgeInsets.fromLTRB(4.0, 0.0, 4.0, 32.0),
         child: FutureBuilder(
             future: _designData,
             builder: (context, snapshot) {
@@ -343,34 +343,6 @@ class MyHomePageState extends State<MyHomePage> {
         ));
   }
 
-  Widget _brandText() {
-    return Container(
-      color: Colors.grey,
-        padding: EdgeInsets.only(left: 8.0, top: 8.0, right: 8.0),
-        child: Row(
-          children: <Widget>[
-            Expanded(
-                child: Text(
-              'Local Brand',
-              style: TextStyle(
-                fontSize: 20.0,
-                fontWeight: FontWeight.bold,
-              ),
-            )),
-            GestureDetector(
-              child: Text('View All',
-                  style: TextStyle(
-                    color: Colors.white,
-                  )),
-              onTap: () {
-                Navigator.push(context,MaterialPageRoute(
-                  builder: (context) => BrandAll()));
-              },
-            ),
-          ],
-        ));
-  }
-
   Widget _brands() {
     return 
     Container(
@@ -407,6 +379,34 @@ class MyHomePageState extends State<MyHomePage> {
     );
   }
 
+  Widget _brandText() {
+    return Container(
+      color: Colors.grey,
+        padding: EdgeInsets.only(left: 8.0, top: 8.0, right: 8.0),
+        child: Row(
+          children: <Widget>[
+            Expanded(
+                child: Text(
+              'All Brands',
+              style: TextStyle(
+                fontSize: 20.0,
+                fontWeight: FontWeight.bold,
+              ),
+            )),
+            GestureDetector(
+              child: Text('View All',
+                  style: TextStyle(
+                    color: Colors.white,
+                  )),
+              onTap: () {
+                Navigator.push(context,MaterialPageRoute(
+                  builder: (context) => BrandAll()));
+              },
+            ),
+          ],
+        ));
+  }
+
   Widget brandCard(DocumentSnapshot snapshot) {
     return FlatButton(
             padding: EdgeInsets.all(0.0),
@@ -438,7 +438,7 @@ class MyHomePageState extends State<MyHomePage> {
 
   Widget _storyText() {
     return Container(
-        padding: EdgeInsets.fromLTRB(8.0, 16.0, 8.0, 0.0),
+        padding: EdgeInsets.fromLTRB(8.0, 32.0, 8.0, 0.0),
         child: Row(
           children: <Widget>[
             Expanded(

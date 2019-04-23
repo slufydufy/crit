@@ -18,7 +18,11 @@ class AWBState extends State<AWB> {
   CrudMethod crudObj = CrudMethod();
 
   awbproceed() {
-      crudObj.confirmPayment(widget.item.documentID, {
+      if (awbTxtCont.text.length < 5) {
+        Navigator.pop(context);
+        dismissAwbWrong();
+      } else {
+        crudObj.confirmPayment(widget.item.documentID, {
         "status" : 'pesanan dikirim',
         "awb" : awbTxtCont.text
       }).then((result) {
@@ -27,6 +31,7 @@ class AWBState extends State<AWB> {
       }).catchError((e) {
         print(e);
       });
+      }
     
   }
 
@@ -42,6 +47,27 @@ class AWBState extends State<AWB> {
             FlatButton(
               child: Text('OK'),
               onPressed: awbproceed
+            )
+          ],
+        );
+      },
+    );
+  }
+
+  dismissAwbWrong() {
+    return showDialog(
+      context: context,
+      barrierDismissible: false,
+      builder: (BuildContext context) {
+        return AlertDialog(
+          title: Text('Input AWB'),
+          content: Text('Nomor AWB / Nomor Resi yang dimasukkan salah'),
+          actions: <Widget>[
+            FlatButton(
+              child: Text('OK'),
+              onPressed: () {
+                Navigator.pop(context);
+              }
             )
           ],
         );
@@ -85,7 +111,7 @@ class AWBState extends State<AWB> {
         maxLines: 1,
         validator: (value) {
             if (value.isEmpty) {
-              return 'AWB rekening belum diisi';
+              return 'AWB belum diisi';
             }
           },
               decoration: InputDecoration(

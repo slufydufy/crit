@@ -2,18 +2,16 @@ import 'package:flutter/material.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'changeOrderStatus.dart';
 
-class AdminDetailPage extends StatelessWidget {
+class SalesDetail extends StatelessWidget {
   final DocumentSnapshot item;
-  AdminDetailPage({this.item});
-
+  SalesDetail({this.item});
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text('Detail Order'),
+        title: Text('Detail Penjualan'),
       ),
-      body: 
-      ListView(
+      body: ListView(
         children: <Widget>[
           ListTile(
             title: Text(item.data['status'], style: TextStyle(
@@ -75,7 +73,9 @@ class AdminDetailPage extends StatelessWidget {
             subtitle: Text('Total Price'),
           ),
         ],
-      )
+      ),
     );
   }
+
+
 }

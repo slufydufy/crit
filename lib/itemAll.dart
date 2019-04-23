@@ -140,42 +140,6 @@ class ItemAllState extends State<ItemAll> {
         ),
       ),
     );
-    // Scaffold(
-    //   appBar: AppBar(
-    //     title: Text('All Items'),
-        // actions: <Widget>[
-        //   SizedBox(
-        //     width: 54.0,
-        //     child: FlatButton(child: Icon(Icons.shopping_cart),
-        //       onPressed: checkLoginOrderAppbar),
-        //   )
-        // ],
-    //   ),
-    //   drawer: _showDrawer(),
-      // body: FutureBuilder(
-      //   future: _designData,
-      //   builder: (_, snapshot) {
-      //     if (snapshot.connectionState == ConnectionState.waiting) {
-      //       return Center(child: CircularProgressIndicator());
-      //     } else {
-      //       return
-      //       Padding(
-      //         padding: const EdgeInsets.all(4.0),
-      //         child: GridView.builder(
-      //               physics: ScrollPhysics(),
-      //               shrinkWrap: true,
-      //               gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
-      //                   crossAxisCount: 2),
-      //               itemCount: snapshot.data.length,
-      //               itemBuilder: (context, index) {
-      //                 return _itemCard(snapshot.data[index]);
-      //               },
-      //             ),
-      //       );
-      //     }
-      //   },
-      // ),
-    // );
   }
 
   Widget _showTopsItem() {

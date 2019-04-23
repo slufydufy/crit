@@ -3,7 +3,6 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'adminPage.dart';
 import 'brandPage.dart';
-// import 'package:google_sign_in/google_sign_in.dart';
 
 class Profile extends StatefulWidget {
   @override
@@ -16,8 +15,6 @@ class _ProfileState extends State<Profile> {
   Future _adminData;
   String crntUid;
   String _email;
-  // GoogleSignIn _gSignIn = GoogleSignIn();
-
 
   Future fetchAdmin() async {
     QuerySnapshot admQuery = await Firestore.instance.collection('adminUid').getDocuments();
@@ -145,18 +142,36 @@ class _ProfileState extends State<Profile> {
             return
             ListView(
             children: <Widget>[
+              _showBrandPage(),
               _showName(snapshot.data[0]),
               _showEmail(snapshot.data[0]),
               _showReset(),
-              _showBrandPage(),
               Divider(),
               _showSignOut(),
               _showadmin()
         ],
       );
+          } else {
+            return
+            Center(child: Text('User not found, please contact admin'),);
           }
         },
       )
+    );
+  }
+
+  Widget _showBrandPage() {
+    return
+    Container(
+      color: Colors.lime,
+      child: ListTile(
+        title: Text('Brand Page'),
+        subtitle: Text('Create / Manage your Brand'),
+        trailing: Icon(Icons.arrow_forward_ios),
+        onTap: () {
+          Navigator.push(context, MaterialPageRoute(builder: (context) => BrandPage()));
+        }
+      ),
     );
   }
 
@@ -183,18 +198,6 @@ class _ProfileState extends State<Profile> {
       subtitle: Text('Reset your account password'),
       trailing: Icon(Icons.arrow_forward_ios),
       onTap: _resetDialog
-    );
-  }
-
-  Widget _showBrandPage() {
-    return
-    ListTile(
-      title: Text('Brand Page'),
-      subtitle: Text('Create / Manage your Brand'),
-      trailing: Icon(Icons.arrow_forward_ios),
-      onTap: () {
-        Navigator.push(context, MaterialPageRoute(builder: (context) => BrandPage()));
-      }
     );
   }
 

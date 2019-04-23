@@ -4,6 +4,7 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'confirmPayment.dart';
 import 'package:flutter/services.dart';
 import 'itemAll.dart';
+import 'crud.dart';
 
 
 class OrderList extends StatefulWidget {
@@ -15,7 +16,9 @@ class OrderListState extends State<OrderList> {
   BuildContext scafoldContext;
 
   Future _orderData;
-  String _documentId;
+  String _docDelId;
+  String _docConfId;
+  CrudMethod crudObj = CrudMethod();
 
   Future fetchOrder() async {
     final user = await FirebaseAuth.instance.currentUser();
@@ -42,7 +45,7 @@ class OrderListState extends State<OrderList> {
             FlatButton(
               child: Text('OK'),
               onPressed: () {
-                Firestore.instance.collection('orderList').document(_documentId).delete();
+                Firestore.instance.collection('orderList').document(_docDelId).delete();
                 Navigator.popUntil(context, ModalRoute.withName('/'));
               },
             )
@@ -50,6 +53,42 @@ class OrderListState extends State<OrderList> {
         );
       },
     );
+  }
+
+  confirmOrderDialog() {
+    return showDialog(
+      context: context,
+      barrierDismissible: true,
+      builder: (BuildContext context) {
+        return AlertDialog(
+          title: Text('Order Selesai'),
+          content: Text('Order telah diterima ?'),
+          actions: <Widget>[
+            FlatButton(
+              child: Text('Cancel'),
+              onPressed: () {
+                Navigator.pop(context);
+              },
+            ),
+            FlatButton(
+              child: Text('OK'),
+              onPressed: orderproceed
+            )
+          ],
+        );
+      },
+    );
+  }
+
+  orderproceed() {
+      crudObj.confirmPayment(_docConfId, {
+        "status" : 'pesanan diterima',
+      }).then((result) {
+        Navigator.pop(context);
+        Navigator.popUntil(context, ModalRoute.withName('/'));
+      }).catchError((e) {
+        print(e);
+      });
   }
 
   void createSnackBar(String message) {
@@ -89,13 +128,18 @@ class OrderListState extends State<OrderList> {
               child: Column(
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: <Widget>[
-                  Text('You\'re not order any item yet, buy our local brand now.', textAlign: TextAlign.center,),
-                  RaisedButton(
-                    onPressed: () {
-                      Navigator.push(context, MaterialPageRoute(builder: (context) => ItemAll()));
-                    },
-                    color: Colors.lime,
-                    child: Text('View All Items'),
+                  Center(child: Text('No order found, buy our local brand now.', textAlign: TextAlign.center,)),
+                  Padding(
+                    padding: const EdgeInsets.all(8.0),
+                    child: Center(
+                      child: RaisedButton(
+                        onPressed: () {
+                          Navigator.push(context, MaterialPageRoute(builder: (context) => ItemAll()));
+                        },
+                        color: Colors.lime,
+                        child: Text('View All Items'),
+                      ),
+                    ),
                   ),
 
                 ],
@@ -119,8 +163,8 @@ class OrderListState extends State<OrderList> {
                     _showItem(snapshot.data[i]),
                     _showPrice(snapshot.data[i]),
                     _showQuantity(snapshot.data[i]),
-                    _showAddInfo(snapshot.data[i]),
                     _showTotalPrize(snapshot.data[i]),
+                    _showAddInfo(snapshot.data[i]),
                     Divider(),
                     _showConfirmBtn(snapshot.data[i]),
                     _showAwbText(snapshot.data[i]),
@@ -217,40 +261,6 @@ class OrderListState extends State<OrderList> {
     );
   }
 
-  Widget _showAddInfo(item) {
-    return Padding(
-      padding: const EdgeInsets.all(16.0),
-      child: Container(
-        decoration: BoxDecoration(
-          border: Border.all(color: Colors.grey)
-        ),
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.stretch,
-            children: <Widget>[
-              Container(
-                  padding: EdgeInsets.all(8.0),
-                  child: Text(
-                    'Info tambahan :', style: TextStyle(
-                      fontSize: 14.0,
-                      color: Colors.grey
-                    ),
-                  ),
-                ),
-              Container(
-                padding: EdgeInsets.all(8.0),
-                child: Text(item.data['addInfo'] ?? "", style: TextStyle(
-                      fontSize: 16.0,
-                      color: Colors.grey
-                    ),
-                    maxLines: 2,
-                  ),
-              ),
-            ],
-          ),
-      ),
-    );
-  }
-
   Widget _showQuantity(item) {
     return Row(
         children: <Widget>[
@@ -309,6 +319,7 @@ class OrderListState extends State<OrderList> {
                 padding: const EdgeInsets.fromLTRB(16.0, 8.0, 0.0, 0.0),
                 child: Text('Harga Total', style: TextStyle(
                     fontSize: 16.0,
+                    fontWeight: FontWeight.bold,
                     color: Colors.grey
                   ),
                 ),
@@ -318,6 +329,7 @@ class OrderListState extends State<OrderList> {
             padding: const EdgeInsets.fromLTRB(0.0, 8.0, 16.0, 0.0),
             child: Text(item.data['totalPrice'].toString(), style: TextStyle(
                   fontSize: 16.0,
+                  fontWeight: FontWeight.bold,
                   color: Colors.grey
                 ),
               ),
@@ -326,9 +338,44 @@ class OrderListState extends State<OrderList> {
       );
   }
 
+  Widget _showAddInfo(item) {
+    return Padding(
+      padding: const EdgeInsets.fromLTRB(16.0, 16.0, 16.0, 8.0),
+      child: 
+      Column(
+        crossAxisAlignment: CrossAxisAlignment.stretch,
+        children: <Widget>[
+          Padding(
+            padding: const EdgeInsets.only(bottom: 4.0),
+            child: Text('Info tambahan :', style: TextStyle(
+                            fontSize: 16.0,
+                            color: Colors.grey
+                          )),
+          ),
+          Container(
+            decoration: BoxDecoration(
+              border: Border.all(color: Colors.grey)
+            ),
+            child: 
+              Container(
+                padding: EdgeInsets.all(8.0),
+                child: 
+                Text(item.data['addInfo'] ?? "", style: TextStyle(
+                      fontSize: 16.0,
+                      color: Colors.grey
+                    ),
+                    maxLines: 2,
+                  ),
+              ),
+          ),
+        ],
+      ),
+    );
+  }
+
   Widget _showConfirmBtn(item) {
     final _docId = item.documentID;
-    _documentId = _docId;
+    _docDelId = _docId;
     if (item.data['status'] != 'menunggu pembayaran') {
       return
       Container(height: 8.0,);
@@ -354,7 +401,8 @@ class OrderListState extends State<OrderList> {
             iconSize: 32,
             color: Colors.lime,
             onPressed: deleteOrderDialog,
-          )
+          ),
+          Container(width: 8,)
         ],
       ),
     );
@@ -365,6 +413,8 @@ class OrderListState extends State<OrderList> {
     if (item.data['status'] != 'pesanan dikirim') {
       return Container();
     } else {
+      final _docId = item.documentID;
+    _docConfId = _docId;
     return
     Row(
         children: <Widget>[
@@ -396,6 +446,14 @@ class OrderListState extends State<OrderList> {
               }
             ),
           ),
+          Spacer(),
+          IconButton(
+            icon: Icon(Icons.check_circle),
+            color: Colors.lime,
+            iconSize: 32,
+            onPressed: confirmOrderDialog
+          ),
+          Container(width: 8.0,)
         ],
       );
     }

@@ -25,7 +25,6 @@ class ChangeOrderStatusState extends State<ChangeOrderStatus> {
       }).catchError((e) {
         print(e);
       });
-    
   }
 
   dismissProceedDialog() async {
@@ -58,6 +57,13 @@ class ChangeOrderStatusState extends State<ChangeOrderStatus> {
       body: 
       ListView(
         children: <Widget>[
+          Container(
+            color: Colors.grey[300],
+            child: ListTile(
+            title: Text('Nama Bank'),
+            trailing: Text(widget.item.data['bank'] ?? ""),
+            ),
+          ),
           Container(
             color: Colors.grey[300],
             child: ListTile(

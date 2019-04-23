@@ -190,7 +190,7 @@ class StoryDetail extends StatelessWidget {
           Navigator.push(context,
             MaterialPageRoute(builder: (context) => ItemAll()));
         },
-        child: Text('Join us!, Buy to donate now!', textAlign: TextAlign.center, style: TextStyle(
+        child: Text('Buy from our local brand now!', textAlign: TextAlign.center, style: TextStyle(
           fontSize: 24.0,
           fontWeight: FontWeight.bold,
           color: Colors.lime

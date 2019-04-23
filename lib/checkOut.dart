@@ -65,14 +65,13 @@ class CheckOutState extends State<CheckOut> {
     var charUid = _uid.substring(0, 3);
     var rng = Random();
     var code = rng.nextInt(9000) + 1000;
-    // if (finalSize == null) {
-    //   createSnackBar('Pilih ukuran');
-    // } else 
     if (quantityTxtCont.text.isEmpty || quantityTxtCont.text == '0') {
       createSnackBar('Jumlah minimum 1');
     } else if (_formkey.currentState.validate()) {
       crudObj.addOrder({
         'uid': _uid,
+        'brandId': widget.itemCO.data['brandId'],
+        'brandName': widget.itemCO.data['brandName'],
         'itemTitle': widget.itemCO.data['itemName'],
         'itemPrice': widget.itemCO.data['price'],
         'itemImg': widget.itemCO.data['mainImg'],
