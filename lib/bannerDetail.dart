@@ -17,7 +17,6 @@ class BannerDetail extends StatelessWidget {
           _showTitle(),
           _showSub(),
           _showImage(context),
-          Divider(),
           _showDesc(),
           Divider(),
           _showDonateNowText(context)
@@ -52,16 +51,19 @@ class BannerDetail extends StatelessWidget {
 
   Widget _showImage(BuildContext context) {
     return
-    FlatButton(
-      padding: EdgeInsets.all(0.0),
-      onPressed: () {
-        Navigator.push(context, MaterialPageRoute(builder: (context) => ImageFull(item: item.data['imgUrl'])));
-      },
-        child: Image.network(
-        item.data['imgUrl'],
-        fit: BoxFit.cover,
-        height: MediaQuery.of(context).size.width / 1.5,
-        width: MediaQuery.of(context).size.width,
+    Container(
+      padding: EdgeInsets.all(4.0),
+      child: FlatButton(
+        padding: EdgeInsets.all(0.0),
+        onPressed: () {
+          Navigator.push(context, MaterialPageRoute(builder: (context) => ImageFull(item: item.data['imgUrl'])));
+        },
+          child: Image.network(
+          item.data['imgUrl'],
+          fit: BoxFit.cover,
+          height: MediaQuery.of(context).size.width / 1.5,
+          width: MediaQuery.of(context).size.width,
+        ),
       ),
     );
   }

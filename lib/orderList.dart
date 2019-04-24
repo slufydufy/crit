@@ -128,7 +128,7 @@ class OrderListState extends State<OrderList> {
               child: Column(
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: <Widget>[
-                  Center(child: Text('No order found, buy our local brand now.', textAlign: TextAlign.center,)),
+                  Center(child: Text('No order found, buy from our local brand now.', textAlign: TextAlign.center,)),
                   Padding(
                     padding: const EdgeInsets.all(8.0),
                     child: Center(

@@ -35,7 +35,6 @@ class BrandDetailState extends State<BrandDetail> {
           _showTitle(),
           _showDesc(),
           _showImage(context),
-          Divider(),
           _showContact(),
           Divider(),
           _showPhone(),
@@ -75,12 +74,15 @@ class BrandDetailState extends State<BrandDetail> {
 
   Widget _showImage(BuildContext context) {
     return Container(
-      child: GestureDetector(
-        onTap: () {
+      padding: EdgeInsets.all(4.0),
+      child: FlatButton(
+        padding: EdgeInsets.all(0.0),
+        onPressed: () {
           Navigator.push(context, MaterialPageRoute(builder: (context) => ImageFull(item: widget.item.data['imgUrl'])));
         },
         child: Image.network(widget.item.data['imgUrl'],
         height: MediaQuery.of(context).size.width / 1.5,
+        width: MediaQuery.of(context).size.width,
         fit: BoxFit.cover,
         )),
     );

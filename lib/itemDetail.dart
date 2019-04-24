@@ -29,12 +29,45 @@ class ItemDetailState extends State<ItemDetail> {
     _brandData = fetchBrand();
   }
 
+  bool _isFav = true;
+  int _favCount = 0;
+
+  void togleFav() {
+    setState(() {
+      if(_isFav) {
+        _isFav = false;
+        _favCount += 1;
+      } else {
+        _isFav = true;
+        _favCount -= 1;
+      }
+    });
+  }
+
+  floatLike() {
+    return
+    Padding(
+      padding: const EdgeInsets.only(bottom: 48.0),
+      child: FloatingActionButton.extended(
+        icon: (_isFav ? Icon(Icons.favorite_border) : Icon(Icons.favorite)),
+        // Icon(Icons.favorite_border),
+        label: Text(_favCount.toString()),
+        onPressed: togleFav,
+      ),
+    );
+  }
+
+  counter() {
+
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
         title: Text('Detail'),
       ),
+      floatingActionButton: floatLike(),
       body: Column(
         crossAxisAlignment: CrossAxisAlignment.stretch,
         children: <Widget>[
@@ -44,7 +77,6 @@ class ItemDetailState extends State<ItemDetail> {
                 _showTitle(),
                 _showSub(),
                 _showImage(context),
-                Divider(height: 8.0,),
                 _showBrandName(),
                 Divider(),
                 _showPrice(),
@@ -92,12 +124,15 @@ class ItemDetailState extends State<ItemDetail> {
 
   Widget _showImage(BuildContext context) {
     return Container(
-      child: GestureDetector(
-        onTap: () {
+      padding: EdgeInsets.all(4.0),
+      child: FlatButton(
+        padding: EdgeInsets.all(0.0),
+        onPressed: () {
           Navigator.push(context, MaterialPageRoute(builder: (context) => ImageFull(item: widget.item.data['mainImg'])));
         },
         child: Image.network(widget.item.data['mainImg'],
         height: MediaQuery.of(context).size.width,
+        width: MediaQuery.of(context).size.width,
         fit: BoxFit.cover,
         )),
     );

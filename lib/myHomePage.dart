@@ -31,11 +31,10 @@ class MyHomePageState extends State<MyHomePage> {
     return fetchBanner.documents;
   }
 
-  Future fetchDonateDesign() async {
-    QuerySnapshot fetchDesign =
-        // await ref.collection('fl_content').where('mainCat', isEqualTo: 'design').limit(6).getDocuments();
+  Future fetchItem() async {
+    QuerySnapshot itemData =
         await ref.collection('items').limit(6).getDocuments();
-    return fetchDesign.documents;
+    return itemData.documents;
   }
 
   Future fetchBrand() async {
@@ -193,7 +192,7 @@ class MyHomePageState extends State<MyHomePage> {
   void initState() {
     super.initState();
     _bannerData = fetchBanner();
-    _designData = fetchDonateDesign();
+    _designData = fetchItem();
     _brandData = fetchBrand();
     _storyData = fetchStory();
   }
