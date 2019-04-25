@@ -206,9 +206,20 @@ class ItemDetailState extends State<ItemDetail> {
 
   Widget _showMoreImage(BuildContext context) {
     List moreImgList = [];
-      moreImgList.add(widget.item.data['moreImg1'] ?? "");
-      moreImgList.add(widget.item.data['moreImg2'] ?? "");
-      moreImgList.add(widget.item.data['moreImg3'] ?? "");
+    // if (widget.item.data['moreImg1'] != '') {
+    //   moreImgList.add(widget.item.data['moreImg1']);
+    // } else {moreImgList.add('http://www.theemailcompany.com/wp-content/uploads/2016/02/no-image-placeholder-big-300x200.jpg');}
+
+    // if (widget.item.data['moreImg2'] != '') {
+    //   moreImgList.add(widget.item.data['moreImg2']);
+    // } else {moreImgList.add('http://www.theemailcompany.com/wp-content/uploads/2016/02/no-image-placeholder-big-300x200.jpg');}
+
+    // if (widget.item.data['moreImg3'] != '') {
+    //   moreImgList.add(widget.item.data['moreImg3']);
+    // } else {moreImgList.add('http://www.theemailcompany.com/wp-content/uploads/2016/02/no-image-placeholder-big-300x200.jpg');}
+      moreImgList.add(widget.item.data['moreImg1'] ?? "http://www.theemailcompany.com/wp-content/uploads/2016/02/no-image-placeholder-big-300x200.jpg");
+      moreImgList.add(widget.item.data['moreImg2'] ?? "http://www.theemailcompany.com/wp-content/uploads/2016/02/no-image-placeholder-big-300x200.jpg");
+      moreImgList.add(widget.item.data['moreImg3'] ?? "http://www.theemailcompany.com/wp-content/uploads/2016/02/no-image-placeholder-big-300x200.jpg");
           
     return
     Container(
@@ -218,7 +229,14 @@ class ItemDetailState extends State<ItemDetail> {
         itemBuilder: (context, i) {
           return Card(
             clipBehavior: Clip.antiAlias,
-            child: Image.network(moreImgList[i],fit: BoxFit.cover,));
+            child: 
+            FadeInImage.assetNetwork(
+              placeholder: 'assets/images/imgPlaceholder.png',
+              image: moreImgList[i],
+              fit: BoxFit.cover,
+            )
+            // Image.network(moreImgList[i],fit: BoxFit.cover,)
+            );
         },
         itemCount: moreImgList.length,
         pagination: SwiperPagination(),
@@ -270,7 +288,13 @@ class ImageFull extends StatelessWidget {
                   tag: 'imageHero',
                   child: 
                   PhotoView(
-                    imageProvider: NetworkImage(item),
+                    imageProvider:
+                    // FadeInImage.assetNetwork(
+                    //   placeholder: 'assets/images/placeShirt.png',
+                    //   image: item,
+                    //   fit: BoxFit.cover,
+                    // ),
+                    NetworkImage(item),
                     initialScale: 1.5,
                     backgroundDecoration: BoxDecoration(color: Colors.white))
                 )

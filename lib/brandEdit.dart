@@ -9,19 +9,25 @@ class BrandEdit extends StatefulWidget {
   final String imgUrl;
   final String email;
   final String mobile;
-  BrandEdit({this.docId, this.title, this.desc, this.imgUrl, this.email, this.mobile});
+  final String brandId;
+
+  BrandEdit({this.docId, this.title, this.desc, this.imgUrl, this.email, this.mobile, this.brandId});
   @override
   BrandEditState createState() => BrandEditState();
 }
 
 class BrandEditState extends State<BrandEdit> {
+  BuildContext scafoldContext;
 
   final titleTxtCont = TextEditingController();
   final descTxtCont = TextEditingController();
   final imgUrlTxtCont = TextEditingController();
   final emailTxtCont = TextEditingController();
   final mobileTxtCont = TextEditingController();
+  final delTxtCont = TextEditingController();
   final _formkey = GlobalKey<FormState>();
+
+  String delText;
 
   updateBrandDialog() async {
     return showDialog(
@@ -30,17 +36,22 @@ class BrandEditState extends State<BrandEdit> {
       builder: (BuildContext context) {
         return AlertDialog(
           title: Text('Edit Brand'),
-          content: Text('Submit new data ?'),
+          content: Text('Masukkan data baru ?'),
           actions: <Widget>[
             FlatButton(
+              color: Colors.lime,
               child: Text('Cancel'),
               onPressed: () {
                 Navigator.pop(context);
               },
             ),
             FlatButton(
+              color: Colors.lime,
               child: Text('OK'),
-              onPressed: updateData
+              onPressed: () {
+                Navigator.pop(context);
+                updateBrandData();
+              }
             )
           ],
         );
@@ -48,7 +59,134 @@ class BrandEditState extends State<BrandEdit> {
     );
   }
 
-  updateData() {
+  deleteBrandDialog() async {
+    return showDialog(
+      context: context,
+      barrierDismissible: true,
+      builder: (BuildContext context) {
+        return AlertDialog(
+          title: Text('Hapus Brand'),
+          content: Text('Apakah anda ingin menghapus Brand ?'),
+          actions: <Widget>[
+            FlatButton(
+              color: Colors.lime,
+              child: Text('Cancel'),
+              onPressed: () {
+                Navigator.pop(context);
+              },
+            ),
+            FlatButton(
+              color: Colors.lime,
+              child: Text('OK'),
+              onPressed: () {
+                Navigator.pop(context);
+                confirmDeleteDialog();
+              }
+            )
+          ],
+        );
+      },
+    );
+  }
+
+  confirmDeleteDialog() async {
+    String brandName = widget.title;
+    return showDialog(
+      context: context,
+      barrierDismissible: true,
+      builder: (BuildContext context) {
+        return AlertDialog(
+          title: Text('Masukkan text dibawah sebagai konfirmasi: ' + '\n\"$brandName\"'),
+          content: TextField(
+            controller: delTxtCont,
+          ),
+          actions: <Widget>[
+            FlatButton(
+              color: Colors.lime,
+              child: Text('Cancel'),
+              onPressed: () {
+                Navigator.pop(context);
+              },
+            ),
+            FlatButton(
+              color: Colors.lime,
+              child: Text('OK'),
+              onPressed: () {
+                delText = delTxtCont.text;
+                checkBrandItem();
+              }
+            )
+          ],
+        );
+      },
+    );
+  }
+
+  checkBrandItem() {
+    if (delTxtCont.text == widget.title ) {
+      Firestore.instance.collection('items').where('brandId', isEqualTo: widget.brandId).getDocuments().then((result) {
+      print(result.documents.length);
+      if (result.documents.length == 0 ) {
+        Firestore.instance.collection('brands').document(widget.docId).delete();
+        Navigator.pop(context);
+        dismissDeleteSuccDialog();
+      } else {
+        Navigator.pop(context);
+        deleteItemExist();
+      }
+    });
+    } else {
+      Navigator.pop(context);
+      createSnackBar('Text yang dimasukkan Salah');
+    }
+  }
+
+  dismissDeleteSuccDialog() async {
+    return showDialog(
+      context: context,
+      barrierDismissible: false,
+      builder: (BuildContext context) {
+        return AlertDialog(
+          title: Text('Berhasil Dihapus'),
+          content: Text(
+              'Brand berhasil dihapus, anda dapat membuat membuat pada halaman : Profile > Brand Page'),
+          actions: <Widget>[
+            FlatButton(
+              color: Colors.lime,
+              child: Text('OK'),
+              onPressed: () {
+                Navigator.popUntil(context, ModalRoute.withName('/'));
+              },
+            )
+          ],
+        );
+      },
+    );
+  }
+
+  deleteItemExist() async {
+    return showDialog(
+      context: context,
+      barrierDismissible: false,
+      builder: (BuildContext context) {
+        return AlertDialog(
+          title: Text('Item belum kosong'),
+          content: Text('Hapus semua item sebelum menghapus brand'),
+          actions: <Widget>[
+            FlatButton(
+              color: Colors.lime,
+              child: Text('OK'),
+              onPressed: () {
+                Navigator.pop(context);
+              }
+            )
+          ],
+        );
+      },
+    );
+  }
+
+  updateBrandData() {
     if(_formkey.currentState.validate()) {
       Firestore.instance.collection('brands').document(widget.docId).updateData({
         'imgUrl': imgUrlTxtCont.text,
@@ -66,17 +204,26 @@ class BrandEditState extends State<BrandEdit> {
     }
   }
 
+  void createSnackBar(String message) {
+    final snackBar = SnackBar(content: 
+     Text(message, style: TextStyle(fontWeight: FontWeight.bold),),
+    backgroundColor: Colors.grey.withOpacity(0.8),
+    );
+    Scaffold.of(scafoldContext).showSnackBar(snackBar);
+  }
+
   dismissEditBrandDialog(BuildContext context) async {
     return showDialog(
       context: context,
       barrierDismissible: false,
       builder: (BuildContext context) {
         return AlertDialog(
-          title: Text('Create Brand'),
+          title: Text('Edit Brand'),
           content: Text(
               'Data brand berhasil diubah, anda dapat melihat data baru pada halaman : Profile > Brand Page'),
           actions: <Widget>[
             FlatButton(
+              color: Colors.lime,
               child: Text('OK'),
               onPressed: () {
                 Navigator.popUntil(context, ModalRoute.withName('/'));
@@ -95,6 +242,7 @@ class BrandEditState extends State<BrandEdit> {
     imgUrlTxtCont.dispose();
     emailTxtCont.dispose();
     mobileTxtCont.dispose();
+    delTxtCont.dispose();
     super.dispose();
   }
 
@@ -116,17 +264,29 @@ class BrandEditState extends State<BrandEdit> {
         actions: <Widget>[
           SizedBox(
             width: 60.0,
-            child: FlatButton(child: Icon(Icons.check_circle, size: 32,),
-              onPressed: updateBrandDialog
+            child: FlatButton(child: Icon(Icons.delete_forever, size: 30,),
+              onPressed: deleteBrandDialog
               ),
           )
         ],
       ),
-      body: ListView(
+      body: 
+      Builder(builder: (BuildContext context) {
+      scafoldContext = context;
+      return
+      Column(
+        children: <Widget>[
+          Expanded(
+            child: ListView(
               children: <Widget>[
                 _brandForm(),
               ],
-            )
+            ),
+          ),
+          _showSubmitButton(context)
+        ],
+      );
+      })
     );
   }
 
@@ -236,6 +396,22 @@ class BrandEditState extends State<BrandEdit> {
                 new EdgeInsets.symmetric(vertical: 10.0, horizontal: 10.0),
             border: OutlineInputBorder()),
       ),
+    );
+  }
+
+  Widget _showSubmitButton(BuildContext context) {
+    return GestureDetector(
+      child: Container(
+        padding: EdgeInsets.all(16.0),
+        color: Colors.grey,
+        child: Center(
+          child: Text(
+            'Submit',
+            style: TextStyle(color: Colors.black, fontSize: 16, fontWeight: FontWeight.bold),
+          ),
+        ),
+      ),
+      onTap: updateBrandDialog,
     );
   }
 }

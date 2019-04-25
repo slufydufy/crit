@@ -316,11 +316,12 @@ class MyHomePageState extends State<MyHomePage> {
           color: Colors.white,
           child: Stack(
             children: <Widget>[
-              Image.network(
-                snapshot.data['mainImg'],
-                fit: BoxFit.cover,
-                height: MediaQuery.of(context).size.width / 3,
-                width: MediaQuery.of(context).size.width / 3,
+              FadeInImage.assetNetwork(
+              placeholder: 'assets/images/imgPlaceholder.png',
+              image: snapshot.data['mainImg'],
+              fit: BoxFit.cover,
+              height: MediaQuery.of(context).size.width / 3,
+              width: MediaQuery.of(context).size.width / 3,
               ),
               Positioned(
                 bottom: 0.0,
@@ -417,7 +418,10 @@ class MyHomePageState extends State<MyHomePage> {
               children: <Widget>[
                 Card(
                   clipBehavior: Clip.antiAlias,
-                  child: Image.network(snapshot.data['imgUrl'],
+                  child: 
+                  FadeInImage.assetNetwork(
+                  placeholder: 'assets/images/imgPlaceholder.png',
+                  image: snapshot.data['imgUrl'],
                   fit: BoxFit.cover,
                   width: MediaQuery.of(context).size.width / 1.5,
                   height: MediaQuery.of(context).size.width / 2.25,
@@ -506,11 +510,12 @@ class MyHomePageState extends State<MyHomePage> {
               Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: <Widget>[
-                  Image.network(
-                    snapshot.data['imgUrl'],
-                    fit: BoxFit.cover,
-                    height: MediaQuery.of(context).size.width / 1.75,
-                    width: MediaQuery.of(context).size.width,
+                  FadeInImage.assetNetwork(
+                  placeholder: 'assets/images/imgPlaceholder.png',
+                  image: snapshot.data['imgUrl'],
+                  fit: BoxFit.cover,
+                  height: MediaQuery.of(context).size.width / 1.75,
+                  width: MediaQuery.of(context).size.width,
                   ),
                   Padding(
                     padding: const EdgeInsets.all(8.0),

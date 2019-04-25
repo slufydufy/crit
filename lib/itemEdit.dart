@@ -127,7 +127,7 @@ class ItemEditState extends State<ItemEdit> {
       barrierDismissible: false,
       builder: (BuildContext context) {
         return AlertDialog(
-          title: Text('Create Brand'),
+          title: Text('Edit Item'),
           content: Text(
               'Data item berhasil diubah, anda dapat melihat data baru pada halaman : Profile > Brand Page'),
           actions: <Widget>[

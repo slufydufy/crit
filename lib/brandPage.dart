@@ -23,6 +23,8 @@ class BrandPageState extends State<BrandPage> {
   String imgUrl;
   String email;
   String mobile;
+  String brandId;
+
 
   Future fetchBrand() async {
     String _uid;
@@ -89,6 +91,7 @@ class BrandPageState extends State<BrandPage> {
             imgUrl = snapshot.data[0].data['imgUrl'];
             email = snapshot.data[0].data['email'];
             mobile = snapshot.data[0].data['mobile'];
+            brandId = snapshot.data[0].data['brandId'];
             return ListView(
               children: <Widget>[
                 _showPenjualanText(),
@@ -132,7 +135,7 @@ class BrandPageState extends State<BrandPage> {
           width: 60.0,
           child: FlatButton(child: Icon(Icons.edit),
             onPressed: (){
-              Navigator.push(context, MaterialPageRoute(builder: (context) => BrandEdit(docId: _documentId, title: title, desc: desc, imgUrl: imgUrl, email: email, mobile: mobile)));
+              Navigator.push(context, MaterialPageRoute(builder: (context) => BrandEdit(docId: _documentId, title: title, desc: desc, imgUrl: imgUrl, email: email, mobile: mobile, brandId: brandId,)));
             }));
         }
       },

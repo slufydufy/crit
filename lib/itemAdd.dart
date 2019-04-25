@@ -82,7 +82,10 @@ class ItemAddState extends State<ItemAdd> {
             ),
             FlatButton(
               child: Text('OK'),
-              onPressed: submitItem,
+              onPressed: () {
+                submitItem();
+                Navigator.pop(context);
+              },
             )
           ],
         );

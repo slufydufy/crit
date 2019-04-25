@@ -40,7 +40,10 @@ class BrandCreateState extends State<BrandCreate> {
             ),
             FlatButton(
               child: Text('OK'),
-              onPressed: submitBrand,
+              onPressed: () {
+                Navigator.pop(context);
+                submitBrand();
+              },
             )
           ],
         );
