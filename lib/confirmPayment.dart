@@ -18,14 +18,6 @@ class ConfirmPaymentState extends State<ConfirmPayment> {
   final jumlahTxtCont = TextEditingController();
   CrudMethod crudObj = CrudMethod();
 
-  @override
-  void dispose() {
-    bankTxtCont.dispose();
-    rekTxtCont.dispose();
-    rekTxtCont.dispose();
-    super.dispose();
-  }
-
   confirm() {
     if (_formConfirmKey.currentState.validate()) {
       crudObj.confirmPayment(widget.itemConf.documentID, {

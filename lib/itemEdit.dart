@@ -59,6 +59,65 @@ class ItemEditState extends State<ItemEdit> {
     super.dispose();
   }
 
+  deleteItemDialog() async {
+    return showDialog(
+      context: context,
+      barrierDismissible: true,
+      builder: (BuildContext context) {
+        return AlertDialog(
+          title: Text('Hapus Item'),
+          content: Text('Apakah anda ingin menghapus item ini ?'),
+          actions: <Widget>[
+            FlatButton(
+              color: Colors.lime,
+              child: Text('Cancel', style: TextStyle(color: Colors.black)),
+              onPressed: () {
+                Navigator.pop(context);
+              },
+            ),
+            FlatButton(
+              color: Colors.lime,
+              child: Text('OK', style: TextStyle(color: Colors.black)),
+              onPressed: () {
+                Navigator.pop(context);
+                deleteItem();
+              }
+            )
+          ],
+        );
+      },
+    );
+  }
+
+  deleteItem() {
+    Firestore.instance.collection('items').document(widget.itemId).delete().then((result) {
+      dismissDeleteItemDialog();
+    });
+  }
+
+  dismissDeleteItemDialog() async {
+    return showDialog(
+      context: context,
+      barrierDismissible: false,
+      builder: (BuildContext context) {
+        return AlertDialog(
+          title: Text('Hapus Item'),
+          content: Text('Item berhasil dihapus'),
+          actions: <Widget>[
+            FlatButton(
+              color: Colors.lime,
+              child: Text('OK', style: TextStyle(color: Colors.black)),
+              onPressed: () {
+                Navigator.pop(context);
+                Navigator.popUntil(context, ModalRoute.withName('/'));
+              }
+            )
+          ],
+        );
+      },
+    );
+  }
+
   updateItemdDialog() async {
     return showDialog(
       context: context,
@@ -69,14 +128,19 @@ class ItemEditState extends State<ItemEdit> {
           content: Text('Submit new data ?'),
           actions: <Widget>[
             FlatButton(
+              color: Colors.lime,
               child: Text('Cancel'),
               onPressed: () {
                 Navigator.pop(context);
               },
             ),
             FlatButton(
+              color: Colors.lime,
               child: Text('OK'),
-              onPressed: updateData
+              onPressed: () {
+                Navigator.pop(context);
+                updateData();
+              }
             )
           ],
         );
@@ -132,6 +196,7 @@ class ItemEditState extends State<ItemEdit> {
               'Data item berhasil diubah, anda dapat melihat data baru pada halaman : Profile > Brand Page'),
           actions: <Widget>[
             FlatButton(
+              color: Colors.lime,
               child: Text('OK'),
               onPressed: () {
                 Navigator.popUntil(context, ModalRoute.withName('/'));
@@ -167,8 +232,8 @@ class ItemEditState extends State<ItemEdit> {
         actions: <Widget>[
           SizedBox(
             width: 60.0,
-            child: FlatButton(child: Icon(Icons.check_circle, size: 32,),
-              onPressed: updateItemdDialog
+            child: FlatButton(child: Icon(Icons.delete_forever, size: 32,),
+              onPressed: deleteItemDialog
               ),
           )
         ],
@@ -177,10 +242,17 @@ class ItemEditState extends State<ItemEdit> {
           builder: (BuildContext context) {
             scafoldContext = context;
             return
-            ListView(
+            Column(
               children: <Widget>[
-                _brandForm(),
-                _showCategory(),
+                Expanded(
+                  child: ListView(
+                    children: <Widget>[
+                      _brandForm(),
+                      _showCategory(),
+                    ],
+                  ),
+                ),
+                _showSubmitButton(context)
               ],
             );
             }
@@ -399,6 +471,22 @@ class ItemEditState extends State<ItemEdit> {
         );
         }
       },
+    );
+  }
+
+  Widget _showSubmitButton(BuildContext context) {
+    return GestureDetector(
+      child: Container(
+        padding: EdgeInsets.all(16.0),
+        color: Colors.grey,
+        child: Center(
+          child: Text(
+            'Submit',
+            style: TextStyle(color: Colors.black, fontSize: 16, fontWeight: FontWeight.bold),
+          ),
+        ),
+      ),
+      onTap: updateItemdDialog,
     );
   }
 }

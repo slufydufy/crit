@@ -4,6 +4,7 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:photo_view/photo_view.dart';
 import 'package:flutter_swiper/flutter_swiper.dart';
 import 'brandDetail.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 
 class ItemDetail extends StatefulWidget {
   final DocumentSnapshot item;
@@ -16,17 +17,13 @@ class ItemDetail extends StatefulWidget {
 class ItemDetailState extends State<ItemDetail> {
   
   Future _brandData;
+  String _docId;
+  String _uid;
 
   Future fetchBrand() async {
     final String _id = widget.item.data['brandId'];
     QuerySnapshot data = await Firestore.instance.collection('brands').where('brandId', isEqualTo: _id).getDocuments();
     return data.documents;
-  }
-
-  @override
-  void initState() {
-    super.initState();
-    _brandData = fetchBrand();
   }
 
   bool _isFav = true;
@@ -37,9 +34,17 @@ class ItemDetailState extends State<ItemDetail> {
       if(_isFav) {
         _isFav = false;
         _favCount += 1;
+        Firestore.instance.collection('fav/$_docId/fav').document(_uid).setData({
+          'uid': _uid
+        }).catchError((e) {
+          print(e);
+        });
       } else {
         _isFav = true;
         _favCount -= 1;
+        Firestore.instance.collection('fav/$_docId/fav').document(_uid).delete().catchError((e) {
+          print(e);
+        });
       }
     });
   }
@@ -49,17 +54,46 @@ class ItemDetailState extends State<ItemDetail> {
     Padding(
       padding: const EdgeInsets.only(bottom: 48.0),
       child: FloatingActionButton.extended(
-        icon: (_isFav ? Icon(Icons.favorite_border) : Icon(Icons.favorite)),
-        // Icon(Icons.favorite_border),
-        label: Text(_favCount.toString()),
+        icon: (_isFav ? Icon(Icons.favorite_border, color: Colors.white,) : Icon(Icons.favorite, color: Colors.white)),
+        label: Text(_favCount.toString(), style: TextStyle(color: Colors.white)),
         onPressed: togleFav,
       ),
     );
   }
 
-  counter() {
-
+  fetchTtlFav() {
+    _brandData = fetchBrand();
+    String _docId = widget.item.documentID;
+    Firestore.instance.collection('fav/$_docId/fav').getDocuments().then((result) {
+      setState(() {
+        _favCount = result.documents.length;
+        print(_docId);
+      });
+    });
   }
+
+  fetchCrntFav() {
+    _docId = widget.item.documentID;
+
+    FirebaseAuth.instance.currentUser().then((result) {
+      _uid = result.uid;
+      print(_uid);
+    });
+
+    Firestore.instance.collection('fav/$_docId/fav').where('uid', isEqualTo: _uid) .getDocuments().then((result) {
+      if (result.documents.length > 0) {
+        _isFav = true;
+      }
+    });
+    
+  }
+
+  @override
+  void initState() {
+    super.initState();
+    fetchTtlFav();
+    fetchCrntFav();
+  }  
 
   @override
   Widget build(BuildContext context) {
@@ -288,13 +322,7 @@ class ImageFull extends StatelessWidget {
                   tag: 'imageHero',
                   child: 
                   PhotoView(
-                    imageProvider:
-                    // FadeInImage.assetNetwork(
-                    //   placeholder: 'assets/images/placeShirt.png',
-                    //   image: item,
-                    //   fit: BoxFit.cover,
-                    // ),
-                    NetworkImage(item),
+                    imageProvider: NetworkImage(item),
                     initialScale: 1.5,
                     backgroundDecoration: BoxDecoration(color: Colors.white))
                 )
