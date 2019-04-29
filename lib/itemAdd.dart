@@ -75,7 +75,7 @@ class ItemAddState extends State<ItemAdd> {
               'Apakah semua data yang dimasukkan telah benar ?'),
           actions: <Widget>[
             FlatButton(
-              child: Text('Cancel'),
+              child: Text('CANCEL'),
               onPressed: () {
                 Navigator.pop(context);
               },

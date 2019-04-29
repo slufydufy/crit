@@ -123,7 +123,7 @@ class CheckOutState extends State<CheckOut> {
           content: Text('Please sign in to make an order'),
           actions: <Widget>[
             FlatButton(
-              child: Text('Sign In'),
+              child: Text('SIGN IN'),
               onPressed: () {
                 Navigator.pop(context);
                 Navigator.push(context,

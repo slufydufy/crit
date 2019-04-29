@@ -5,6 +5,7 @@ import 'package:photo_view/photo_view.dart';
 import 'package:flutter_swiper/flutter_swiper.dart';
 import 'brandDetail.dart';
 import 'package:firebase_auth/firebase_auth.dart';
+import 'mainLogin.dart';
 
 class ItemDetail extends StatefulWidget {
   final DocumentSnapshot item;
@@ -24,6 +25,38 @@ class ItemDetailState extends State<ItemDetail> {
     final String _id = widget.item.data['brandId'];
     QuerySnapshot data = await Firestore.instance.collection('brands').where('brandId', isEqualTo: _id).getDocuments();
     return data.documents;
+  }
+
+  checkLoginFav() async {
+    FirebaseUser status = await FirebaseAuth.instance.currentUser();
+    if (status == null) {
+      _dismissLoginDialog(context);
+    } else {
+      togleFav();
+    }
+  }
+
+  _dismissLoginDialog(BuildContext context) async {
+    return showDialog(
+      context: context,
+      barrierDismissible: true,
+      builder: (BuildContext context) {
+        return AlertDialog(
+          title: Text('You are not sign in'),
+          content: Text('Please sign in to continue'),
+          actions: <Widget>[
+            FlatButton(
+              child: Text('SIGN IN'),
+              onPressed: () {
+                Navigator.pop(context);
+                Navigator.push(context,
+                    MaterialPageRoute(builder: (context) => MainLogin()));
+              },
+            )
+          ],
+        );
+      },
+    );
   }
 
   bool _isFav = true;
@@ -56,7 +89,7 @@ class ItemDetailState extends State<ItemDetail> {
       child: FloatingActionButton.extended(
         icon: (_isFav ? Icon(Icons.favorite_border, color: Colors.white,) : Icon(Icons.favorite, color: Colors.white)),
         label: Text(_favCount.toString(), style: TextStyle(color: Colors.white)),
-        onPressed: togleFav,
+        onPressed: checkLoginFav,
       ),
     );
   }
@@ -67,24 +100,23 @@ class ItemDetailState extends State<ItemDetail> {
     Firestore.instance.collection('fav/$_docId/fav').getDocuments().then((result) {
       setState(() {
         _favCount = result.documents.length;
-        print(_docId);
       });
     });
   }
 
   fetchCrntFav() {
     _docId = widget.item.documentID;
-
     FirebaseAuth.instance.currentUser().then((result) {
-      _uid = result.uid;
-      print(_uid);
+    _uid = result.uid;
+      Firestore.instance.collection('fav/$_docId/fav').where('uid', isEqualTo: _uid).getDocuments().then((result) {
+      if (result.documents.length > 0) {
+        print(result.documents.length);
+        _isFav = false;
+        }
+      });
     });
 
-    Firestore.instance.collection('fav/$_docId/fav').where('uid', isEqualTo: _uid) .getDocuments().then((result) {
-      if (result.documents.length > 0) {
-        _isFav = true;
-      }
-    });
+    
     
   }
 

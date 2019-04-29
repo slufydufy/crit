@@ -37,7 +37,7 @@ class OrderListState extends State<OrderList> {
           content: Text('Hapus order ini ?'),
           actions: <Widget>[
             FlatButton(
-              child: Text('Cancel'),
+              child: Text('CANCEL'),
               onPressed: () {
                 Navigator.pop(context);
               },
@@ -65,7 +65,7 @@ class OrderListState extends State<OrderList> {
           content: Text('Order telah diterima ?'),
           actions: <Widget>[
             FlatButton(
-              child: Text('Cancel'),
+              child: Text('CANCEL'),
               onPressed: () {
                 Navigator.pop(context);
               },

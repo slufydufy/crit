@@ -40,7 +40,7 @@ class _ProfileState extends State<Profile> {
           content: Text('Reset your account password ?'),
           actions: <Widget>[
             FlatButton(
-              child: Text('Cancel'),
+              child: Text('CANCEL'),
               onPressed: () {
                 Navigator.pop(context);
               },
@@ -103,7 +103,7 @@ class _ProfileState extends State<Profile> {
           content: Text('Sign Out from this account ?'),
           actions: <Widget>[
             FlatButton(
-              child: Text('Cancel'),
+              child: Text('CANCEL'),
               onPressed: () {
                 Navigator.pop(context);
               },

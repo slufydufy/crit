@@ -69,15 +69,13 @@ class ItemEditState extends State<ItemEdit> {
           content: Text('Apakah anda ingin menghapus item ini ?'),
           actions: <Widget>[
             FlatButton(
-              color: Colors.lime,
-              child: Text('Cancel', style: TextStyle(color: Colors.black)),
+              child: Text('CANCEL'),
               onPressed: () {
                 Navigator.pop(context);
               },
             ),
             FlatButton(
-              color: Colors.lime,
-              child: Text('OK', style: TextStyle(color: Colors.black)),
+              child: Text('OK'),
               onPressed: () {
                 Navigator.pop(context);
                 deleteItem();
@@ -105,8 +103,7 @@ class ItemEditState extends State<ItemEdit> {
           content: Text('Item berhasil dihapus'),
           actions: <Widget>[
             FlatButton(
-              color: Colors.lime,
-              child: Text('OK', style: TextStyle(color: Colors.black)),
+              child: Text('OK'),
               onPressed: () {
                 Navigator.pop(context);
                 Navigator.popUntil(context, ModalRoute.withName('/'));
@@ -128,14 +125,12 @@ class ItemEditState extends State<ItemEdit> {
           content: Text('Submit new data ?'),
           actions: <Widget>[
             FlatButton(
-              color: Colors.lime,
-              child: Text('Cancel'),
+              child: Text('CANCEL'),
               onPressed: () {
                 Navigator.pop(context);
               },
             ),
             FlatButton(
-              color: Colors.lime,
               child: Text('OK'),
               onPressed: () {
                 Navigator.pop(context);
@@ -196,7 +191,6 @@ class ItemEditState extends State<ItemEdit> {
               'Data item berhasil diubah, anda dapat melihat data baru pada halaman : Profile > Brand Page'),
           actions: <Widget>[
             FlatButton(
-              color: Colors.lime,
               child: Text('OK'),
               onPressed: () {
                 Navigator.popUntil(context, ModalRoute.withName('/'));

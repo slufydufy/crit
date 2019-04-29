@@ -39,14 +39,12 @@ class BrandEditState extends State<BrandEdit> {
           content: Text('Masukkan data baru ?'),
           actions: <Widget>[
             FlatButton(
-              color: Colors.lime,
-              child: Text('Cancel'),
+              child: Text('CANCEL'),
               onPressed: () {
                 Navigator.pop(context);
               },
             ),
             FlatButton(
-              color: Colors.lime,
               child: Text('OK'),
               onPressed: () {
                 Navigator.pop(context);
@@ -69,14 +67,12 @@ class BrandEditState extends State<BrandEdit> {
           content: Text('Apakah anda ingin menghapus Brand ?'),
           actions: <Widget>[
             FlatButton(
-              color: Colors.lime,
-              child: Text('Cancel'),
+              child: Text('CANCEL'),
               onPressed: () {
                 Navigator.pop(context);
               },
             ),
             FlatButton(
-              color: Colors.lime,
               child: Text('OK'),
               onPressed: () {
                 Navigator.pop(context);
@@ -102,14 +98,12 @@ class BrandEditState extends State<BrandEdit> {
           ),
           actions: <Widget>[
             FlatButton(
-              color: Colors.lime,
-              child: Text('Cancel'),
+              child: Text('CANCEL'),
               onPressed: () {
                 Navigator.pop(context);
               },
             ),
             FlatButton(
-              color: Colors.lime,
               child: Text('OK'),
               onPressed: () {
                 delText = delTxtCont.text;
@@ -152,7 +146,6 @@ class BrandEditState extends State<BrandEdit> {
               'Brand berhasil dihapus, anda dapat membuat membuat pada halaman : Profile > Brand Page'),
           actions: <Widget>[
             FlatButton(
-              color: Colors.lime,
               child: Text('OK'),
               onPressed: () {
                 Navigator.popUntil(context, ModalRoute.withName('/'));
@@ -223,7 +216,6 @@ class BrandEditState extends State<BrandEdit> {
               'Data brand berhasil diubah, anda dapat melihat data baru pada halaman : Profile > Brand Page'),
           actions: <Widget>[
             FlatButton(
-              color: Colors.lime,
               child: Text('OK'),
               onPressed: () {
                 Navigator.popUntil(context, ModalRoute.withName('/'));

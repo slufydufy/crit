@@ -33,7 +33,7 @@ class BrandCreateState extends State<BrandCreate> {
               'Apakah semua data yang dimasukkan telah benar ?'),
           actions: <Widget>[
             FlatButton(
-              child: Text('Cancel'),
+              child: Text('CANCEL'),
               onPressed: () {
                 Navigator.pop(context);
               },

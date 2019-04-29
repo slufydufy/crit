@@ -57,7 +57,7 @@ class StoryAllAllState extends State<StoryAll> {
           content: Text('Please sign in to continue'),
           actions: <Widget>[
             FlatButton(
-              child: Text('Sign In'),
+              child: Text('SIGN IN'),
               onPressed: () {
                 Navigator.pop(context);
                 Navigator.push(context,
