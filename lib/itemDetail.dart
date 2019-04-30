@@ -95,7 +95,6 @@ class ItemDetailState extends State<ItemDetail> {
   }
 
   fetchTtlFav() {
-    _brandData = fetchBrand();
     String _docId = widget.item.documentID;
     Firestore.instance.collection('fav/$_docId/fav').getDocuments().then((result) {
       setState(() {
@@ -123,6 +122,7 @@ class ItemDetailState extends State<ItemDetail> {
   @override
   void initState() {
     super.initState();
+    _brandData = fetchBrand();
     fetchTtlFav();
     fetchCrntFav();
   }  

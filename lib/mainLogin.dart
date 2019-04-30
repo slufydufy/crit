@@ -185,6 +185,7 @@ class _MainLoginState extends State<MainLogin> {
       padding: EdgeInsets.fromLTRB(16.0, 8.0, 16.0, 0.0),
       child: TextFormField(
         controller: emailTxtCont,
+        keyboardType: TextInputType.emailAddress,
           maxLines: 1,
           validator: (value) {
             if (value.isEmpty) {

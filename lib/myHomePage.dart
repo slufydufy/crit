@@ -25,6 +25,7 @@ class MyHomePageState extends State<MyHomePage> {
   Future _storyData;
 
   var ref = Firestore.instance;
+  bool isLoggedIn = false;
 
   Future fetchBanner() async {
     QuerySnapshot fetchBanner = await ref.collection('fl_content').where('mainCat', isEqualTo: 'banner').getDocuments();
@@ -116,15 +117,11 @@ class MyHomePageState extends State<MyHomePage> {
         children: <Widget>[
           Container(
             color: Colors.grey,
-            height: MediaQuery.of(context).size.width / 4.5,
-          ),
-        ListTile(
-            title: Text(
-              'Crit, buy to Donate',
-              style: TextStyle(
-                fontSize: 22.0,
-              ),
-            ),
+            height: MediaQuery.of(context).size.width / 2,
+            child: Center(child: Text('BRANDWASH', style: TextStyle(
+              fontSize: 32, 
+              color: Colors.white, 
+              fontWeight: FontWeight.bold),)),
           ),
           ListTile(
           title: Text(
@@ -182,7 +179,8 @@ class MyHomePageState extends State<MyHomePage> {
             style: TextStyle(fontSize: 16.0),
           ),
           leading: Icon(Icons.person),
-          onTap: checkLoginProfile),
+          onTap: checkLoginProfile
+        ),
         ],
       ),
     );
@@ -191,6 +189,7 @@ class MyHomePageState extends State<MyHomePage> {
   @override
   void initState() {
     super.initState();
+    // currentUser();
     _bannerData = fetchBanner();
     _designData = fetchItem();
     _brandData = fetchBrand();
@@ -200,7 +199,7 @@ class MyHomePageState extends State<MyHomePage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(title: Text('CRIT'),
+      appBar: AppBar(title: Text('BRANDWASH'),
         actions: <Widget>[
           SizedBox(
             width: 54.0,

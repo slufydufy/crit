@@ -120,7 +120,7 @@ class ItemAllState extends State<ItemAll> {
             isScrollable: true,
             tabs: <Widget>[
               Tab(
-                text: 'Tops',
+                text: 'Top',
               ),
               Tab(
                 text: 'Bottom',

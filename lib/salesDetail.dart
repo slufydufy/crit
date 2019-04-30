@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
-import 'changeOrderStatus.dart';
+import 'awb.dart';
 
 class SalesDetail extends StatelessWidget {
   final DocumentSnapshot item;
@@ -13,29 +13,8 @@ class SalesDetail extends StatelessWidget {
       ),
       body: ListView(
         children: <Widget>[
-          ListTile(
-            title: Text(item.data['status'], style: TextStyle(
-              fontWeight: FontWeight.bold,
-              color: Colors.redAccent
-            ),),
-            subtitle: Text('Status Order (Ubah Status Order)'),
-            trailing: Icon(Icons.keyboard_arrow_right),
-            onTap: () {
-              Navigator.push(context, MaterialPageRoute(builder: (context) => ChangeOrderStatus(item: item)));
-            },
-          ),
-          ListTile(
-            title: Text(item.data['bank'] ?? ""),
-            subtitle: Text('Nama Bank'),
-          ),
-          ListTile(
-            title: Text(item.data['noRekCust'] ?? ""),
-            subtitle: Text('Nomor Rekening'),
-          ),
-          ListTile(
-            title: Text(item.data['jmlBayar'] ?? ""),
-            subtitle: Text('Jumlah Transfer'),
-          ),
+          orderStatus(context),
+          showAwb(),
           ListTile(
             title: Text(item.data['orderNumber'].toString()),
             subtitle: Text('Order Number'),
@@ -75,6 +54,50 @@ class SalesDetail extends StatelessWidget {
         ],
       ),
     );
+  }
+
+  Widget orderStatus(BuildContext context) {
+    if (item.data['status'] == 'pesanan diproses') {
+      return
+      Container(
+        color: Colors.lime,
+        child: ListTile(
+          title: Text(item.data['status'], style: TextStyle(
+            fontWeight: FontWeight.bold,
+            color: Colors.redAccent
+          ),),
+          subtitle: Text('Status Order (Klik untuk memassukkan AWB)'),
+          trailing: Icon(Icons.arrow_forward_ios),
+          onTap: () {
+            Navigator.push(context, MaterialPageRoute(builder: (context) => AWB(item: item)));
+          },
+        ),
+      );
+    } else {
+      return
+    Container(
+      color: Colors.lime,
+      child: ListTile(
+        title: Text(item.data['status'], style: TextStyle(
+          fontWeight: FontWeight.bold,
+          color: Colors.redAccent
+        ),),
+        subtitle: Text('Status Order (Status Order)'),
+      ),
+    );
+    }
+  }
+
+  Widget showAwb() {
+    if (item.data['status'] == 'pesanan dikirim' || item.data['status'] == 'pesanan diterima') {
+      return
+      ListTile(
+        title: Text(item.data['awb'].toString()),
+        subtitle: Text('AWB / Nomor resi'),
+      );
+    } else {
+      return Container();
+    }
   }
 
 

@@ -88,7 +88,6 @@ class _ProfileState extends State<Profile> {
 
   signOut() async {
     await FirebaseAuth.instance.signOut();
-    // await _gSignIn.signOut();
     Navigator.pop(context);
     Navigator.popUntil(context, ModalRoute.withName('/'));
   }

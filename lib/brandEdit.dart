@@ -167,7 +167,6 @@ class BrandEditState extends State<BrandEdit> {
           content: Text('Hapus semua item sebelum menghapus brand'),
           actions: <Widget>[
             FlatButton(
-              color: Colors.lime,
               child: Text('OK'),
               onPressed: () {
                 Navigator.pop(context);
