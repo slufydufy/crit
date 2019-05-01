@@ -135,10 +135,17 @@ class _MainLoginState extends State<MainLogin> {
   }
 
   Widget _showLogo(BuildContext context) {
-    return Image.asset('assets/images/loginimg.png',
-    height: MediaQuery.of(context).size.width,
-    fit: BoxFit.cover,
-    );
+    return 
+    Container(
+      height: MediaQuery.of(context).size.width,
+      child: Center(
+        child: Image.asset('assets/images/bw.png',
+        height: MediaQuery.of(context).size.width /2,
+        width: MediaQuery.of(context).size.width /2,
+        ),
+      ),
+    )
+    ;
   }
 
   Widget _showSkipText(BuildContext context) {

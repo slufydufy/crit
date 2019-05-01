@@ -47,6 +47,7 @@ flutter:
   assets:
     - assets/images/loginimg.png
     - assets/images/g.png
+    - assets/images/bw.png
     - assets/images/imgPlaceholder.png
 
 
