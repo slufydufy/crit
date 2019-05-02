@@ -65,23 +65,37 @@ class _RegisterState extends State<Register> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(
-        title: Text('Register'),
-      ),
+      appBar: AppBar(),
       body: 
       Builder(
         builder: (BuildContext context) {
           scafoldContext = context;
           return
-          Column(
-          crossAxisAlignment: CrossAxisAlignment.stretch,
-          children: <Widget>[
-            _showRegForm(),
-            _showButton(context)
-          ],
-        );
+          ListView(
+            children: <Widget>[
+              Column(
+            crossAxisAlignment: CrossAxisAlignment.stretch,
+            children: <Widget>[
+              _showText(),
+              _showRegForm(),
+              _showButton(context)
+            ],
+        ),
+            ],
+          );
         },
       )
+    );
+  }
+
+  Widget _showText() {
+    return
+    Padding(
+      padding: EdgeInsets.only(top: 32.0, left: 32.0),
+      child: Text('Email Sign Up', style: TextStyle(
+        fontSize: 28,
+        color: Colors.grey[800]
+      ),),
     );
   }
 
@@ -171,8 +185,8 @@ class _RegisterState extends State<Register> {
             registerEmail(emailTxtCont.text, passTxtCont.text);
           } 
         },
-        color: Colors.grey,
-        child: Text('Register', style: TextStyle(color: Colors.white),),
+        color: Colors.grey[800],
+        child: Text('Sign Up', style: TextStyle(color: Colors.white),),
       ),
     );
   }

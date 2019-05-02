@@ -16,8 +16,12 @@ class BrandCreateState extends State<BrandCreate> {
   final imgUrlTxtCont = TextEditingController();
   final emailTxtCont = TextEditingController();
   final mobileTxtCont = TextEditingController();
+  final bankNameTxtCont = TextEditingController();
+  final accNamextCont = TextEditingController();
+  final rekNumberTxtCont = TextEditingController();
   CrudMethod crudObj = CrudMethod();
   final _formkey = GlobalKey<FormState>();
+  final _bankkey = GlobalKey<FormState>();
   String _uid;
 
   checkBrandDialog() async {
@@ -55,7 +59,7 @@ class BrandCreateState extends State<BrandCreate> {
     var today = DateTime.now();
     String formatter =
         "${today.year.toString()}${today.month.toString().padLeft(2, '0')}${today.day.toString().padLeft(2, '0')}";
-    if (_formkey.currentState.validate()) {
+    if (_formkey.currentState.validate() && _bankkey.currentState.validate()) {
       crudObj.addBrand({
         'brandId': 'br_' + _uid,
         'cDate' : formatter,
@@ -64,13 +68,16 @@ class BrandCreateState extends State<BrandCreate> {
         'desc': descTxtCont.text,
         'email': emailTxtCont.text,
         'mobile': mobileTxtCont.text,
+        'bank': bankNameTxtCont.text,
+        'bankAcc': accNamextCont.text,
+        'noRek': rekNumberTxtCont.text,
       }).then((result) {
         dismissBrandDialog(context);
       }).catchError((e) {
         print(e);
       });
     } else {
-        Navigator.pop(context);
+        
     }
   }
 
@@ -117,7 +124,10 @@ class BrandCreateState extends State<BrandCreate> {
           Expanded(
             child: ListView(
               children: <Widget>[
-                _brandForm()
+                _showBrandText(),
+                _brandForm(),
+                _showAccText(),
+                _bankForm()
               ],
             ),
           ),
@@ -127,16 +137,27 @@ class BrandCreateState extends State<BrandCreate> {
     );
   }
 
+  Widget _showBrandText() {
+    return
+    Padding(
+      padding: EdgeInsets.only(top: 16.0, left: 16.0),
+      child: Text('Brand Profile', style: TextStyle(
+        fontSize: 28,
+        color: Colors.grey[800]
+      ),),
+    );
+  }
+
   Widget _brandForm() {
     return Form(
       key: _formkey,
       child: Column(
-        children: <Widget>[ _showTitle(), _showDesc(), _showImgUrl(), _showEmail(), _showMobile()],
+        children: <Widget>[ _showBrandTitle(), _showDesc(), _showImgUrl(), _showEmail(), _showMobile()],
       ),
     );
   }
 
-  Widget _showTitle() {
+  Widget _showBrandTitle() {
     return Container(
       padding: EdgeInsets.fromLTRB(16.0, 16.0, 16.0, 0.0),
       child: TextFormField(
@@ -229,6 +250,86 @@ class BrandCreateState extends State<BrandCreate> {
         },
         decoration: InputDecoration(
             labelText: 'Nomor HP',
+            contentPadding:
+                new EdgeInsets.symmetric(vertical: 10.0, horizontal: 10.0),
+            border: OutlineInputBorder()),
+      ),
+    );
+  }
+
+  Widget _showAccText() {
+    return
+    Padding(
+      padding: EdgeInsets.only(top: 32.0, left: 16.0),
+      child: Text('Bank Account', style: TextStyle(
+        fontSize: 28,
+        color: Colors.grey[800]
+      ),),
+    );
+  }
+
+  Widget _bankForm() {
+    return Form(
+      key: _bankkey,
+      child: Column(
+        children: <Widget>[ _showBankName(), _showBankAcc(), _showAccNumb()],
+      ),
+    );
+  }
+
+  Widget _showBankName() {
+    return Container(
+      padding: EdgeInsets.fromLTRB(16.0, 16.0, 16.0, 0.0),
+      child: TextFormField(
+          controller: bankNameTxtCont,
+          maxLines: 1,
+          validator: (value) {
+            if (value.isEmpty) {
+              return 'Nama bank belum diisi';
+            }
+          },
+          decoration: InputDecoration(
+              labelText: 'Nama Bank',
+              contentPadding:
+                  new EdgeInsets.symmetric(vertical: 10.0, horizontal: 10.0),
+              border: OutlineInputBorder())),
+    );
+  }
+
+  Widget _showBankAcc() {
+    return Container(
+      padding: EdgeInsets.fromLTRB(16.0, 16.0, 16.0, 0.0),
+      child: TextFormField(
+          controller: accNamextCont,
+          maxLines: 1,
+          validator: (value) {
+            if (value.isEmpty) {
+              return 'Nama pemilik account belum diisi';
+            }
+          },
+          decoration: InputDecoration(
+              labelText: 'Nama Pemilik Account',
+              contentPadding:
+                  new EdgeInsets.symmetric(vertical: 10.0, horizontal: 10.0),
+              border: OutlineInputBorder())),
+    );
+  }
+
+  Widget _showAccNumb() {
+    return Padding(
+      padding: EdgeInsets.fromLTRB(16.0, 16.0, 16.0, 0.0),
+      child: TextFormField(
+        controller: rekNumberTxtCont,
+        keyboardType: TextInputType.phone,
+        inputFormatters: [WhitelistingTextInputFormatter.digitsOnly],
+        maxLines: 1,
+        validator: (value) {
+          if (value.isEmpty) {
+            return 'Nomor Rek belum diisi';
+          }
+        },
+        decoration: InputDecoration(
+            labelText: 'Nomor Rekening',
             contentPadding:
                 new EdgeInsets.symmetric(vertical: 10.0, horizontal: 10.0),
             border: OutlineInputBorder()),

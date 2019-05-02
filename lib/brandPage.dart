@@ -24,6 +24,9 @@ class BrandPageState extends State<BrandPage> {
   String email;
   String mobile;
   String brandId;
+  String bank;
+  String bankAcc;
+  String noRek;
 
 
   Future fetchBrand() async {
@@ -92,6 +95,9 @@ class BrandPageState extends State<BrandPage> {
             email = snapshot.data[0].data['email'];
             mobile = snapshot.data[0].data['mobile'];
             brandId = snapshot.data[0].data['brandId'];
+            bank = snapshot.data[0].data['bank'];
+            bankAcc = snapshot.data[0].data['bankAcc'];
+            noRek = snapshot.data[0].data['noRek'];
             return ListView(
               children: <Widget>[
                 _showPenjualanText(),
@@ -101,6 +107,10 @@ class BrandPageState extends State<BrandPage> {
                 _showBrandImg(snapshot.data[0].data['imgUrl']),
                 _showBrandEmail(snapshot.data[0].data['email']),
                 _showBrandPhone(snapshot.data[0].data['mobile']),
+                Divider(),
+                _bankName(snapshot.data[0].data['bank']),
+                _bankAccName(snapshot.data[0].data['bankAcc']),
+                _noRek(snapshot.data[0].data['noRek']),
                 _showItemText(snapshot.data[0].data['title']),
                 _gridView()
               ],
@@ -135,7 +145,7 @@ class BrandPageState extends State<BrandPage> {
           width: 60.0,
           child: FlatButton(child: Icon(Icons.edit),
             onPressed: (){
-              Navigator.push(context, MaterialPageRoute(builder: (context) => BrandEdit(docId: _documentId, title: title, desc: desc, imgUrl: imgUrl, email: email, mobile: mobile, brandId: brandId,)));
+              Navigator.push(context, MaterialPageRoute(builder: (context) => BrandEdit(docId: _documentId, title: title, desc: desc, imgUrl: imgUrl, email: email, mobile: mobile, brandId: brandId, bank: bank, bankAcc: bankAcc, noRek: noRek,)));
             }));
         }
       },
@@ -195,7 +205,7 @@ class BrandPageState extends State<BrandPage> {
   Widget _showBrandTitle(item) {
     return
     ListTile(
-      title: Text(item),
+      title: Text(item ?? ""),
       subtitle: Text('Brand Name'),
     );
   }
@@ -203,7 +213,7 @@ class BrandPageState extends State<BrandPage> {
   Widget _showBrandDesc(item) {
     return
     ListTile(
-      title: Text(item, maxLines: 2,),
+      title: Text(item ?? "", maxLines: 2,),
       subtitle: Text('Brand Description'),
     );
   }
@@ -213,7 +223,7 @@ class BrandPageState extends State<BrandPage> {
     ListTile(
       title: Text('Image Theme'),
       subtitle: Text('Brand Image Theme'),
-      trailing: Image.network(item,
+      trailing: Image.network(item ?? "",
         height: 50,
         width: 50,
         fit: BoxFit.cover,),
@@ -223,7 +233,7 @@ class BrandPageState extends State<BrandPage> {
   Widget _showBrandEmail(item) {
     return
     ListTile(
-      title: Text(item),
+      title: Text(item ?? ""),
       subtitle: Text('Brand Email'),
     );
   }
@@ -231,8 +241,32 @@ class BrandPageState extends State<BrandPage> {
   Widget _showBrandPhone(item) {
     return
     ListTile(
-      title: Text(item),
+      title: Text(item ?? ""),
       subtitle: Text('Phone'),
+    );
+  }
+
+  Widget _bankName(item) {
+    return
+    ListTile(
+      title: Text(item  ?? ""),
+      subtitle: Text('Nama Bank'),
+    );
+  }
+
+  Widget _bankAccName(item) {
+    return
+    ListTile(
+      title: Text(item ?? ""),
+      subtitle: Text('Nama Pemilik Account'),
+    );
+  }
+
+  Widget _noRek(item) {
+    return
+    ListTile(
+      title: Text(item ?? ""),
+      subtitle: Text('Nomor Rekening'),
     );
   }
 

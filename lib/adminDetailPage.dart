@@ -15,20 +15,34 @@ class AdminDetailPage extends StatelessWidget {
       body: 
       ListView(
         children: <Widget>[
-          ListTile(
-            title: Text(item.data['status'], style: TextStyle(
-              fontWeight: FontWeight.bold,
-              color: Colors.redAccent
+          Container(
+            color: Colors.lime,
+            child: ListTile(
+              title: Text(item.data['status'], style: TextStyle(
+                fontWeight: FontWeight.bold,
+                color: Colors.redAccent
+              ),),
+              subtitle: Text('Status Order (Ubah Status Order)'),
+              trailing: Icon(Icons.keyboard_arrow_right),
+              onTap: () {
+                Navigator.push(context, MaterialPageRoute(builder: (context) => ChangeOrderStatus(item: item)));
+              },
+            ),
+          ),
+          Padding(
+            padding: EdgeInsets.only(top: 16.0, left: 16.0),
+            child: Text('Cust Info', style: TextStyle(
+              fontSize: 28,
+              color: Colors.grey[800]
             ),),
-            subtitle: Text('Status Order (Ubah Status Order)'),
-            trailing: Icon(Icons.keyboard_arrow_right),
-            onTap: () {
-              Navigator.push(context, MaterialPageRoute(builder: (context) => ChangeOrderStatus(item: item)));
-            },
           ),
           ListTile(
             title: Text(item.data['bank'] ?? ""),
             subtitle: Text('Nama Bank'),
+          ),
+          ListTile(
+            title: Text(item.data['accName'] ?? ""),
+            subtitle: Text('Nama Account Bank'),
           ),
           ListTile(
             title: Text(item.data['noRekCust'] ?? ""),
@@ -54,6 +68,14 @@ class AdminDetailPage extends StatelessWidget {
             title: Text(item.data['address']),
             subtitle: Text('Address'),
           ),
+          Divider(),
+          Padding(
+            padding: EdgeInsets.only(top: 16.0, left: 16.0),
+            child: Text('Item Info', style: TextStyle(
+              fontSize: 28,
+              color: Colors.grey[800]
+            ),),
+          ),
           ListTile(
             title: Text(item.data['itemTitle']),
             subtitle: Text('Item Name'),
@@ -78,4 +100,6 @@ class AdminDetailPage extends StatelessWidget {
       )
     );
   }
+
+  
 }

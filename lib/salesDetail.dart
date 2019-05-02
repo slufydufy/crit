@@ -14,6 +14,13 @@ class SalesDetail extends StatelessWidget {
       body: ListView(
         children: <Widget>[
           orderStatus(context),
+          Padding(
+            padding: EdgeInsets.only(top: 16.0, left: 16.0),
+            child: Text('Cust Info', style: TextStyle(
+              fontSize: 28,
+              color: Colors.grey[800]
+            ),),
+          ),
           showAwb(),
           ListTile(
             title: Text(item.data['orderNumber'].toString()),
@@ -30,6 +37,14 @@ class SalesDetail extends StatelessWidget {
           ListTile(
             title: Text(item.data['address']),
             subtitle: Text('Address'),
+          ),
+          Divider(),
+          Padding(
+            padding: EdgeInsets.only(top: 16.0, left: 16.0),
+            child: Text('Item Info', style: TextStyle(
+              fontSize: 28,
+              color: Colors.grey[800]
+            ),),
           ),
           ListTile(
             title: Text(item.data['itemTitle']),
