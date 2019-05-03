@@ -5,6 +5,30 @@ import 'awb.dart';
 class SalesDetail extends StatelessWidget {
   final DocumentSnapshot item;
   SalesDetail({this.item});
+
+  dismissNoRefDialog(BuildContext context) async {
+    return showDialog(
+      context: context,
+      barrierDismissible: false,
+      builder: (BuildContext context) {
+        return AlertDialog(
+          title: Text('Pembayaran dilakukan ke bank anda.\nNomor Referensi Pembayaran'),
+          content: Text(item.data['orderNumber'], style: TextStyle(
+            fontSize: 18,
+          ),),
+          actions: <Widget>[
+            FlatButton(
+              child: Text('OK'),
+              onPressed: () {
+                Navigator.pop(context);
+              }
+            )
+          ],
+        );
+      },
+    );
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -88,6 +112,22 @@ class SalesDetail extends StatelessWidget {
           },
         ),
       );
+    } else if (item.data['status'] == 'selesai') {
+      return
+      Container(
+        color: Colors.lime,
+        child: ListTile(
+          title: Text(item.data['status'], style: TextStyle(
+            fontWeight: FontWeight.bold,
+            color: Colors.redAccent
+          ),),
+          subtitle: Text('Status Order (Lihat No.Ref Transfer)'),
+          trailing: Icon(Icons.arrow_forward_ios),
+          onTap: () {
+            dismissNoRefDialog(context);
+          },
+        ),
+      );
     } else {
       return
     Container(
@@ -117,3 +157,12 @@ class SalesDetail extends StatelessWidget {
 
 
 }
+
+// Column(
+//         children: <Widget>[
+//           Center(child: Text('Pembayaran telah dilakukan dengan nomor referensi:'),),
+//           Center(child: Text(item.data['orderNumber'], style: TextStyle(
+//             fontSize: 18,
+//           ),))
+//         ],
+//       );

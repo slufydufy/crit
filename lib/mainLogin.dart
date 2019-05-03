@@ -16,15 +16,17 @@ class _MainLoginState extends State<MainLogin> {
   BuildContext scafoldContext;
 
   CrudMethod crudObj = CrudMethod();
+  GoogleSignInAccount _currentUser;
+
   GoogleSignIn _gSignIn = GoogleSignIn(
     scopes: [
       'email',
       'https://www.googleapis.com/auth/contacts.readonly'
     ]
   );
-  GoogleSignInAccount _currentUser;
 
   googleSignIn() async {
+    _loadingDialog(context);
     try {
       GoogleSignInAccount googleSignInAccount = await _gSignIn.signIn();
       GoogleSignInAuthentication googleSignInAuthentication = await googleSignInAccount.authentication;
@@ -54,6 +56,24 @@ class _MainLoginState extends State<MainLogin> {
     }
   }
 
+  _loadingDialog(BuildContext context) async {
+    return showDialog(
+      context: context,
+      barrierDismissible: false,
+      builder: (BuildContext context) {
+        return AlertDialog(
+          title: Center(child: Text('Sign In ')),
+          content: Container(
+            width: 84,
+            height: 84,
+            child: Center(
+              child: CircularProgressIndicator()
+              )),
+        );
+      },
+    );
+  }
+
   @override
   void initState() {
     super.initState();
@@ -65,7 +85,6 @@ class _MainLoginState extends State<MainLogin> {
         _gSignIn.signInSilently();
       }
     });
-    
   }
 
   @override
@@ -156,7 +175,7 @@ class _MainLoginState extends State<MainLogin> {
                       color: Colors.white
                     ),),
                     Spacer(),
-                    Image.asset('assets/images/g.png', width: 30, height: 30)
+                    Image.asset('assets/images/g.png', width: 24, height: 24)
               ],
             ),
           ),

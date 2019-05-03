@@ -87,74 +87,70 @@ class BrandAllState extends State<BrandAll> {
         children: <Widget>[
           Container(
             color: Colors.grey,
-            height: MediaQuery.of(context).size.width / 4.5,
+            height: MediaQuery.of(context).size.width / 2,
+            child: Center(child: Text('BRANDWASH', style: TextStyle(
+              fontSize: 32, 
+              color: Colors.white, 
+              fontWeight: FontWeight.bold),)),
           ),
           ListTile(
-            title: Text(
-              'Crit, buy to Donate',
-              style: TextStyle(
-                fontSize: 22.0,
-              ),
-            ),
+          title: Text(
+            'Home',
+            style: TextStyle(fontSize: 16.0),
           ),
-          ListTile(
-              title: Text(
-                'Home',
-                style: TextStyle(fontSize: 16.0),
-              ),
-              leading: Icon(Icons.home),
-              onTap: () {
-                Navigator.pop(context);
-                Navigator.push(context,
-                    MaterialPageRoute(builder: (context) => MyHomePage()));
-              }),
-          ListTile(
-              title: Text(
-                'Order Saya',
-                style: TextStyle(fontSize: 16.0),
-              ),
-              leading: Icon(Icons.add_shopping_cart),
-              onTap: checkLoginOrder),
-          ListTile(
-              title: Text(
-                'All Items',
-                style: TextStyle(fontSize: 16.0),
-              ),
-              leading: Icon(Icons.blur_on),
-              onTap: () {
-                Navigator.pop(context);
+          leading: Icon(Icons.home),
+          onTap: () {
+            Navigator.pop(context);
+            Navigator.push(context,
+                MaterialPageRoute(builder: (context) => MyHomePage()));
+          }),
+        ListTile(
+          title: Text(
+            'Order Saya',
+            style: TextStyle(fontSize: 16.0),
+          ),
+          leading: Icon(Icons.shopping_cart),
+          onTap: checkLoginOrder),
+        ListTile(
+          title: Text(
+            'All Items',
+            style: TextStyle(fontSize: 16.0),
+          ),
+          leading: Icon(Icons.blur_on),
+          onTap: () {
+            Navigator.pop(context);
                 Navigator.push(context,
                     MaterialPageRoute(builder: (context) => ItemAll()));
               }),
-          ListTile(
-              title: Text(
-                'All Brands',
-                style: TextStyle(fontSize: 16.0),
-              ),
-              leading: Icon(Icons.store_mall_directory),
-              onTap: () {
-                Navigator.pop(context);
+        ListTile(
+          title: Text(
+            'All Brands',
+            style: TextStyle(fontSize: 16.0),
+          ),
+          leading: Icon(Icons.store_mall_directory),
+          onTap: () {
+            Navigator.pop(context);
                 Navigator.push(context,
                     MaterialPageRoute(builder: (context) => BrandAll()));
+              }),      
+        ListTile(
+          title: Text(
+            'All Story',
+            style: TextStyle(fontSize: 16.0),
+          ),
+          leading: Icon(Icons.fiber_new),
+          onTap: () {
+            Navigator.pop(context);
+            Navigator.push(context,MaterialPageRoute(builder: (context) => StoryAll()));
               }),
-          ListTile(
-              title: Text(
-                'All Story',
-                style: TextStyle(fontSize: 16.0),
-              ),
-              leading: Icon(Icons.fiber_new),
-              onTap: () {
-                Navigator.pop(context);
-                Navigator.push(context,
-                    MaterialPageRoute(builder: (context) => StoryAll()));
-              }),
-          ListTile(
-              title: Text(
-                'Profile',
-                style: TextStyle(fontSize: 16.0),
-              ),
-              leading: Icon(Icons.person),
-              onTap: checkLoginProfile),
+        ListTile(
+          title: Text(
+            'Profile',
+            style: TextStyle(fontSize: 16.0),
+          ),
+          leading: Icon(Icons.person),
+          onTap: checkLoginProfile
+        ),
         ],
       ),
     );

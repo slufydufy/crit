@@ -26,7 +26,26 @@ class EmailLoginState extends State<EmailLogin> {
     Scaffold.of(scafoldContext).showSnackBar(snackBar);
   }
 
+  _loadingDialog(BuildContext context) async {
+    return showDialog(
+      context: context,
+      barrierDismissible: false,
+      builder: (BuildContext context) {
+        return AlertDialog(
+          title: Center(child: Text('Sign In ')),
+          content: Container(
+            width: 84,
+            height: 84,
+            child: Center(
+              child: CircularProgressIndicator()
+              )),
+        );
+      },
+    );
+  }
+
   signInEmail() async {
+    _loadingDialog(context);
     FirebaseUser user;
     try {
       user = await FirebaseAuth.instance.

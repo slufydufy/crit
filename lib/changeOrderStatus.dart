@@ -16,25 +16,14 @@ class ChangeOrderStatusState extends State<ChangeOrderStatus> {
 
   CrudMethod crudObj = CrudMethod();
 
-  orderproceed() {
-      crudObj.confirmPayment(widget.item.documentID, {
-        "status" : 'pesanan diproses',
-      }).then((result) {
-        Navigator.pop(context);
-        Navigator.popUntil(context, ModalRoute.withName('/'));
-      }).catchError((e) {
-        print(e);
-      });
-  }
-
   dismissProceedDialog() async {
     return showDialog(
       context: context,
       barrierDismissible: true,
       builder: (BuildContext context) {
         return AlertDialog(
-          title: Text('Pembayaran telah dilakukan?'),
-          content: Text('Apakah pembayaran telah dipastikan masuk ? tekan OK untuk melanjutkan'),
+          title: Text('Pembayaran telah masuk?'),
+          content: Text('Pembayaran telah dipastikan masuk ? \n Klik OK untuk melanjutkan'),
           actions: <Widget>[
             FlatButton(
               child: Text('OK'),
@@ -46,10 +35,51 @@ class ChangeOrderStatusState extends State<ChangeOrderStatus> {
     );
   }
 
+  orderproceed() {
+      crudObj.confirmPayment(widget.item.documentID, {
+        "status" : 'pesanan diproses',
+      }).then((result) {
+        Navigator.pop(context);
+        Navigator.popUntil(context, ModalRoute.withName('/'));
+      }).catchError((e) {
+        print(e);
+      });
+  }
+
+  dismissSelesaiDialog() async {
+    return showDialog(
+      context: context,
+      barrierDismissible: true,
+      builder: (BuildContext context) {
+        return AlertDialog(
+          title: Text('Pembayaran telah dilakukan?'),
+          content: Text('Pembayaran ke brand telah dilakukan ? \n Klik OK untuk melanjutkan'),
+          actions: <Widget>[
+            FlatButton(
+              child: Text('OK'),
+              onPressed: orderSelesai
+            )
+          ],
+        );
+      },
+    );
+  }
+
+  orderSelesai() {
+      crudObj.confirmPayment(widget.item.documentID, {
+        "status" : 'selesai',
+      }).then((result) {
+        Navigator.pop(context);
+        Navigator.popUntil(context, ModalRoute.withName('/'));
+      }).catchError((e) {
+        print(e);
+      });
+  }
+
 
   @override
   Widget build(BuildContext context) {
-    if (widget.item.data['status'] == 'konfirmasi by admin' || widget.item.data['status'] == 'pesanan diproses' || widget.item.data['status'] == 'pesanan dikirim') {
+    if (widget.item.data['status'] == 'konfirmasi by admin' || widget.item.data['status'] == 'pesanan diproses' || widget.item.data['status'] == 'pesanan dikirim' || widget.item.data['status'] == 'pesanan diterima') {
       return Scaffold(
       appBar: AppBar(
         title: Text('Change Order Status'),
@@ -93,8 +123,19 @@ class ChangeOrderStatusState extends State<ChangeOrderStatus> {
           ),
           Divider(),
           _showChangetoProceed(widget.item.data['status']),
-          _showChangeToDelivery(widget.item)
+          _showChangeToDelivery(widget.item),
+          _showSelesai(widget.item.data['status'])
         ],
+      )
+    );
+    } else if(widget.item.data['status'] == 'selesai') {
+      return Scaffold(
+      appBar: AppBar(
+        title: Text('Change Order Status'),
+      ),
+      body: 
+      Center(
+        child: Text('Order telah Selesai :)')
       )
     );
     } else {
@@ -145,4 +186,21 @@ class ChangeOrderStatusState extends State<ChangeOrderStatus> {
       Container();
     }
   }
+
+  Widget _showSelesai(status) {
+    if (status == 'pesanan diterima') {
+      return
+      ListTile(
+            title: Text('Selesai'),
+            subtitle: Text('Pembayaran telah ditransfer ke rekening brand', style: TextStyle(
+              fontWeight: FontWeight.bold,
+            ),),
+            trailing: Icon(Icons.keyboard_arrow_right),
+            onTap: dismissSelesaiDialog
+          );
+    } else {
+      return
+      Container();
+      }
+    }
 }

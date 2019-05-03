@@ -112,7 +112,7 @@ class BrandPageState extends State<BrandPage> {
                 _bankAccName(snapshot.data[0].data['bankAcc']),
                 _noRek(snapshot.data[0].data['noRek']),
                 _showItemText(snapshot.data[0].data['title']),
-                _gridView()
+                _gridView(snapshot.data[0].data['title'])
               ],
             );
           }
@@ -303,7 +303,7 @@ class BrandPageState extends State<BrandPage> {
     );
   }
 
-  Widget _gridView() {
+  Widget _gridView(brandName) {
     return Container(
         padding: EdgeInsets.fromLTRB(4.0, 16.0, 4.0, 16.0),
         child: FutureBuilder(
@@ -312,6 +312,19 @@ class BrandPageState extends State<BrandPage> {
               if (snapshot.connectionState == ConnectionState.waiting) {
                 return Center(
                   child: CircularProgressIndicator(),
+                );
+              } else if (snapshot.data.length == 0) {
+                return 
+                FlatButton(
+                  onPressed: () {
+                Navigator.push(context, MaterialPageRoute(builder: (context) => ItemAdd(brandName: brandName)));
+                  },
+                  child: Center(
+                    child: 
+                      Text('Add an item now', style: TextStyle(
+                        fontSize: 16,
+                        color: Colors.grey
+                      ),)),
                 );
               } else {
                 return GridView.builder(

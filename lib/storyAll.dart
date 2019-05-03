@@ -206,15 +206,11 @@ class StoryAllAllState extends State<StoryAll> {
         children: <Widget>[
           Container(
             color: Colors.grey,
-            height: MediaQuery.of(context).size.width / 4.5,
-          ),
-        ListTile(
-            title: Text(
-              'Crit, buy to Donate',
-              style: TextStyle(
-                fontSize: 22.0,
-              ),
-            ),
+            height: MediaQuery.of(context).size.width / 2,
+            child: Center(child: Text('BRANDWASH', style: TextStyle(
+              fontSize: 32, 
+              color: Colors.white, 
+              fontWeight: FontWeight.bold),)),
           ),
           ListTile(
           title: Text(
@@ -232,7 +228,7 @@ class StoryAllAllState extends State<StoryAll> {
             'Order Saya',
             style: TextStyle(fontSize: 16.0),
           ),
-          leading: Icon(Icons.add_shopping_cart),
+          leading: Icon(Icons.shopping_cart),
           onTap: checkLoginOrder),
         ListTile(
           title: Text(
@@ -272,7 +268,8 @@ class StoryAllAllState extends State<StoryAll> {
             style: TextStyle(fontSize: 16.0),
           ),
           leading: Icon(Icons.person),
-          onTap: checkLoginProfile),
+          onTap: checkLoginProfile
+        ),
         ],
       ),
     );

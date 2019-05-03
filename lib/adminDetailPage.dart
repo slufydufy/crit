@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'changeOrderStatus.dart';
+import 'brandBankInfo.dart';
 
 class AdminDetailPage extends StatelessWidget {
   final DocumentSnapshot item;
@@ -96,10 +97,20 @@ class AdminDetailPage extends StatelessWidget {
             title: Text(item.data['totalPrice'].toString()),
             subtitle: Text('Total Price'),
           ),
+          Container(
+            color: Colors.grey,
+            child: ListTile(
+              title: Text('Brand Bank Info'),
+              trailing: Icon(Icons.keyboard_arrow_right),
+              onTap: () {
+                Navigator.push(context, MaterialPageRoute(builder: (context) => BrandBankInfo(brandId: item.data['brandId'])));
+              },
+            ),
+          ),
         ],
       )
     );
   }
 
-  
+
 }
