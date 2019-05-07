@@ -82,7 +82,7 @@ class CheckOutState extends State<CheckOut> {
         'address': orderAddrTxtCont.text,
         'totalPrice': finalPrice,
         'status': 'menunggu pembayaran',
-        'orderNumber': formatter + '/' + charUid + '/' + code.toString()
+        'orderNumber': formatter + '/' + charUid + '/' + code.toString(),
       }).then((result) {
         dismissOrderDialog(context);
       }).catchError((e) {

@@ -6,6 +6,86 @@ class SalesDetail extends StatelessWidget {
   final DocumentSnapshot item;
   SalesDetail({this.item});
 
+  dismissWaitPaymentDialog(BuildContext context) async {
+    return showDialog(
+      context: context,
+      barrierDismissible: true,
+      builder: (BuildContext context) {
+        return AlertDialog(
+          title: Text('Menunggu konfirmasi pembayaran dari customer.'),
+          actions: <Widget>[
+            FlatButton(
+              child: Text('OK'),
+              onPressed: () {
+                Navigator.pop(context);
+              }
+            )
+          ],
+        );
+      },
+    );
+  }
+
+  dismissConfAdminDialog(BuildContext context) async {
+    return showDialog(
+      context: context,
+      barrierDismissible: true,
+      builder: (BuildContext context) {
+        return AlertDialog(
+          title: Text('Konfirmasi pembayaran dilakukan oleh Admin BrandWash.'),
+          actions: <Widget>[
+            FlatButton(
+              child: Text('OK'),
+              onPressed: () {
+                Navigator.pop(context);
+              }
+            )
+          ],
+        );
+      },
+    );
+  }
+
+  dismissOnDeliveryDialog(BuildContext context) async {
+    return showDialog(
+      context: context,
+      barrierDismissible: true,
+      builder: (BuildContext context) {
+        return AlertDialog(
+          title: Text('Dalam pengiriman, menunggu konfirmasi diterima.'),
+          actions: <Widget>[
+            FlatButton(
+              child: Text('OK'),
+              onPressed: () {
+                Navigator.pop(context);
+              }
+            )
+          ],
+        );
+      },
+    );
+  }
+
+  dismissReceivedDialog(BuildContext context) async {
+    return showDialog(
+      context: context,
+      barrierDismissible: true,
+      builder: (BuildContext context) {
+        return AlertDialog(
+          title: Text('Pesanan telah sampai, dalam proses pembayaran oleh Admin'),
+          actions: <Widget>[
+            FlatButton(
+              child: Text('OK'),
+              onPressed: () {
+                Navigator.pop(context);
+              }
+            )
+          ],
+        );
+      },
+    );
+  }
+
   dismissNoRefDialog(BuildContext context) async {
     return showDialog(
       context: context,
@@ -96,7 +176,39 @@ class SalesDetail extends StatelessWidget {
   }
 
   Widget orderStatus(BuildContext context) {
-    if (item.data['status'] == 'pesanan diproses') {
+    if (item.data['status'] == 'menunggu pembayaran') {
+      return
+      Container(
+        color: Colors.lime,
+        child: ListTile(
+          title: Text(item.data['status'], style: TextStyle(
+            fontWeight: FontWeight.bold,
+            color: Colors.redAccent
+          ),),
+          subtitle: Text('Status Order'),
+          trailing: Icon(Icons.arrow_forward_ios),
+          onTap: () {
+            dismissWaitPaymentDialog(context);
+          },
+        ),
+      );
+    } else if (item.data['status'] == 'konfirmasi by admin') {
+      return
+      Container(
+        color: Colors.lime,
+        child: ListTile(
+          title: Text(item.data['status'], style: TextStyle(
+            fontWeight: FontWeight.bold,
+            color: Colors.redAccent
+          ),),
+          subtitle: Text('Status Order'),
+          trailing: Icon(Icons.arrow_forward_ios),
+          onTap: () {
+            dismissConfAdminDialog(context);
+          },
+        ),
+      );
+    } else if (item.data['status'] == 'pesanan diproses') {
       return
       Container(
         color: Colors.lime,
@@ -109,6 +221,38 @@ class SalesDetail extends StatelessWidget {
           trailing: Icon(Icons.arrow_forward_ios),
           onTap: () {
             Navigator.push(context, MaterialPageRoute(builder: (context) => AWB(item: item)));
+          },
+        ),
+      );
+    } else if (item.data['status'] == 'pesanan dikirim') {
+      return
+      Container(
+        color: Colors.lime,
+        child: ListTile(
+          title: Text(item.data['status'], style: TextStyle(
+            fontWeight: FontWeight.bold,
+            color: Colors.redAccent
+          ),),
+          subtitle: Text('Status Order'),
+          trailing: Icon(Icons.arrow_forward_ios),
+          onTap: () {
+            dismissOnDeliveryDialog(context);
+          },
+        ),
+      );
+    } else if (item.data['status'] == 'pesanan diterima') {
+      return
+      Container(
+        color: Colors.lime,
+        child: ListTile(
+          title: Text(item.data['status'], style: TextStyle(
+            fontWeight: FontWeight.bold,
+            color: Colors.redAccent
+          ),),
+          subtitle: Text('Status Order'),
+          trailing: Icon(Icons.arrow_forward_ios),
+          onTap: () {
+            dismissReceivedDialog(context);
           },
         ),
       );
@@ -144,7 +288,7 @@ class SalesDetail extends StatelessWidget {
   }
 
   Widget showAwb() {
-    if (item.data['status'] == 'pesanan dikirim' || item.data['status'] == 'pesanan diterima') {
+    if (item.data['status'] == 'pesanan dikirim' || item.data['status'] == 'pesanan diterima' || item.data['status'] == 'selesai') {
       return
       ListTile(
         title: Text(item.data['awb'].toString()),

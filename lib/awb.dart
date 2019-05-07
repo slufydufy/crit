@@ -82,11 +82,36 @@ class AWBState extends State<AWB> {
         title: Text('Input AWB'),
       ),
       body: Column(
+        crossAxisAlignment: CrossAxisAlignment.stretch,
           children: <Widget>[
+            _text(),
             _formAWB(),
             _showButton()
           ],
         ),
+    );
+  }
+
+  Widget _text() {
+    return Container(
+      color: Colors.grey[300],
+      padding: const EdgeInsets.fromLTRB(16.0, 32.0, 16.0, 32.0),
+      child: 
+      Column(
+        children: <Widget>[
+          Text('Pembayaran telah dipastikan masuk!', style: TextStyle(
+            fontSize: 24.0
+          ),),
+          Container(height: 16,),
+          Text('Silahkan memproses pesanan dan memasukkan AWB / No resi jika telah dikirim.', style: TextStyle(
+            fontSize: 16.0
+          ),),
+          Container(height: 16,),
+          Text('Batas proses order sampai dikirim adalah 3 hari, atau order akan dibatalkan otomatis', style: TextStyle(
+            fontSize: 14.0
+          ),)
+        ],
+      )
     );
   }
 
@@ -105,7 +130,7 @@ class AWBState extends State<AWB> {
   Widget _showAwb() {
     return
     Padding(
-        padding: const EdgeInsets.only(left: 16.0, right: 16.0, top: 48.0),
+        padding: const EdgeInsets.only(left: 16.0, right: 16.0, top: 16.0),
         child: TextFormField(
         controller: awbTxtCont,
         maxLines: 1,
@@ -127,7 +152,7 @@ class AWBState extends State<AWB> {
   Widget _showButton() {
     return
     Padding(
-      padding: const EdgeInsets.only(top: 16.0),
+      padding: const EdgeInsets.fromLTRB(16.0, 16.0, 16.0, 0.0),
       child: RaisedButton(
         child: Text('Submit'),
         onPressed: dismissAwbDialog,

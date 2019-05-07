@@ -42,7 +42,7 @@ class ConfirmPaymentState extends State<ConfirmPayment> {
       builder: (BuildContext context) {
         return AlertDialog(
           title: Text('Confirm Payment'),
-          content: Text('Konfirmasi by admin membutuhkan beberapa saat, silahkan melihat status order anda di menu \"Order Saya\"'),
+          content: Text('Konfirmasi oleh admin membutuhkan beberapa saat, silahkan melihat status order anda di menu \"Order Saya\"'),
           actions: <Widget>[
             FlatButton(
               child: Text('OK'),
